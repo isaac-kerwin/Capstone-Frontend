@@ -43,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
     'Time Slot',
     'Allergies / Dietary Requirements',
   ];
-
+  
   @override
   void initState() {
     super.initState();

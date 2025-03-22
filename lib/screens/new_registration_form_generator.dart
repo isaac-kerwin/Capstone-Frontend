@@ -40,9 +40,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<EventWithQuestions>(
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Register for Event'),
+    ),
+    body: FutureBuilder<EventWithQuestions>(
       future: eventFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -66,7 +69,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
- 
                 // Dynamic questions
                 ...List.generate(event.questions.length, (index) {
                   final question = event.questions[index];
@@ -119,6 +121,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
           ),
         );
       },
-    );
-  }
-}
+    ),
+  );
+}}

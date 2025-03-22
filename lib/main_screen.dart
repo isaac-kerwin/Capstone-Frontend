@@ -3,6 +3,7 @@ import 'package:first_app/screens/explore.dart';
 import 'package:first_app/screens/organiser_dashboard/organiser_dashboard_home.dart';
 import 'package:first_app/screens/organiser_dashboard/event_details_page.dart';
 import 'package:first_app/screens/login.dart';
+import 'package:first_app/screens/organiser_dashboard/event_details_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,6 +20,7 @@ class _MainScreenState extends State<MainScreen> {
     Explore(),
     OrganiserDashboard(),
     LoginScreen(),
+    EventDetailsPage(), // In Progress screen 
   ];
 
   void _onItemTapped(int index) {
@@ -50,9 +52,15 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.login),
             label: 'Login',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.align_horizontal_left_sharp ),
+            label: 'In Progress',
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.black, 
+  
         onTap: _onItemTapped,
       ),
     );

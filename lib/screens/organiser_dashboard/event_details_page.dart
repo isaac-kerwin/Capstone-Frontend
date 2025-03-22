@@ -5,6 +5,8 @@ import '../../data/participant_data.dart';
 import '../../services/report_service.dart';
 import '../../widgets/event_info_item.dart';
 import '../../widgets/action_button.dart';
+import 'package:first_app/services/url_service.dart';
+import 'package:first_app/screens/organiser_dashboard/edit_event_page.dart';  
 
 class EventDetailsPage extends StatelessWidget {
   const EventDetailsPage({Key? key}) : super(key: key);
@@ -161,7 +163,8 @@ class EventDetailsPage extends StatelessWidget {
               text: 'GENERATE EXTERNAL URL',
               icon: Icons.arrow_forward,
               onPressed: () {
-                // Handle generate external URL
+                UrlService url = UrlService();
+                url.copyAndNavigate(context);
               },
             ),
             const SizedBox(height: 16),
@@ -169,7 +172,12 @@ class EventDetailsPage extends StatelessWidget {
               text: 'EDIT EVENT INFORMATION',
               icon: Icons.arrow_forward,
               onPressed: () {
-                // Handle edit event information
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EditEventPage(),
+                  ),
+                );
               },
             ),
           ],

@@ -64,7 +64,7 @@ Future<void> deleteEvent(int id) async {
 }
 
 //Implemented
-Future<Events?> getAllEvents() async {
+Future<Events> getAllEvents() async {
   try{
     final response = await dioClient.dio.get("/events");
     if(response.data["success"]){
@@ -73,13 +73,12 @@ Future<Events?> getAllEvents() async {
       return events;
     }
     else{
-      print("Failed to get events: ${response.data}");
+      throw Exception("Failed to get events: ${response.data}");
     }
   }
   catch(error){
-    print("Error getting events: $error");
+    throw Exception("Error getting events: $error");
   }
-  return null;
 }
 
 Future<EventWithQuestions> getEventById(int id) async {
