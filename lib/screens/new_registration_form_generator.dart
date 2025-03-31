@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/models/event.dart';
 import 'package:first_app/models/question.dart';
+import 'package:first_app/models/ticket.dart';
 import 'package:first_app/network/event.dart';
-
 
 class RegistrationForm extends StatefulWidget {
   final int eventId;
@@ -15,6 +15,7 @@ class RegistrationForm extends StatefulWidget {
 class _RegistrationFormState extends State<RegistrationForm> {
   late Future<EventWithQuestions> eventFuture;
   final _formKey = GlobalKey<FormState>();
+  bool _isSubmitting = false;
   String? selectedTicket;
   final Map<int, TextEditingController> controllers = {};
 
@@ -40,87 +41,120 @@ class _RegistrationFormState extends State<RegistrationForm> {
     }
   }
 
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text('Register for Event'),
-    ),
-    body: FutureBuilder<EventWithQuestions>(
-      future: eventFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData) {
-          return const Center(child: Text('No event data found.'));
-        }
+  _buildTicketDropDown(List<Ticket> tickets) {
+    return DropdownButtonFormField<String>(
+      decoration: const InputDecoration(labelText: 'Select Ticket'),
+      value: selectedTicket,
+      items: tickets.map((ticket) {
+        return DropdownMenuItem<String>(
+          value: ticket.name,
+          child: Text(ticket.name),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          selectedTicket = value;
+        });
+      },
+      validator: (value) => value == null ? 'Please select a ticket' : null,
+    );
+  }
 
-        final event = snapshot.data!;
-        // Initialize controllers for each question if not already done
-        for (int i = 0; i < event.questions.length; i++) {
-          controllers.putIfAbsent(i, () => TextEditingController());
-        }
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register for Event'),
+      ),
+      body: FutureBuilder<EventWithQuestions>(
+        future: eventFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData) {
+            return const Center(child: Text('No event data found.'));
+          }
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Dynamic questions
-                ...List.generate(event.questions.length, (index) {
-                  final question = event.questions[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: TextFormField(
-                      controller: controllers[index],
-                      decoration: InputDecoration(
-                        labelText: question.question.questionText,
-                        border: const OutlineInputBorder(),
+          final event = snapshot.data!;
+          // Initialize controllers for each question if not already done
+          for (int i = 0; i < event.questions.length; i++) {
+            controllers.putIfAbsent(i, () => TextEditingController());
+          }
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Dynamic questions
+                  ...List.generate(event.questions.length, (index) {
+                    final question = event.questions[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: TextFormField(
+                        controller: controllers[index],
+                        decoration: InputDecoration(
+                          labelText: question.question.questionText,
+                          border: const OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (question.isRequired &&
+                              (value == null || value.isEmpty)) {
+                            return 'This field is required';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (question.isRequired &&
-                            (value == null || value.isEmpty)) {
-                          return 'This field is required';
-                        }
-                        return null;
-                      },
-                    ),
-                  );
-                }),
-                const SizedBox(height: 20),
-                // Ticket dropdown
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: 'Select Ticket'),
-                  value: selectedTicket,
-                  items: event.tickets.map((ticket) {
-                    return DropdownMenuItem<String>(
-                      value: ticket.name,
-                      child: Text(ticket.name),
                     );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedTicket = value;
-                    });
-                  },
-                  validator: (value) =>
-                      value == null ? 'Please select a ticket' : null,
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _submitForm,
-                    child: const Text('Submit'),
+                  }),
+                  const SizedBox(height: 20),
+                  // Ticket dropdown
+                  DropdownButtonFormField<String>(
+                    decoration:
+                        const InputDecoration(labelText: 'Select Ticket'),
+                    value: selectedTicket,
+                    items: event.tickets.map((ticket) {
+                      return DropdownMenuItem<String>(
+                        value: ticket.name,
+                        child: Text(ticket.name),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedTicket = value;
+                      });
+                    },
+                    validator: (value) =>
+                        value == null ? 'Please select a ticket' : null,
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 102, 89, 175),
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: _isSubmitting ? null : _submitForm,
+                      child: _isSubmitting
+                          ? const CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : const Text('PROCEED TO PAYMENT'),
+                    ),
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
-    ),
-  );
-}}
+          );
+        },
+      ),
+    );
+  }
+}

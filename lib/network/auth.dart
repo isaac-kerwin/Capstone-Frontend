@@ -1,7 +1,5 @@
-import 'dart:convert';
-import 'dart:ffi';
+
 import "package:first_app/network/dio_client.dart";
-import "package:flutter_secure_storage/flutter_secure_storage.dart";
 import "package:first_app/models/user.dart";
 
 // TO DO NOT USE PRINTS FOR ERROR HANDLING

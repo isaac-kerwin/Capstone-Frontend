@@ -3,7 +3,7 @@ import 'package:first_app/screens/explore.dart';
 import 'package:first_app/screens/organiser_dashboard/organiser_dashboard_home.dart';
 import 'package:first_app/screens/organiser_dashboard/event_details_page.dart';
 import 'package:first_app/screens/login.dart';
-import 'package:first_app/screens/organiser_dashboard/event_details_page.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

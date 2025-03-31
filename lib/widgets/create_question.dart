@@ -87,7 +87,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
                 isRequired: isRequired,
                 displayOrder: int.parse(displayOrderStr),
               );
-              Navigator.pop(context, question);
+              Navigator.pop(context, question); 
             }
           },
           child: const Text('Create'),
