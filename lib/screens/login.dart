@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/screens/register_account.dart';
 import 'package:first_app/network/auth.dart';
+import 'package:first_app/widgets/form_widgets.dart'; // For SystemChrome.setPreferredOrientations
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -52,23 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
           // Stretch children horizontally
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.emailAddress,
-            ),
+            buildTextField(label: 'Email Adress', controller: _emailController, keyboardType: TextInputType.emailAddress),
             const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-            ),
+            buildTextField(label: 'Password', controller: _passwordController, obscureText: true),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _login,

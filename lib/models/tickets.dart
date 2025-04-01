@@ -58,8 +58,6 @@ class TicketInformation{
       this.quantityTotal,
       this.salesStart,
       this.salesEnd});
-
-  
 }
 
 class TicketDTO {

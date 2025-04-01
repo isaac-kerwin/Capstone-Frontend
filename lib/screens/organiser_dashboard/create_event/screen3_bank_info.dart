@@ -1,29 +1,14 @@
-import 'screen4_questions.dart';
+import 'package:first_app/screens/organiser_dashboard/create_event/screen4_questions.dart';
 import 'package:flutter/material.dart';
-import '../create_registration_form_page.dart';
-import 'package:first_app/models/ticket.dart';
+import 'package:first_app/widgets/form_widgets.dart';
+
 
 class EditBankInformationPage extends StatefulWidget {
-  final String eventName;
-  final String location;
-  final String description;
-  final String type;
-  final int capacity;
-  final DateTime startDateTime;
-  final DateTime endDateTime;
-  final List<TicketDTO> tickets;
-
+  final Map<String, dynamic> eventData; 
 
   const EditBankInformationPage({
     super.key,
-    required this.eventName,
-    required this.location,
-    required this.description,
-    required this.type,
-    required this.capacity,
-    required this.startDateTime,
-    required this.endDateTime,
-    required this.tickets,  
+    required this.eventData,
   });
 
   @override
@@ -47,37 +32,14 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
         child: Column(
           children: [
             // Account Name
-            TextField(
-              controller: _accountNameController,
-              decoration: const InputDecoration(
-                labelText: 'Account Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
+            buildTextField(label: "Account Name", controller: _accountNameController),
             const SizedBox(height: 16),
-
             // Account Number
-            TextField(
-              controller: _accountNumberController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Account Number',
-                border: OutlineInputBorder(),
-              ),
-            ),
+            buildTextField(label: "Account Number", controller: _accountNumberController, isNumber: true),
             const SizedBox(height: 16),
-
             // BSB
-            TextField(
-              controller: _bsbController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'BSB',
-                border: OutlineInputBorder(),
-              ),
-            ),
+            buildTextField(label: "BSB", controller: _bsbController, isNumber: true),
             const SizedBox(height: 24),
-
             // Continue Button
             ElevatedButton(
               onPressed: _onContinue,
@@ -102,22 +64,19 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
       return;
     }
 
+    widget.eventData['accountName'] = accountName;  
+    widget.eventData['accountNumber'] = accountNumber;
+    widget.eventData['bsb'] = bsb;
+
+    //Print all widget.eventData data to console for debugging 
+    print('Event Data: ${widget.eventData['eventName']}');
+    
     // Navigate to the CreateRegistrationFormPage with all data
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CreateEventQuestions(
-          eventName: widget.eventName,
-          location: widget.location,
-          description: widget.description,
-          type: widget.type,
-          capacity: widget.capacity,
-          startDateTime: widget.startDateTime,
-          endDateTime: widget.endDateTime,
-          tickets: widget.tickets,
-          accountName: accountName,
-          accountNumber: accountNumber,
-          bsb: bsb,
+          eventData : widget.eventData
         ),
       ),
     );

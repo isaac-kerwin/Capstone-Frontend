@@ -1,5 +1,5 @@
 import 'package:first_app/models/question.dart';
-import 'package:first_app/models/ticket.dart';
+import 'package:first_app/models/tickets.dart';
 import 'package:first_app/network/auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:first_app/network/event.dart';

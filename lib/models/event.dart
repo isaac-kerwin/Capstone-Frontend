@@ -1,7 +1,6 @@
 import 'package:first_app/models/question.dart';
-import 'package:first_app/models/ticket.dart';
+import 'package:first_app/models/tickets.dart';
 import 'package:first_app/models/organizer.dart';
-import 'package:first_app/models/question.dart';
 
 //For Get all Events
 class Events {

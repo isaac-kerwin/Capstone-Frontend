@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/models/ticket.dart';
+import 'package:first_app/models/tickets.dart';
 import 'package:first_app/widgets/create_ticket.dart';
 import 'package:first_app/screens/organiser_dashboard/create_event/screen3_bank_info.dart';
 
 class TicketManagementScreen extends StatefulWidget {
   
-  final String eventName;
-  final String location;
-  final String description;
-  final String type;
-  final int capacity;
-  final DateTime startDateTime;
-  final DateTime endDateTime;
+  Map<String, dynamic> eventData = {}; 
 
-  TicketManagementScreen({
-    required this.eventName,
-    required this.location,
-    required this.description,
-    required this.type,
-    required this.capacity,
-    required this.startDateTime,
-    required this.endDateTime,
-  });
+  TicketManagementScreen({ required this.eventData, super.key,});
 
   @override
   State<TicketManagementScreen> createState() => _TicketManagementScreenState();
@@ -100,22 +86,48 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
       );
       return;
     }
+
+    widget.eventData['tickets'] = tickets;
     Navigator.push(context,
       MaterialPageRoute(
-        builder: (context) => EditBankInformationPage(
-          eventName: widget.eventName,
-          location: widget.location,
-          description: widget.description,
-          type: widget.type,
-          capacity: widget.capacity,
-          startDateTime: widget.startDateTime,
-          endDateTime: widget.endDateTime,
-          tickets: tickets,
-        ),
+        builder: (context) => EditBankInformationPage( eventData: widget.eventData,),
       ),
     );
-
   }
+
+  Widget _buildDateRow({
+    required String label,
+    required String dateText,
+    required VoidCallback onPressed,
+    required String buttonText,
+  }) {
+    return Row(
+      children: [
+        Expanded(child: Text('$label: $dateText')),
+        ElevatedButton(
+          onPressed: onPressed,
+          child: Text(buttonText),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTicketList() {
+  if (tickets.isEmpty) {
+    return const Center(child: Text('No tickets added yet.'));
+  }
+  return ListView.builder(
+    itemCount: tickets.length,
+    itemBuilder: (context, index) {
+      final ticket = tickets[index];
+      return ListTile(
+        title: Text(ticket.name),
+        subtitle: Text('Price: ${ticket.price}, Quantity: ${ticket.quantityTotal}'),
+      );
+    },
+  );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,25 +137,19 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
         child: Column(
           children: [
             // Sales Start Date
-            Row(
-              children: [
-                Expanded(child: Text('Sales Start: ${_formatDate(salesStart)}')),
-                ElevatedButton(
-                  onPressed: _selectSalesStart,
-                  child: const Text('Select Start'),
-                ),
-              ],
+            _buildDateRow(
+              label: 'Sales Start',
+              dateText: _formatDate(salesStart),
+              onPressed: _selectSalesStart,
+              buttonText: 'Select Start',
             ),
             const SizedBox(height: 8),
             // Sales End Date
-            Row(
-              children: [
-                Expanded(child: Text('Sales End: ${_formatDate(salesEnd)}')),
-                ElevatedButton(
-                  onPressed: _selectSalesEnd,
-                  child: const Text('Select End'),
-                ),
-              ],
+            _buildDateRow(
+              label: 'Sales End',
+              dateText: _formatDate(salesEnd),
+              onPressed: _selectSalesEnd,
+              buttonText: 'Select End',
             ),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -151,21 +157,8 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
               child: const Text('Add Ticket'),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: tickets.isEmpty
-                  ? const Center(child: Text('No tickets added yet.'))
-                  : ListView.builder(
-                      itemCount: tickets.length,
-                      itemBuilder: (context, index) {
-                        final ticket = tickets[index];
-                        return ListTile(
-                          title: Text(ticket.name),
-                          subtitle: Text(
-                              'Price: ${ticket.price}, Quantity: ${ticket.quantityTotal}'),
-                        );
-                      },
-                    ),
-            ),
+            // List of tickets
+            Expanded(child: _buildTicketList()),
             ElevatedButton( 
               onPressed: _onContinue,
               child: const Text('Continue'),

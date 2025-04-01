@@ -1,5 +1,6 @@
+import 'package:first_app/widgets/form_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:first_app/models/ticket.dart';
+import 'package:first_app/models/tickets.dart';
 
 class CreateTicketDialog extends StatefulWidget {
   final DateTime salesStart;
@@ -17,11 +18,62 @@ class CreateTicketDialog extends StatefulWidget {
 
 class _CreateTicketDialogState extends State<CreateTicketDialog> {
   final _formKey = GlobalKey<FormState>();
-  String name = '';
-  String description = '';
-  String price = '';
-  String quantity = '';
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _quantityController = TextEditingController();
 
+
+  String? _ticketNameValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter ticket name';
+    }
+    return null;
+  } 
+
+  String? _descriptionValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter description';
+    }
+    return null;
+  }
+
+  String? _priceValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter price';
+    }
+    if (double.tryParse(value.trim()) == null) {
+      return 'Enter a valid number';
+    }
+    return null;
+  }
+
+  String? _quantityValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Enter quantity';
+    }
+    if (int.tryParse(value.trim()) == null) {
+      return 'Enter a valid integer';
+    }
+    return null;
+  }
+
+  _createTicketDTO(){
+    String name = _nameController.text.trim();
+    String description = _descriptionController.text.trim();
+    String price = _priceController.text.trim();
+    String quantity = _quantityController.text.trim();
+    
+    return TicketDTO(
+      name: name,
+      description: description,
+      price: double.parse(price),
+      quantityTotal: int.parse(quantity),
+      salesStart: widget.salesStart,
+      salesEnd: widget.salesEnd,
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -33,60 +85,17 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Ticket Name
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Ticket Name'),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Enter ticket name';
-                  }
-                  return null;
-                },
-                onSaved: (value) => name = value!.trim(),
-              ),
+              buildTextField(label: "name", validator: _ticketNameValidator, controller: _nameController,),
               const SizedBox(height: 8),
               // Description
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Description'),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Enter description';
-                  }
-                  return null;
-                },
-                onSaved: (value) => description = value!.trim(),
-              ),
+              buildTextField(label: "description", validator: _descriptionValidator, controller: _descriptionController),
               const SizedBox(height: 8),
               // Price
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Price'),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Enter price';
-                  }
-                  if (double.tryParse(value.trim()) == null) {
-                    return 'Enter a valid number';
-                  }
-                  return null;
-                },
-                onSaved: (value) => price = value!.trim(),
-              ),
+              buildTextField(label: "price", validator: _priceValidator, controller: _priceController, isNumber: true),
               const SizedBox(height: 8),
               // Quantity
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Quantity'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Enter quantity';
-                  }
-                  if (int.tryParse(value.trim()) == null) {
-                    return 'Enter a valid integer';
-                  }
-                  return null;
-                },
-                onSaved: (value) => quantity = value!.trim(),
-              ),
+              buildTextField(label: "quantity", validator: _quantityValidator, controller: _quantityController, isNumber: true),
+              const SizedBox(height: 8),  
             ],
           ),
         ),
@@ -102,14 +111,7 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {
               _formKey.currentState!.save();
-              final ticket = TicketDTO(
-                name: name,
-                description: description,
-                price: double.parse(price),
-                quantityTotal: int.parse(quantity),
-                salesStart: widget.salesStart,
-                salesEnd: widget.salesEnd,
-              );
+              final ticket = _createTicketDTO();
               Navigator.pop(context, ticket);
             }
           },

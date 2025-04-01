@@ -10,8 +10,29 @@ class Explore extends StatefulWidget {
   _ExploreState createState() => _ExploreState();
 }
 
+
+
 class _ExploreState extends State<Explore> {
   late Future<Events> eventsFuture;
+
+  _register (EventDetails event){
+      Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => RegistrationForm(eventId: event.id),
+      ),
+    );
+  }
+  
+  _ExploreListTile(EventDetails event) {
+     return ListTile(
+        title: Text(event.name),
+        trailing: ElevatedButton(
+          onPressed: () { _register(event); },
+          child: const Text('Register'),
+        ),
+    );
+  }
 
   @override
   void initState(){
@@ -39,21 +60,7 @@ class _ExploreState extends State<Explore> {
             itemCount: events.length,
             itemBuilder: (context, index) {
               final event = events[index];
-              return ListTile(
-                title: Text(event.name),
-                trailing: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to the RegistrationForm and pass the event id.
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => RegistrationForm(eventId: event.id),
-                      ),
-                    );
-                  },
-                  child: const Text('Register'),
-                ),
-              );
+              return _ExploreListTile(event);
             },
           );
         },

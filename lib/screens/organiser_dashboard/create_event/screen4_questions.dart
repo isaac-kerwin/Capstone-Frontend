@@ -1,42 +1,21 @@
-import 'package:first_app/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/models/question.dart';
 import 'package:first_app/widgets/create_question.dart';
-import 'package:first_app/models/ticket.dart';
+import 'package:first_app/models/event.dart';
+import 'package:first_app/models/tickets.dart';
 import 'package:first_app/network/event.dart';
 
 class CreateEventQuestions extends StatefulWidget {
 
-  final String eventName;
-  final String location;
-  final String description;
-  final String type;
-  final int capacity;
-  final DateTime startDateTime;
-  final DateTime endDateTime;
-  final List<TicketDTO> tickets;
-  final String accountName;
-  final String accountNumber;
-  final String bsb;
+   final Map<String, dynamic> eventData; 
 
   const CreateEventQuestions({
     super.key,
-    required this.eventName,
-    required this.location,
-    required this.description,
-    required this.type,
-    required this.capacity,
-    required this.startDateTime,
-    required this.endDateTime,
-    required this.tickets,
-    required this.accountName,
-    required this.accountNumber,
-    required this.bsb,
+    required this.eventData,
   });
 
   @override
-  State<CreateEventQuestions> createState() =>
-      _CreateEventQuestionsScreenState();
+  State<CreateEventQuestions> createState() => _CreateEventQuestionsScreenState();
 }
 
 class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
@@ -56,6 +35,35 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     }
   }
 
+  _unpackAndCreateEvent(Map<String, dynamic> eventData) async {
+    // Unpack the event data
+    String name = eventData['eventName'];
+    String description = eventData['description'];
+    String location = eventData['location'];
+    String type = eventData['type'];
+    DateTime startDateTime = eventData['startDateTime'];
+    DateTime endDateTime = eventData['endDateTime'];
+    int capacity = eventData['capacity'];
+    List<TicketDTO> tickets = eventData['tickets'];
+    List<CreateQuestionDTO> questions = eventData['questions'];
+
+    // Create the event object
+    CreateEventDTO event = CreateEventDTO(
+      name : name,
+      description: description,
+      location: location,
+      eventType: type,
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
+      capacity: capacity,
+      tickets: tickets,
+      questions: questions,
+    );
+
+    // Call the API to create the event
+    await createEvent(event);
+  }
+
   // Continue button action: check that at least one question is added and navigate.
   Future<void> _continue() async {
     if (questions.isEmpty) {
@@ -65,18 +73,25 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
 
       return;
     }
-    CreateEventDTO event = CreateEventDTO(
-      name: widget.eventName,
-      description: widget.description,
-      location: widget.location,
-      eventType: widget.type,
-      startDateTime: widget.startDateTime,
-      endDateTime: widget.endDateTime,
-      capacity: widget.capacity,
-      tickets: widget.tickets,
-      questions: questions,
+    widget.eventData['questions'] = questions;
+    await _unpackAndCreateEvent(widget.eventData);
+  }
+
+  _buildQuestionList() {
+    if (questions.isEmpty) {
+      return const Center(child: Text('No questions added yet.'));
+    }
+    return ListView.builder(
+      itemCount: questions.length,
+      itemBuilder: (context, index) {
+        final question = questions[index];
+        return ListTile(
+          title: Text(question.questionText),
+          subtitle: Text(
+              'Required: ${question.isRequired ? "Yes" : "No"}, Order: ${question.displayOrder}'),
+        );
+      },
     );
-    await createEvent(event);
   }
 
   @override
@@ -96,21 +111,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
             ),
             const SizedBox(height: 16),
             // Display list of added questions.
-            Expanded(
-              child: questions.isEmpty
-                  ? const Center(child: Text('No questions added yet.'))
-                  : ListView.builder(
-                      itemCount: questions.length,
-                      itemBuilder: (context, index) {
-                        final question = questions[index];
-                        return ListTile(
-                          title: Text(question.questionText),
-                          subtitle: Text(
-                              'Required: ${question.isRequired ? "Yes" : "No"}, Order: ${question.displayOrder}'),
-                        );
-                      },
-                    ),
-            ),
+            Expanded(child: _buildQuestionList()),
             const SizedBox(height: 16),
             // Continue button.
             ElevatedButton(
