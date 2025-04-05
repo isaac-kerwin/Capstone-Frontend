@@ -5,6 +5,7 @@ import 'package:first_app/models/event.dart';
 import 'package:first_app/models/tickets.dart';
 import 'package:first_app/network/event.dart';
 import 'package:first_app/screens/organiser_dashboard/organiser_dashboard_home.dart';
+import 'package:first_app/widgets/action_button.dart';
 
 class CreateEventQuestions extends StatefulWidget {
 
@@ -114,7 +115,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
         child: Column(
           children: [
             // Button to add a new question.
-            ElevatedButton(
+            TextButton(
               onPressed: _openCreateQuestionDialog,
               child: const Text('Add Question'),
             ),
@@ -123,9 +124,10 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
             Expanded(child: _buildQuestionList()),
             const SizedBox(height: 16),
             // Continue button.
-            ElevatedButton(
+            ActionButton(
               onPressed: _continue,
-              child: const Text('Create Event'),
+              text: 'Create Event',
+              icon: Icons.arrow_forward,
             ),
           ],
         ),

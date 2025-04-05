@@ -1,6 +1,7 @@
 import 'package:first_app/screens/organiser_dashboard/create_event/screen4_questions.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/widgets/form_widgets.dart';
+import 'package:first_app/widgets/action_button.dart';
 
 
 class EditBankInformationPage extends StatefulWidget {
@@ -41,9 +42,10 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
             buildTextField(label: "BSB", controller: _bsbController, isNumber: true),
             const SizedBox(height: 24),
             // Continue Button
-            ElevatedButton(
+            ActionButton(
               onPressed: _onContinue,
-              child: const Text('Continue'),
+              text: 'Continue',
+              icon: Icons.arrow_forward,
             ),
           ],
         ),

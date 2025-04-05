@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/screens/organiser_dashboard/create_event/screen2_tickets.dart';
 import 'package:first_app/widgets/form_widgets.dart';
+import 'package:first_app/widgets/action_button.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -101,7 +102,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     return Row(
       children: [
         Expanded(child: Text(label)),
-        ElevatedButton(
+        TextButton(
           onPressed: onPressed,
           child: const Text('Choose Date'),
         ),
@@ -129,9 +130,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
   // Continue button
   Widget _buildContinueButton() {
-    return ElevatedButton(
+    return ActionButton(
       onPressed: _onContinue,
-      child: const Text('Continue'),
+      text: 'Continue',
+      icon: Icons.arrow_forward,
     );
   }
 

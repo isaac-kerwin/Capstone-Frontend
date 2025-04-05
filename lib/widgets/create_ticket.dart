@@ -101,12 +101,16 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context); // Cancel
-          },
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Cancel
+            },
           child: const Text('Cancel'),
         ),
+        const SizedBox(width: 24.0), 
         ElevatedButton(
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {
@@ -118,6 +122,8 @@ class _CreateTicketDialogState extends State<CreateTicketDialog> {
           child: const Text('Create'),
         ),
       ],
-    );
+    ),
+  ],
+);
   }
 }

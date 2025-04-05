@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:first_app/models/tickets.dart';
 import 'package:first_app/widgets/create_ticket.dart';
 import 'package:first_app/screens/organiser_dashboard/create_event/screen3_bank_info.dart';
+import 'package:first_app/widgets/action_button.dart';
 
 class TicketManagementScreen extends StatefulWidget {
   
@@ -104,7 +105,7 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
     return Row(
       children: [
         Expanded(child: Text('$label: $dateText')),
-        ElevatedButton(
+        TextButton(
           onPressed: onPressed,
           child: Text(buttonText),
         ),
@@ -152,16 +153,14 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
               buttonText: 'Select End',
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _openCreateTicketDialog,
-              child: const Text('Add Ticket'),
-            ),
+            TextButton(onPressed: _openCreateTicketDialog, child: Text('Add Tickets')),
             const SizedBox(height: 16),
             // List of tickets
             Expanded(child: _buildTicketList()),
-            ElevatedButton( 
+            ActionButton( 
               onPressed: _onContinue,
-              child: const Text('Continue'),
+              text: 'Continue',
+              icon: Icons.arrow_forward,
             ),
             
           ],
