@@ -12,9 +12,9 @@ class CreateQuestionDialog extends StatefulWidget {
 
 class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _questionTextController = TextEditingController();
+  final TextEditingController _questionTextController = TextEditingController();
   bool isRequired = false;
-  TextEditingController _displayOrderController = TextEditingController();
+  final TextEditingController _displayOrderController = TextEditingController();
 
   _buildIsRequiredSwitch() {
     return Row(

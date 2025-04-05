@@ -4,6 +4,7 @@ import 'package:first_app/widgets/create_question.dart';
 import 'package:first_app/models/event.dart';
 import 'package:first_app/models/tickets.dart';
 import 'package:first_app/network/event.dart';
+import 'package:first_app/screens/organiser_dashboard/organiser_dashboard_home.dart';
 
 class CreateEventQuestions extends StatefulWidget {
 
@@ -75,6 +76,14 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     }
     widget.eventData['questions'] = questions;
     await _unpackAndCreateEvent(widget.eventData);
+    
+        // Alternatively, if you want to remove all previous routes, use:
+     Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const OrganiserDashboard()),
+      (Route<dynamic> route) => false,
+    );
+  
   }
 
   _buildQuestionList() {

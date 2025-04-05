@@ -3,6 +3,7 @@ import 'package:first_app/models/event.dart';
 import 'package:first_app/models/question.dart';
 import 'package:first_app/models/tickets.dart';
 import 'package:first_app/network/event.dart';
+import 'package:first_app/main_screen.dart';
 
 class RegistrationForm extends StatefulWidget {
   final int eventId;
@@ -37,6 +38,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
       // You can collect the selectedTicket and text field responses here.
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Form Submitted Successfully')),
+      );
+    
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+        (Route<dynamic> route) => false,
       );
     }
   }
