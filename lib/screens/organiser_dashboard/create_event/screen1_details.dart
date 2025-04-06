@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:first_app/screens/organiser_dashboard/create_event/screen2_tickets.dart';
 import 'package:first_app/widgets/form_widgets.dart';
 import 'package:first_app/widgets/action_button.dart';
+import 'package:first_app/models/tickets.dart';
+import 'package:first_app/screens/organiser_dashboard/create_event/screen4_questions.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -180,8 +182,22 @@ class _CreateEventPageState extends State<CreateEventPage> {
         _endDateTime = newDateTime;
       }
     });
+  } 
+List<TicketDTO> _createFreeTicket() {
+      TicketDTO ticket = TicketDTO(
+        name: 'Free Ticket',
+        description: 'Free ticket for the event',
+        price: 0.0,
+        quantityTotal: int.parse(_capacityController.text.trim()),
+        salesStart: _startDateTime!,
+        salesEnd: _endDateTime!,
+      );
+      List <TicketDTO> tickets = [ticket];
+      return tickets;
   }
 
+  // Handle the Continue button press
+  // Validate inputs and navigate to the next screen
 // continue logic
   void _onContinue() {
     final eventName = _eventNameController.text.trim();
@@ -224,12 +240,24 @@ class _CreateEventPageState extends State<CreateEventPage> {
       'isFree': _isFree,
     };
 
-    // Navigate to next screen
-    Navigator.push(
+    if (_isFree) {
+      eventData['tickets'] = _createFreeTicket();
+      Navigator.push(context,
+        MaterialPageRoute(
+          builder: (context) => CreateEventQuestions(eventData: eventData),
+        ),
+      );
+     // No tickets for free events
+    } else {
+      Navigator.push(
       context,
       MaterialPageRoute(
          builder: (context) => TicketManagementScreen(eventData: eventData)
       ),
-    );
+    ); // Placeholder for ticket data
+    }
+
+    // Navigate to next screen
+
   }
 }

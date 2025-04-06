@@ -9,8 +9,7 @@ import 'package:first_app/widgets/action_button.dart';
 
 class CreateEventQuestions extends StatefulWidget {
 
-   final Map<String, dynamic> eventData; 
-
+  final Map<String, dynamic> eventData; 
   const CreateEventQuestions({
     super.key,
     required this.eventData,
