@@ -5,16 +5,14 @@ class QuestionnaireManagementPage extends StatefulWidget {
   const QuestionnaireManagementPage({super.key});
 
   @override
-  State<QuestionnaireManagementPage> createState() =>
-      _QuestionnaireManagementPageState();
+  State<QuestionnaireManagementPage> createState() => _QuestionnaireManagementPageState();
 }
 
 class _QuestionnaireManagementPageState
-    extends State<QuestionnaireManagementPage> {
+  extends State<QuestionnaireManagementPage> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-
   final TextEditingController _fieldNameController = TextEditingController();
   String? _selectedInputType;
 

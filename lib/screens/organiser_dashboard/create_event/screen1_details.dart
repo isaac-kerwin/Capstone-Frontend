@@ -182,7 +182,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
         _endDateTime = newDateTime;
       }
     });
-  } 
+  }
 List<TicketDTO> _createFreeTicket() {
       TicketDTO ticket = TicketDTO(
         name: 'Free Ticket',

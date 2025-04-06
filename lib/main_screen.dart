@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/screens/explore.dart';
 import 'package:first_app/screens/organiser_dashboard/organiser_dashboard_home.dart';
-import 'package:first_app/screens/organiser_dashboard/event_details_page.dart';
 import 'package:first_app/screens/login.dart';
 
 
@@ -16,11 +15,10 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   // List of screens that correspond to the bottom navigation items.
-  final List<Widget> _screens = const [
+  final List<Widget> _screens = [
     Explore(),
-    OrganiserDashboard(),
+    OrganiserDashboard(organiserId: 1), // Example organiserId  
     LoginScreen(),
-    EventDetailsPage(), // In Progress screen 
   ];
 
   void _onItemTapped(int index) {

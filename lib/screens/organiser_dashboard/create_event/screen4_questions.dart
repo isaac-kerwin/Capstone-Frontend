@@ -7,6 +7,7 @@ import 'package:first_app/network/event.dart';
 import 'package:first_app/screens/organiser_dashboard/organiser_dashboard_home.dart';
 import 'package:first_app/widgets/action_button.dart';
 
+
 class CreateEventQuestions extends StatefulWidget {
 
   final Map<String, dynamic> eventData; 
@@ -80,7 +81,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
         // Alternatively, if you want to remove all previous routes, use:
      Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const OrganiserDashboard()),
+      MaterialPageRoute(builder: (context) => OrganiserDashboard(organiserId: 1)),
       (Route<dynamic> route) => false,
     );
   

@@ -4,14 +4,14 @@ class EventInfoItem extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final String title;
-  final String subtitle;
+  String? subtitle;
 
-  const EventInfoItem({
+  EventInfoItem({
     Key? key,
     required this.icon,
     required this.iconColor,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
   }) : super(key: key);
 
   @override
@@ -32,7 +32,8 @@ class EventInfoItem extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 16),
-        Column(
+        Expanded (
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -42,16 +43,20 @@ class EventInfoItem extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
+              softWrap: true,
             ),
             const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
+            if (subtitle != null) 
+              Text(
+                  subtitle!,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                  softWrap: true,
+                ),
           ],
+        ),
         ),
       ],
     );
