@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/models/question.dart';
-import 'package:first_app/widgets/create_question.dart';
+import 'package:first_app/event_creation/widgets/create_question.dart';
 import 'package:first_app/models/event.dart';
 import 'package:first_app/models/tickets.dart';
 import 'package:first_app/network/event.dart';
-import 'package:first_app/screens/organiser_dashboard/organiser_dashboard_home.dart';
-import 'package:first_app/widgets/action_button.dart';
+import 'package:first_app/event_management/screens/organiser_dashboard_home.dart';
+import 'package:first_app/fundamental_widgets/action_button.dart';
 
 
 class CreateEventQuestions extends StatefulWidget {

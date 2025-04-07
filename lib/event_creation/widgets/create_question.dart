@@ -1,7 +1,7 @@
-import 'package:first_app/widgets/form_widgets.dart';
+import 'package:first_app/fundamental_widgets/form_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/models/question.dart';
-import 'package:first_app/widgets/create_question.dart';
+import 'package:first_app/event_creation/widgets/create_question.dart';
 
 class CreateQuestionDialog extends StatefulWidget {
   const CreateQuestionDialog({super.key});

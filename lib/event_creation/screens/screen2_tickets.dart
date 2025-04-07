@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/models/tickets.dart';
-import 'package:first_app/widgets/create_ticket.dart';
-import 'package:first_app/screens/organiser_dashboard/create_event/screen3_bank_info.dart';
-import 'package:first_app/widgets/action_button.dart';
+import 'package:first_app/event_creation/widgets/create_ticket.dart';
+import 'package:first_app/event_creation/screens/screen3_bank_info.dart';
+import 'package:first_app/fundamental_widgets/action_button.dart';
 
 class TicketManagementScreen extends StatefulWidget {
   

@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "lib"
+		},
+		{
+			"path": "test"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}

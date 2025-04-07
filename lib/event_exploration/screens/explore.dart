@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/screens/new_registration_form_generator.dart';
+import 'package:first_app/event_registration/screens/new_registration_form_generator.dart';
 import 'package:first_app/models/event.dart';
 import 'package:first_app/network/event.dart';
 

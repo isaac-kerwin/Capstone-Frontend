@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/screens/register_account.dart';
+import 'package:first_app/login_and_register/screens/register_account.dart';
 import 'package:first_app/network/auth.dart';
 
 class LoginScreen extends StatefulWidget {

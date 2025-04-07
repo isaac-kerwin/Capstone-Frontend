@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:convert';
-import 'dart:ffi';
 import 'package:first_app/network/auth.dart';
 import "package:first_app/network/dio_client.dart";
 import "package:first_app/models/event.dart";

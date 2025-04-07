@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/models/event.dart';
-import 'package:first_app/widgets/event_info_item.dart';
+import 'package:first_app/event_management/widgets/event_info_item.dart';
 import 'package:first_app/services/date_and_time_parser.dart';
   
 class EventInfoTile extends StatefulWidget {

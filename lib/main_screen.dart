@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/screens/explore.dart';
-import 'package:first_app/screens/organiser_dashboard/organiser_dashboard_home.dart';
-import 'package:first_app/screens/login.dart';
+import 'package:first_app/event_exploration/screens/explore.dart';
+import 'package:first_app/event_management/screens/organiser_dashboard_home.dart';
+import 'package:first_app/login_and_register/screens/login.dart';
 
 
 class MainScreen extends StatefulWidget {

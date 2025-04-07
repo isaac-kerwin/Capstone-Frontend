@@ -1,9 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:first_app/screens/organiser_dashboard/create_event/screen1_details.dart';
-import 'package:first_app/screens/organiser_dashboard/create_event/screen2_tickets.dart';
-import 'package:first_app/screens/organiser_dashboard/create_event/screen3_bank_info.dart';
-import 'package:first_app/screens/organiser_dashboard/create_event/screen4_questions.dart';
+import 'package:first_app/event_creation/screens/screen1_details.dart';
+import 'package:first_app/event_creation/screens/screen2_tickets.dart';
+import 'package:first_app/event_creation/screens/screen3_bank_info.dart';
+import 'package:first_app/event_creation/screens/screen4_questions.dart';
+
 
 
 class EventCreationRoutes{
