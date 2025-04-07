@@ -33,7 +33,7 @@ String formatDateRangeAsWords(DateTime start, DateTime end) {
   if (_isSameDay(start, end)) {
     return startStr;
   } else {
-    return '$startStr to $endStr';
+    return '$startStr -\n$endStr';
   }
 }
 

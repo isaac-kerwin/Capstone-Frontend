@@ -1,5 +1,6 @@
 {
 	"folders": [
+
 		{
 			"path": "lib"
 		},
@@ -9,8 +10,10 @@
 		{
 			"path": "."
 		}
+
 	],
 	"settings": {
-		"java.configuration.updateBuildConfiguration": "interactive"
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"dotnet.defaultSolution": "disable"
 	}
 }

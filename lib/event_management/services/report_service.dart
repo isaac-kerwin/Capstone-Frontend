@@ -4,7 +4,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
-import '../models/participant.dart';
+import '../../models/participant.dart';
 
 
 class ReportService {
