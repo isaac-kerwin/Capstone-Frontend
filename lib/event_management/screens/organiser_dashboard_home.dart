@@ -18,7 +18,7 @@ Future<Events> _getEventsByOrganizerId(int id) async {
   return await getEventsByOrganizerId(id);
 }
 
-Widget _buildEventSlideshow(Future<Events> futureEvents) {
+Widget _buildEventSlideshow(Future<Events> futureEvents, {Key? key}) {
   return FutureBuilder<Events>(
     future: futureEvents,
     builder: (context, snapshot) {
@@ -31,7 +31,7 @@ Widget _buildEventSlideshow(Future<Events> futureEvents) {
       } else {
         final eventsData = snapshot.data!;
 
-        return EventSlideshow(events: eventsData, context: context,);
+        return EventSlideshow(events: eventsData, context: context, key: key,);
       }
     },
   );
@@ -55,7 +55,7 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildEventSlideshow(futureEvents),
+            _buildEventSlideshow(futureEvents, key: Key('event_slideshow')),
             const SizedBox(height: 16),
           ],
         ),

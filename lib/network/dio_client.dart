@@ -4,10 +4,12 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'auth.dart';
 
 class DioClient {
-  static final DioClient _instance = DioClient._internal();
-  factory DioClient() => _instance;
 
   final Dio dio;
+
+  DioClient({Dio? customDio}) : dio = customDio ?? Dio();
+  static final DioClient _instance = DioClient._internal();
+
   final CookieJar cookieJar = CookieJar();
 
   DioClient._internal()
@@ -27,5 +29,5 @@ class DioClient {
   }
 }
 
-final dioClient = DioClient();
+var dioClient = DioClient();
   

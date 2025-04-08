@@ -17,7 +17,7 @@ class EventSlideshow extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const CreateEventPage(),
+        builder: (context) => const CreateEventPage(key: Key('create_event_screen'),),
       ),
     );
   }
@@ -46,9 +46,9 @@ class EventSlideshow extends StatelessWidget {
               children: [
                 EventInfoTile(event: event,),
                 const SizedBox(height: 4),
-                ActionButton(text: "Create Event", icon: Icons.arrow_forward, onPressed: _createEvent),
+                ActionButton(text: "Create Event", icon: Icons.arrow_forward, onPressed: _createEvent, key: Key('create_event_button')),
                 const SizedBox(height: 16),
-                ActionButton(text: "Event Details", icon: Icons.arrow_forward, onPressed: _moreDetails),
+                ActionButton(text: "Event Details", icon: Icons.arrow_forward, onPressed: _moreDetails, key: Key('event_details_button')),
               ],
             ),
           );

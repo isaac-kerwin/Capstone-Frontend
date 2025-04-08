@@ -4,7 +4,7 @@ class Organizer {
   final String lastName;
 
   Organizer(
-      {required this.id, required this.firstName, required this.lastName});
+    {required this.id, required this.firstName, required this.lastName});
 }
 
 class OrganizerName {

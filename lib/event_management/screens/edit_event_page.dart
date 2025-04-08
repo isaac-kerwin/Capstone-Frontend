@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
 class EditEventPage extends StatefulWidget {
-  const EditEventPage({Key? key}) : super(key: key);
+  const EditEventPage({Key? key,}) : super(key: key);
 
   @override
   _EditEventPageState createState() => _EditEventPageState();

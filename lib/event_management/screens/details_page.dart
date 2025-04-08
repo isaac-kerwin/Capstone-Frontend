@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'ticket_management_page.dart';
+import 'package:first_app/event_management/services/report_service.dart';
 import 'questionnaire_management_page.dart';
+import 'package:first_app/data/participant_data.dart';
+import 'edit_event_page.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({super.key});
 
   @override
+
+  _createReport(){
+    ReportService reportService = ReportService();
+    reportService.generatePdfReport(getParticipantData());
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +45,7 @@ class DetailsPage extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // TODO: Add generate report navigation
+                _createReport();
               },
               style: _buttonStyle(),
               child: const Text(
@@ -58,7 +67,10 @@ class DetailsPage extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // TODO: Add edit event info logic
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const EditEventPage()),
+                );
               },
               style: _buttonStyle(),
               child: const Text(

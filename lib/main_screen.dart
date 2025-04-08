@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   // List of screens that correspond to the bottom navigation items.
   final List<Widget> _screens = [
     Explore(),
-    OrganiserDashboard(organiserId: 1), // Example organiserId  
+    OrganiserDashboard(organiserId: 1, key: Key('organiser_dashboard_home'),), // Example organiserId  
     LoginScreen(),
   ];
 
@@ -45,6 +45,7 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard),
             label: 'Dashboard',
+            key: Key('organiser_dashboard_nav')
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.login),
