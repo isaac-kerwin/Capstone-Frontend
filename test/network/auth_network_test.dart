@@ -16,7 +16,7 @@ void main() {
     dioClient = DioClient(customDio: mockDio);
   });
 
-  group('T2.1.x - loginUser & handleAccessToken', () {
+  group('loginUser & handleAccessToken Tests', () {
     test('T2.1.1 - loginUser with valid credentials and success response', () async {
       final fakeResponse = {
         "success": true,
