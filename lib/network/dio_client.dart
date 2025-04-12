@@ -1,20 +1,21 @@
+// import 'dart:ffi';
+
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:flutter/material.dart';
 import 'auth.dart';
 
 class DioClient {
+  static final DioClient _instance = DioClient._internal();
+  factory DioClient() => _instance;
 
   final Dio dio;
-
-  DioClient({Dio? customDio}) : dio = customDio ?? Dio();
-  static final DioClient _instance = DioClient._internal();
-
   final CookieJar cookieJar = CookieJar();
 
   DioClient._internal()
       : dio = Dio(BaseOptions(
-          baseUrl: "http://10.0.2.2:3000/api",
+          baseUrl: "http://127.0.0.1:3000/api",
           contentType: "application/json",
           connectTimeout: Duration(seconds: 10),
           receiveTimeout: Duration(seconds: 10),
@@ -29,5 +30,4 @@ class DioClient {
   }
 }
 
-var dioClient = DioClient();
-  
+final dioClient = DioClient();

@@ -15,6 +15,7 @@ class CreateEventPage extends StatefulWidget {
 class _CreateEventPageState extends State<CreateEventPage> {
   // Controllers
   final TextEditingController _eventNameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _capacityController = TextEditingController();
@@ -32,41 +33,44 @@ class _CreateEventPageState extends State<CreateEventPage> {
         '${TimeOfDay.fromDateTime(dateTime).format(context)}';
   }
 
-  /// ----------------------------------
-  ///   Main build method
-  /// ----------------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create New Event'),
+        title: const Text('Enter Event Details Here'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildTextField(label: 'Event Name', controller: _eventNameController),
-            const SizedBox(height: 16),
-            buildTextField(label: 'Location', controller: _locationController),
-            const SizedBox(height: 16),
-            buildTextField(label: 'Description', controller: _descriptionController),
-            const SizedBox(height: 16),
-            buildTextField(label: 'Capacity', controller: _capacityController, isNumber: true),
-            const SizedBox(height: 16),
+            _buildFormField('Event Name', _eventNameController),
+            const SizedBox(height: 20),
+            _buildFormField('Price', _priceController, isNumber: true),
+            const SizedBox(height: 20),
+            _buildFormField('Location', _locationController),
+            const SizedBox(height: 20),
+            _buildFormField('Maximum Capacity', _capacityController, isNumber: true),
+            const SizedBox(height: 20),
+            _buildFormField('Description', _descriptionController, maxLines: 3),
+            const SizedBox(height: 20),
             _buildEventTypeDropdown(),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             _buildDateTimeRow(
               label: 'Starts on: ${_formatDateTime(_startDateTime)}',
               onPressed: () => _pickDateTime(isStart: true),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             _buildDateTimeRow(
               label: 'Ends on: ${_formatDateTime(_endDateTime)}',
               onPressed: () => _pickDateTime(isStart: false),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             _buildIsFreeSwitch(),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
+            _buildPhotoUploadButton(),
+            const SizedBox(height: 40),
             _buildContinueButton(),
           ],
         ),
@@ -74,50 +78,111 @@ class _CreateEventPageState extends State<CreateEventPage> {
     );
   }
 
-// Build Widgets
-
-  // Event Type Dropdown
-  _buildEventTypeDropdown() {
-    const List<DropdownMenuEntry<String>> items = [
-      DropdownMenuEntry(value: 'SPORTS', label: 'SPORTS'),
-      DropdownMenuEntry(value: 'MUSIC', label: 'MUSIC'  ),
-      DropdownMenuEntry(value: 'FOOD', label: 'FOOD'    ),
-      DropdownMenuEntry(value: 'ART', label: 'ART'      ),
-    ];
-
-
-    return buildDropdownMenu(
-      items: items,
-      onSelected: (value) {
-        setState(() {
-          _selectedEventType = value;
-          });
-        },
-    );
-  }
-
-  // Date/Time picker row (label + button)
-  Widget _buildDateTimeRow({
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return Row(
+  Widget _buildFormField(String label, TextEditingController controller, {bool isNumber = false, int maxLines = 1}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: Text(label)),
-        TextButton(
-          onPressed: onPressed,
-          child: const Text('Choose Date'),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+          maxLines: maxLines,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 12,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  // Free-event Switch
+  Widget _buildEventTypeDropdown() {
+    const List<DropdownMenuEntry<String>> items = [
+      DropdownMenuEntry(value: 'SPORTS', label: 'SPORTS'),
+      DropdownMenuEntry(value: 'MUSIC', label: 'MUSIC'),
+      DropdownMenuEntry(value: 'FOOD', label: 'FOOD'),
+      DropdownMenuEntry(value: 'ART', label: 'ART'),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Event Type',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        buildDropdownMenu(
+          items: items,
+          onSelected: (value) {
+            setState(() {
+              _selectedEventType = value;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDateTimeRow({
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.split(':')[0] + ':',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                label.split(':')[1].trim(),
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+            TextButton(
+              onPressed: onPressed,
+              child: const Text('Choose Date'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildIsFreeSwitch() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text('Is this a free event?'),
+        const Text(
+          'Is this a free event?',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         Switch(
           value: _isFree,
           onChanged: (value) {
@@ -130,16 +195,59 @@ class _CreateEventPageState extends State<CreateEventPage> {
     );
   }
 
-  // Continue button
-  Widget _buildContinueButton() {
-    return ActionButton(
-      onPressed: _onContinue,
-      text: 'Continue',
-      icon: Icons.arrow_forward,
+  Widget _buildPhotoUploadButton() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Upload photo from device',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        OutlinedButton(
+          onPressed: () {
+            // Implement photo upload functionality
+          },
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.upload),
+              SizedBox(width: 8),
+              Text('Upload Photo'),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-// Date/Time picker logic
+  Widget _buildContinueButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _onContinue,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: const Text(
+          'Continue',
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
 
   Future<void> _pickDateTime({required bool isStart}) async {
     final DateTime now = DateTime.now();
@@ -156,7 +264,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
     if (pickedDate == null) return;
 
-    // Show TimePicker
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(current ?? now),
@@ -183,52 +290,43 @@ class _CreateEventPageState extends State<CreateEventPage> {
       }
     });
   }
-List<TicketDTO> _createFreeTicket() {
-      TicketDTO ticket = TicketDTO(
-        name: 'Free Ticket',
-        description: 'Free ticket for the event',
-        price: 0.0,
-        quantityTotal: int.parse(_capacityController.text.trim()),
-        salesStart: _startDateTime!,
-        salesEnd: _endDateTime!,
-      );
-      List <TicketDTO> tickets = [ticket];
-      return tickets;
+
+  List<TicketDTO> _createFreeTicket() {
+    TicketDTO ticket = TicketDTO(
+      name: 'Free Ticket',
+      description: 'Free ticket for the event',
+      price: 0.0,
+      quantityTotal: int.parse(_capacityController.text.trim()),
+      salesStart: _startDateTime!,
+      salesEnd: _endDateTime!,
+    );
+    return [ticket];
   }
 
-  // Handle the Continue button press
-  // Validate inputs and navigate to the next screen
-// continue logic
   void _onContinue() {
     final eventName = _eventNameController.text.trim();
     final description = _descriptionController.text.trim();
     final location = _locationController.text.trim();
     final capacity = int.tryParse(_capacityController.text.trim()) ?? 0;
 
-    // Basic validations
     if (eventName.isEmpty ||
         description.isEmpty ||
         location.isEmpty ||
         _startDateTime == null ||
         _endDateTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill out all fields!'),
-        ),
+        const SnackBar(content: Text('Please fill out all fields!')),
       );
       return;
     }
 
     if (capacity <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Capacity must be greater than 0!'),
-        ),
+        const SnackBar(content: Text('Capacity must be greater than 0!')),
       );
       return;
     }
 
-    // Collect data
     final Map<String, dynamic> eventData = {
       'eventName': eventName,
       'description': description,
@@ -242,22 +340,19 @@ List<TicketDTO> _createFreeTicket() {
 
     if (_isFree) {
       eventData['tickets'] = _createFreeTicket();
-      Navigator.push(context,
+      Navigator.push(
+        context,
         MaterialPageRoute(
           builder: (context) => CreateEventQuestions(eventData: eventData),
         ),
       );
-     // No tickets for free events
     } else {
       Navigator.push(
-      context,
-      MaterialPageRoute(
-         builder: (context) => TicketManagementScreen(eventData: eventData)
-      ),
-    ); // Placeholder for ticket data
+        context,
+        MaterialPageRoute(
+          builder: (context) => TicketManagementScreen(eventData: eventData),
+        ),
+      );
     }
-
-    // Navigate to next screen
-
   }
 }
