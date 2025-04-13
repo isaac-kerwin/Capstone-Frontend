@@ -20,12 +20,14 @@ class _ExploreState extends State<Explore> {
   }
 
   void _register(EventDetails event) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => RegistrationForm(eventId: event.id),
-      ),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => RegistrationForm(eventId: event.id),
+        ),
+      );
+    });
   }
 
   Widget _buildEventItem(EventDetails event) {

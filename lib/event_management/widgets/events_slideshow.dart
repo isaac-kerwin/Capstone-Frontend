@@ -22,11 +22,11 @@ class EventSlideshow extends StatelessWidget {
     );
   }
 
-  _moreDetails(){
+  _moreDetails(event){
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailsPage(),
+        builder: (context) => DetailsPage(event: event),
       ),
     );  
   }
@@ -44,11 +44,16 @@ class EventSlideshow extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                EventInfoTile(event: event,),
+                EventInfoTile(event: event),
                 const SizedBox(height: 4),
-                ActionButton(text: "Create Event", icon: Icons.arrow_forward, onPressed: _createEvent, key: Key('create_event_button')),
+                ActionButton(text: "Create Event", icon: Icons.arrow_forward, 
+                              onPressed: _createEvent,
+                              key: Key('create_event_button')),
                 const SizedBox(height: 16),
-                ActionButton(text: "Event Details", icon: Icons.arrow_forward, onPressed: _moreDetails, key: Key('event_details_button')),
+                ActionButton(text: "Event Details", 
+                            icon: Icons.arrow_forward, 
+                            onPressed: () => _moreDetails(event), 
+                            key: Key('event_details_button')),
               ],
             ),
           );

@@ -51,10 +51,6 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.login),
             label: 'Login',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.align_horizontal_left_sharp ),
-            label: 'In Progress',
-          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,

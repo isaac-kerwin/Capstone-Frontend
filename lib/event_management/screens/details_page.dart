@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 import 'ticket_management_page.dart';
-import 'package:first_app/event_management/services/report_service.dart';
 import 'questionnaire_management_page.dart';
-import 'package:first_app/data/participant_data.dart';
 import 'edit_event_page.dart';
+import 'package:first_app/event_management/services/report_service.dart';
+import 'package:first_app/data/participant_data.dart';
+import 'package:first_app/models/event.dart'; // Assuming EventWithQuestions or Event is here
 
-class DetailsPage extends StatelessWidget {
-  const DetailsPage({super.key});
+class DetailsPage extends StatefulWidget {
+  final EventDetails event; 
+  const DetailsPage({super.key
+      , required this.event});
+  
 
   @override
+  State<DetailsPage> createState() => _DetailsPageState();
+}
 
-  _createReport(){
-    ReportService reportService = ReportService();
+class _DetailsPageState extends State<DetailsPage> {
+  void _createReport() {
+    final reportService = ReportService();
     reportService.generatePdfReport(getParticipantData());
   }
 
+  void _navigateTo(BuildContext context, Widget page) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -29,71 +44,44 @@ class DetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TicketManagementPage()),
-                );
-              },
-              style: _buttonStyle(),
-              child: const Text(
-                'TICKET MANAGEMENT',
-                style: TextStyle(color: Colors.white),
-              ),
+            _buildDashboardButton(
+              label: 'TICKET MANAGEMENT',
+              onPressed: () => _navigateTo(context, const TicketManagementPage()),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                _createReport();
-              },
-              style: _buttonStyle(),
-              child: const Text(
-                'GENERATE EVENT REPORT',
-                style: TextStyle(color: Colors.white),
-              ),
+            _buildDashboardButton(
+              label: 'GENERATE EVENT REPORT',
+              onPressed: _createReport,
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
+            _buildDashboardButton(
+              label: 'GENERATE EXTERNAL URL',
               onPressed: () {
-                // TODO: Add external URL logic
+                // TODO: Implement external URL logic
               },
-              style: _buttonStyle(),
-              child: const Text(
-                'GENERATE EXTERNAL URL',
-                style: TextStyle(color: Colors.white),
-              ),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
+            _buildDashboardButton(
+              label: 'EDIT EVENT INFORMATION',
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const EditEventPage()),
-                );
+                // TODO: Replace with the correct Event instance
+                _navigateTo(context, EditEventPage(event: widget.event));
               },
-              style: _buttonStyle(),
-              child: const Text(
-                'EDIT EVENT INFORMATION',
-                style: TextStyle(color: Colors.white),
-              ),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const QuestionnaireManagementPage()),
-                );
-              },
-              style: _buttonStyle(),
-              child: const Text(
-                'QUESTIONNAIRE MANAGEMENT',
-                style: TextStyle(color: Colors.white),
-              ),
+            _buildDashboardButton(
+              label: 'QUESTIONNAIRE MANAGEMENT',
+              onPressed: () => _navigateTo(context, const QuestionnaireManagementPage()),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDashboardButton({required String label, required VoidCallback onPressed}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: _buttonStyle(),
+        child: Text(label, style: const TextStyle(color: Colors.white)),
       ),
     );
   }

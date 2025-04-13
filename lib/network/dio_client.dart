@@ -1,5 +1,3 @@
-// import 'dart:ffi';
-
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
@@ -14,7 +12,7 @@ class DioClient {
 
   DioClient._internal()
       : dio = Dio(BaseOptions(
-          baseUrl: "http://127.0.0.1:3000/api",
+          baseUrl: "http://10.0.2.2:3000/api",
           contentType: "application/json",
           connectTimeout: Duration(seconds: 10),
           receiveTimeout: Duration(seconds: 10),
