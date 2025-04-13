@@ -21,9 +21,7 @@ class CreateEventQuestions extends StatefulWidget {
 }
 
 class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
-  // List to store added questions.
-  List< CreateQuestionDTO> questions = [];
-
+  
   // Opens the pop-up dialog to create a new question.
   Future<void> _openCreateQuestionDialog() async {
     final  CreateQuestionDTO? newQuestion = await showDialog< CreateQuestionDTO>(
@@ -32,7 +30,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     );
     if (newQuestion != null) {
       setState(() {
-        questions.add(newQuestion);
+        widget.eventData["questions"].add(newQuestion);
       });
     }
   }
@@ -68,14 +66,13 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
 
   // Continue button action: check that at least one question is added and navigate.
   Future<void> _continue() async {
-    if (questions.isEmpty) {
+    if (widget.eventData["questions"].isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add at least one question.')),
       );
 
       return;
     }
-    widget.eventData['questions'] = questions;
     await _unpackAndCreateEvent(widget.eventData);
     
         // Alternatively, if you want to remove all previous routes, use:
@@ -88,13 +85,13 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
   }
 
   _buildQuestionList() {
-    if (questions.isEmpty) {
+    if (widget.eventData["questions"].isEmpty) {
       return const Center(child: Text('No questions added yet.'));
     }
     return ListView.builder(
-      itemCount: questions.length,
+      itemCount: widget.eventData["questions"].length,
       itemBuilder: (context, index) {
-        final question = questions[index];
+        final question = widget.eventData["questions"][index];
         return ListTile(
           title: Text(question.questionText),
           subtitle: Text(

@@ -1,4 +1,4 @@
-import 'package:first_app/event_creation/screens/screen4_questions.dart';
+import 'package:first_app/event_creation/screens/event_questions.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/fundamental_widgets/form_widgets.dart';
 import 'package:first_app/fundamental_widgets/action_button.dart';

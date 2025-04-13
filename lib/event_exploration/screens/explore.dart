@@ -102,7 +102,7 @@ class _ExploreState extends State<Explore> {
       {'label': 'Sports', 'icon': Icons.sports_basketball, 'color': Colors.orange},
       {'label': 'Music', 'icon': Icons.music_note, 'color': Colors.redAccent},
       {'label': 'Food', 'icon': Icons.fastfood, 'color': Colors.green},
-      {'label': 'Food', 'icon': Icons.palette, 'color': Colors.blue},
+      {'label': 'Art', 'icon': Icons.palette, 'color': Colors.blue},
     ];
 
     return Scaffold(

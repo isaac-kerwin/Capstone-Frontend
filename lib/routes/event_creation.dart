@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:first_app/event_creation/screens/screen1_details.dart';
-import 'package:first_app/event_creation/screens/screen2_tickets.dart';
-import 'package:first_app/event_creation/screens/screen3_bank_info.dart';
-import 'package:first_app/event_creation/screens/screen4_questions.dart';
+import 'package:first_app/event_creation/screens/event_details.dart';
+import 'package:first_app/event_creation/screens/create_tickets.dart';
+import 'package:first_app/event_creation/screens/bank_info.dart';
+import 'package:first_app/event_creation/screens/event_questions.dart';
 
 
 

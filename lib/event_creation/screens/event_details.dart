@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/event_creation/screens/screen2_tickets.dart';
+import 'package:first_app/event_creation/screens/create_tickets.dart';
 import 'package:first_app/fundamental_widgets/form_widgets.dart';
 import 'package:first_app/fundamental_widgets/action_button.dart';
 import 'package:first_app/models/tickets.dart';
-import 'package:first_app/event_creation/screens/screen4_questions.dart';
+import 'package:first_app/event_creation/screens/event_questions.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -15,7 +15,6 @@ class CreateEventPage extends StatefulWidget {
 class _CreateEventPageState extends State<CreateEventPage> {
   // Controllers
   final TextEditingController _eventNameController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _capacityController = TextEditingController();
@@ -45,15 +44,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildFormField('Event Name', _eventNameController),
-            const SizedBox(height: 20),
-            _buildFormField('Price', _priceController, isNumber: true),
-            const SizedBox(height: 20),
-            _buildFormField('Location', _locationController),
-            const SizedBox(height: 20),
-            _buildFormField('Maximum Capacity', _capacityController, isNumber: true),
-            const SizedBox(height: 20),
-            _buildFormField('Description', _descriptionController, maxLines: 3),
+            buildTextField(label: 'Event Name', controller: _eventNameController),
+            const SizedBox(height: 16),
+            buildTextField(label: 'Location', controller: _locationController),
+            const SizedBox(height: 16),
+            buildTextField(label: 'Description', controller: _descriptionController, maxLines: 3),
+            const SizedBox(height: 16),
+            buildTextField(label: 'Capacity', controller: _capacityController, isNumber: true),
             const SizedBox(height: 20),
             _buildEventTypeDropdown(),
             const SizedBox(height: 20),
@@ -70,41 +67,11 @@ class _CreateEventPageState extends State<CreateEventPage> {
             _buildIsFreeSwitch(),
             const SizedBox(height: 20),
             _buildPhotoUploadButton(),
-            const SizedBox(height: 40),
+            const SizedBox(height: 40), 
             _buildContinueButton(),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildFormField(String label, TextEditingController controller, {bool isNumber = false, int maxLines = 1}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 12,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
