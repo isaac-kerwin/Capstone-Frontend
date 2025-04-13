@@ -4,6 +4,7 @@ import 'package:first_app/fundamental_widgets/form_widgets.dart';
 import 'package:first_app/fundamental_widgets/action_button.dart';
 import 'package:first_app/models/tickets.dart';
 import 'package:first_app/event_creation/screens/event_questions.dart';
+import 'package:first_app/event_creation/screens/event_common_questions.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);
@@ -310,7 +311,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CreateEventQuestions(eventData: eventData),
+          builder: (context) => CommonQuestions(eventData: eventData),
         ),
       );
     } else {

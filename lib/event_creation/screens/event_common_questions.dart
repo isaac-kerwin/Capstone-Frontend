@@ -18,8 +18,8 @@ import 'package:first_app/models/question.dart';
    bool enablePhoneNumber = false;
    bool enableDOB = false;
 
-   _addToggledQuestions(enableFirstName, enableLastName, enablePhoneNumber, enableDOB) {
-      List<CreateQuestionDTO> questions = [];
+   _addToggledQuestions(enableFirstName, enableLastName, enablePhoneNumber, enableDOB, questions) {
+
       if (enableFirstName) {
           questions.add(CreateQuestionDTO(
             questionText: 'First Name',
@@ -48,12 +48,11 @@ import 'package:first_app/models/question.dart';
             displayOrder: 4,
           ));
       }
-     return questions;
    }
 
     _onContinue() {
-      List<CreateQuestionDTO> questions = _addToggledQuestions(enableFirstName, enableLastName, enablePhoneNumber, enableDOB);
-      // Naviagte to event_questions.dart and pass the questions list.  
+      List<CreateQuestionDTO> questions = [];
+      _addToggledQuestions(enableFirstName, enableLastName, enablePhoneNumber, enableDOB, questions);
       widget.eventData['questions'] = questions;  
       Navigator.push(
         context,
@@ -63,7 +62,6 @@ import 'package:first_app/models/question.dart';
           ),
         ),
       );
-    
    }
  
    @override
@@ -113,15 +111,7 @@ import 'package:first_app/models/question.dart';
              const SizedBox(height: 20),
              ElevatedButton(
                onPressed: () {
-                 // Navigate to the ResultPage, passing along the selected toggle states.
-                 Navigator.push(
-                   context,
-                   MaterialPageRoute(
-                     builder: (_) => CreateEventQuestions(
-                        eventData: widget.eventData,
-                     ),
-                   ),
-                 );
+                _onContinue();
                },
                child: const Text('Continue'),
              ),
