@@ -68,7 +68,7 @@ class _EventInfoTileState extends State<EventInfoTile> {
             EventInfoItem(
               icon: Icons.location_on,
               iconColor: Colors.blue,
-              title: 'Royal Exhibition Building',
+              title: event.location,
 
             ),
             const SizedBox(height: 32),

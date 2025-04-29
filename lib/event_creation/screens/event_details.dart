@@ -37,7 +37,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Enter Event Details Here'),
+        title: const Text('Your Event Details'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

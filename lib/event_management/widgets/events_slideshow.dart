@@ -40,7 +40,7 @@ class EventSlideshow extends StatelessWidget {
         itemBuilder: (context, index) {
           final event = eventsList[index];
           return Center(
-            child: Column(
+          child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
