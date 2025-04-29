@@ -12,7 +12,7 @@ class DioClient {
 
   DioClient._internal()
       : dio = Dio(BaseOptions(
-          baseUrl: "http://10.0.2.2:3000/api",
+          baseUrl: "https://eventregistrationsystem-backend.onrender.com/api",
           contentType: "application/json",
           connectTimeout: Duration(seconds: 10),
           receiveTimeout: Duration(seconds: 10),
