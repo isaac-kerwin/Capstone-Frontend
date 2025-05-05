@@ -56,16 +56,16 @@ Future<void> refreshToken() async {
 }
 
 // TO DO ADD PROPER SUCESSFUL RESPONSE HANDLING
-Future<void> registerUser(RegisterUserDTO data) async {
+Future<bool> registerUser(RegisterUserDTO data) async {
   try {
-    final response =
-        await dioClient.dio.post("/auth/register", data: data.toJson());
-    if (response.statusCode == 200) {
-      print("User registered successfully $response");
+    final response = await dioClient.dio.post("/auth/register", data: data.toJson());
+    if (response.data["success"]) {
+      return true;
     } else {
-      print("User registration failed");
+      return false;
     }
   } catch (error) {
-    print("Error registering user: $error");
+    false;
   }
+  return false;
 }

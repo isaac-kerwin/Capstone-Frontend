@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/network/auth.dart';
-import 'package:first_app/models/user.dart'; // For SystemChrome.setPreferredOrientations
+import 'package:first_app/models/user.dart';
+import 'package:first_app/login_and_register/screens/registration_confirmation_page.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -31,17 +32,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text;
 
     try {
-      await registerUser(RegisterUserDTO(
+      bool success = await registerUser(RegisterUserDTO(
         firstName: firstName,
         lastName: lastName,
         email: email,
         password: password,
       ));
-
+    
+      if(success){        
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration successful')),
-      );
-
+          const SnackBar(content: Text('Registration successful')),
+          // Navigate to confirmation screen 
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RegistrationConfirmationScreen(
+              firstName: firstName,
+              email: email,
+            ),
+          ),
+        );
+      }
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration failed. Please try again.')),
+        );
+      }
       // Navigate or reset form here if needed
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -124,8 +141,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   border: OutlineInputBorder(),
                 ),
                 obscureText: true,
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Password is required' : null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Password is required';
+                  if (value.length < 8) return 'Password must be at least 8 characters';
+                  return null;
+                },
               ),
               const SizedBox(height: 16),
 
