@@ -3,7 +3,6 @@ import 'ticket_management_page.dart';
 import 'questionnaire_management_page.dart';
 import 'edit_event_page.dart';
 import 'package:first_app/event_management/services/report_service.dart';
-import 'package:first_app/data/participant_data.dart';
 import 'package:first_app/models/event.dart'; // Assuming EventWithQuestions or Event is here
 
 class DetailsPage extends StatefulWidget {
@@ -17,11 +16,11 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  void _createReport() {
-    final reportService = ReportService();
-    reportService.generatePdfReport(getParticipantData());
-  }
-
+  /*   void _createReport() {
+      final reportService = ReportService();
+      reportService.generatePdfReport(getParticipantData());
+    }
+  */
   void _navigateTo(BuildContext context, Widget page) {
     Navigator.push(
       context,
@@ -48,10 +47,10 @@ class _DetailsPageState extends State<DetailsPage> {
               label: 'TICKET MANAGEMENT',
               onPressed: () => _navigateTo(context, const TicketManagementPage()),
             ),
-            _buildDashboardButton(
+/*             _buildDashboardButton(
               label: 'GENERATE EVENT REPORT',
-              onPressed: _createReport,
-            ),
+              //onPressed: _createReport,
+            ), */
             _buildDashboardButton(
               label: 'GENERATE EXTERNAL URL',
               onPressed: () {

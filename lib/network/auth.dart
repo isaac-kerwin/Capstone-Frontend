@@ -7,7 +7,7 @@ import "package:first_app/models/user.dart";
 String? accessToken;
 
 //Implemented
-Future<void> loginUser(String email, String password) async {
+Future<bool> loginUser(String email, String password) async {
   try {
     final response = await dioClient.dio.post(
       "/auth/login",
@@ -17,11 +17,12 @@ Future<void> loginUser(String email, String password) async {
       final Map<String, dynamic> responseData = response.data;
       final String newAccessToken = responseData["data"]?["accessToken"];
       handleAccessToken(newAccessToken);
+      return true;
     } else {
-      print("Login failed: ${response.data}");
+      return false;
     }
   } catch (error) {
-    print("Login error: $error");
+    return false;
   }
 }
 

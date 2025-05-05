@@ -1,54 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/network/auth.dart';
 import 'package:first_app/models/user.dart'; // For SystemChrome.setPreferredOrientations
-
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
-  
+
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // Controllers for the text fields.
+  final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController  = TextEditingController();
-  final TextEditingController _emailController     = TextEditingController();
-  final TextEditingController _passwordController  = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  // Registration function (add your own registration logic here)
+  bool _isValidEmail(String email) {
+    const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    return RegExp(pattern).hasMatch(email);
+  }
+
   Future<void> _register() async {
-    final String firstName = _firstNameController.text.trim();
-    final String lastName = _lastNameController.text.trim();
-    final String email = _emailController.text.trim();
-    final String password = _passwordController.text;
-    final String confirmPassword = _confirmPasswordController.text;
-    
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
-      return;
-    }
-    
-    await registerUser(
-      RegisterUserDTO(
+    if (!_formKey.currentState!.validate()) return;
+
+    final firstName = _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim();
+    final email = _emailController.text.toLowerCase().trim();
+    final password = _passwordController.text;
+
+    try {
+      await registerUser(RegisterUserDTO(
+        firstName: firstName,
+        lastName: lastName,
         email: email,
         password: password,
-        lastName: lastName,
-        firstName: firstName,
-      ),
-    );
+      ));
 
-    // Proceed with your registration logic
-    debugPrint('Registering: $firstName $lastName, Email: $email');
-    // You can also navigate to another screen or display a success message here.
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration successful')),
+      );
+
+      // Navigate or reset form here if needed
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration failed. Please try again.')),
+      );
+    }
   }
-  
+
   @override
   void dispose() {
-    // Dispose all controllers to free up resources.
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
@@ -56,71 +59,98 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register Account'),
-      ),
+      appBar: AppBar(title: const Text('Register Account')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // First Name field
-            TextField(
-              controller: _firstNameController,
-              decoration: const InputDecoration(
-                labelText: 'First Name',
-                border: OutlineInputBorder(),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              // First Name
+              TextFormField(
+                controller: _firstNameController,
+                decoration: const InputDecoration(
+                  labelText: 'First Name',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) return 'First name is required';
+                  if (RegExp(r'[0-9]').hasMatch(value)) return 'First name cannot contain numbers';
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 16),
-            // Last Name field
-            TextField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(
-                labelText: 'Last Name',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 16),
+
+              // Last Name
+              TextFormField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(
+                  labelText: 'Last Name',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) return 'Last name is required';
+                  if (RegExp(r'[0-9]').hasMatch(value)) return 'Last name cannot contain numbers';
+                  return null;
+                },
               ),
-            ),
-            const SizedBox(height: 16),
-            // Email field
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 16),
+
+              // Email
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) return 'Email is required';
+                  if (!_isValidEmail(value.trim())) return 'Enter a valid email';
+                  return null;
+                },
               ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-            // Password field
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 16),
+
+              // Password
+              TextFormField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Password is required' : null,
               ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            // Confirm Password field
-            TextField(
-              controller: _confirmPasswordController,
-              decoration: const InputDecoration(
-                labelText: 'Confirm Password',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 16),
+
+              // Confirm Password
+              TextFormField(
+                controller: _confirmPasswordController,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
+                  border: OutlineInputBorder(),
+                ),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Please confirm your password';
+                  if (value != _passwordController.text) return 'Passwords do not match';
+                  return null;
+                },
               ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 24),
-            // Register Button
-            ElevatedButton(
-              onPressed: _register,
-              child: const Text('Register'),
-            ),
-          ],
+              const SizedBox(height: 24),
+
+              ElevatedButton(
+                onPressed: _register,
+                child: const Text('Register'),
+              ),
+            ],
+          ),
         ),
       ),
     );

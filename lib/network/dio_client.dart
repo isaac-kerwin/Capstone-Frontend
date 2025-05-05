@@ -12,7 +12,7 @@ class DioClient {
 
   DioClient._internal()
       : dio = Dio(BaseOptions(
-          baseUrl: "https://eventregistrationsystem-backend.onrender.com/api",
+          baseUrl: "http://10.0.2.2:3000/api",
           contentType: "application/json",
           connectTimeout: Duration(seconds: 10),
           receiveTimeout: Duration(seconds: 10),
@@ -29,7 +29,9 @@ class DioClient {
 
 final dioClient = DioClient();
 
-/* import 'package:dio/dio.dart';
+/* 
+Enable when testing using mockito 
+import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'auth.dart';
