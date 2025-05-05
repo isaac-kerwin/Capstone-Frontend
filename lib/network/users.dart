@@ -4,11 +4,6 @@ import 'package:first_app/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:first_app/network/auth.dart';
 
-// To do 
-
-// NOT WORKING IN BACKEND YET
-Future<void> getUserProfile(int id) async {}
-Future<void> changePassword(int id, Struct passwordUpdate) async {}
 
 Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) async {
   try {
@@ -31,8 +26,28 @@ Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) asyn
   } 
 }
 
-// WORKING IN BACKEND
-// ADMIN role endpoints
+Future<UserProfile?> getUserProfile() async {
+  try {
+    final response = await dioClient.dio.get("user/profile"
+      , options: Options(
+        headers:{
+          'Authorization': 'Bearer ${accessToken}',
+        },
+    ));
+    if (response.data["success"]){
+      final UserProfile userProfile = UserProfile.fromJson(response.data["data"]);
+      return userProfile;
+    }
+    else {
+      return null;
+    }
+  }
+  catch (error) {
+    print("Error retrieving user profile: $error");
+    return null;
+  }
+}
+
 Future<void> createUser(CreateUserDTO user) async {
   try {
     final response = await dioClient.dio.post(
@@ -142,5 +157,3 @@ Future<void> deleteUser(int id) async {
     print("Error deleting user: $error");
   }
 }
-
-// Implementation

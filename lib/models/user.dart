@@ -79,7 +79,36 @@ class User{
         updatedAt: DateTime.parse(json["updatedAt"]));
   }
 }
-class UserProfile{}
+class UserProfile{
+  final int id;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String phoneNo;
+  final String role;
+
+  UserProfile(
+      {required this.id,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.phoneNo,
+      required this.role}
+    );
+    
+    factory UserProfile.fromJson(Map<String, dynamic> json) {
+
+      return UserProfile(
+        id: json["id"],
+        firstName: json["firstName"],
+        lastName: json["lastName"],
+        email: json["email"],
+        phoneNo: json["phoneNo"],
+        role: json["role"]
+      );
+    }
+
+}
 class ChangePasswordDTO{
   final String oldPassword;
   final String newPassword;
