@@ -78,13 +78,12 @@ class User{
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]));
   }
-}
-class UserProfile{
+}class UserProfile{
   final int id;
   final String firstName;
   final String lastName;
   final String email;
-  final String phoneNo;
+  final String? phoneNo;
   final String role;
 
   UserProfile(
@@ -92,10 +91,10 @@ class UserProfile{
       required this.firstName,
       required this.lastName,
       required this.email,
-      required this.phoneNo,
+      this.phoneNo,
       required this.role}
     );
-    
+
     factory UserProfile.fromJson(Map<String, dynamic> json) {
 
       return UserProfile(

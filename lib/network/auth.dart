@@ -1,4 +1,3 @@
-
 import "package:first_app/network/dio_client.dart";
 import "package:first_app/models/user.dart";
 
@@ -28,9 +27,6 @@ Future<bool> loginUser(String email, String password) async {
 
 void handleAccessToken(String? newAccessToken) async {
   if (newAccessToken != null) {
-    accessToken == newAccessToken
-        ? print("Access Token the same.")
-        : print("Access Token different.");
     accessToken = newAccessToken;
     print("Login successful! Access Token stored.");
   } else {
@@ -65,7 +61,6 @@ Future<bool> registerUser(RegisterUserDTO data) async {
       return false;
     }
   } catch (error) {
-    false;
+    return false;
   }
-  return false;
 }

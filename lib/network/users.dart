@@ -25,24 +25,23 @@ Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) asyn
     print("Error updating user profile: $error");
   } 
 }
-
 Future<UserProfile?> getUserProfile() async {
   try {
-    final response = await dioClient.dio.get("user/profile"
-      , options: Options(
-        headers:{
-          'Authorization': 'Bearer ${accessToken}',
+    final response = await dioClient.dio.get(
+      "/user/profile",            // ← leading slash here
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
         },
-    ));
-    if (response.data["success"]){
-      final UserProfile userProfile = UserProfile.fromJson(response.data["data"]);
-      return userProfile;
-    }
-    else {
+      ),
+    );
+
+    if (response.data["success"]) {
+      return UserProfile.fromJson(response.data["data"]);
+    } else {
       return null;
     }
-  }
-  catch (error) {
+  } catch (error) {
     print("Error retrieving user profile: $error");
     return null;
   }
@@ -155,5 +154,18 @@ Future<void> deleteUser(int id) async {
     }
   } catch (error) {
     print("Error deleting user: $error");
+  }
+}
+/// Returns the raw 'role' string, or null on any error.
+Future<String?> getUserRole() async {
+  try {
+    final resp = await dioClient.dio.get("/user/profile");
+    final data = resp.data["data"];
+    final role = data["role"];
+    if (role is String) return role;
+    return null;
+  } catch (e) {
+    print("Error fetching role: $e");
+    return null;
   }
 }

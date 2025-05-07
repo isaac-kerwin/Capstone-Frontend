@@ -1,9 +1,12 @@
+// lib/login_and_register/screens/login.dart
+
 import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:first_app/login_and_register/screens/register_account.dart';
 import 'package:first_app/network/auth.dart';
+import 'package:first_app/network/users.dart';           // ← getUserProfile()
 import 'package:first_app/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,28 +23,45 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isValidEmail(String email) {
     const pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-    final regExp = RegExp(pattern);
-    return regExp.hasMatch(email);
+    return RegExp(pattern).hasMatch(email);
   }
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final email = _emailController.text.toLowerCase().trim();
+    final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text;
 
     try {
       final success = await loginUser(email, password);
+      if (!success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Login failed: bad credentials")),
+        );
+        return;
+      }
 
-      final snackBar = SnackBar(
-        content: Text(success
-            ? "Login successful"
-            : "Login failed: please ensure email and password are correct"),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } catch (_) {
+      // **Fetch the full profile** and inspect .role :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+      final profile = await getUserProfile();
+      final isOrganizer = profile?.role == 'ORGANIZER';
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login failed: please try again later')),
+        const SnackBar(content: Text("Login successful")),
+      );
+
+      // Navigate to MainScreen, landing on Dashboard (1) for organizers,
+      // or Explore (0) otherwise
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => MainScreen(
+            initialIndex: isOrganizer ? 1 : 0,
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Login error: please try again later")),
       );
     }
   }
@@ -63,17 +83,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login'),
-      leading: IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const MainScreen()),
-      ); // Goes back to previous screen
-    },
-    ),
-  ),
+      appBar: AppBar(
+        title: const Text('Login'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const MainScreen()),
+            );
+          },
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -88,13 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Email is required';
-                  }
-                  if (!_isValidEmail(value.trim())) {
-                    return 'Enter a valid email address';
-                  }
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Email is required';
+                  if (!_isValidEmail(v.trim())) return 'Enter a valid email address';
                   return null;
                 },
               ),
@@ -106,10 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: OutlineInputBorder(),
                 ),
                 obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Password is required';
-                  }
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Password is required';
                   return null;
                 },
               ),
