@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:first_app/event_exploration/screens/explore.dart';
 import 'package:first_app/event_management/screens/organiser_dashboard_home.dart';
 import 'package:first_app/login_and_register/screens/login.dart';
+import 'package:first_app/get_user.dart';
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
@@ -41,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
         const SnackBar(
           content: Text('Access denied: Organizer dashboard is for organizers only.'),
         ),
+
       );
       return;
     }

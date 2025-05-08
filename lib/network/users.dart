@@ -36,12 +36,17 @@ Future<UserProfile?> getUserProfile() async {
       ),
     );
 
-    if (response.data["success"]) {
+        print("Data: ${response.data["data"]}");
+        print("Success: ${response.data["success"]}");
+
+
+    if (response.data["success"] == true) {
       return UserProfile.fromJson(response.data["data"]);
     } else {
       return null;
     }
   } catch (error) {
+    
     print("Error retrieving user profile: $error");
     return null;
   }
