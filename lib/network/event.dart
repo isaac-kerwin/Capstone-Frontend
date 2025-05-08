@@ -78,6 +78,23 @@ Future<Events> getAllEvents() async {
   }
 }
 
+Future<Events> getFilteredEvents(String filter) async{
+  try{
+    final response = await dioClient.dio.get("/events?$filter");
+    if(response.data["success"]){
+      final  responseData = response.data;
+      Events events = Events.fromJson(responseData["data"]);
+      return events;
+    }
+    else{
+      throw Exception("Failed to get events: ${response.data}");
+    }
+  }
+  catch(error){
+    throw Exception("Error getting events: $error");
+  }
+}
+
 Future<EventWithQuestions> getEventById(int id) async {
   try {
     print("ID: $id");
@@ -91,20 +108,5 @@ Future<EventWithQuestions> getEventById(int id) async {
     }
   } catch (error) {
     throw Exception("Error getting event: $error");
-  }
-}
-
-Future<Events> getEventsByOrganizerId(int id) async {
-  try {
-    final response = await dioClient.dio.get("/events?$id");
-    if (response.data["success"]) {
-      final responseData = response.data;
-      Events events = Events.fromJson(responseData["data"]);
-      return events;
-    } else {
-      throw Exception("Failed to get events: ${response.data}");
-    }
-  } catch (error) {
-    throw Exception("Error getting events: $error");
   }
 }

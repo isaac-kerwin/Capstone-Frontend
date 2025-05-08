@@ -4,6 +4,7 @@ import 'package:first_app/event_exploration/screens/explore.dart';
 import 'package:first_app/event_management/screens/organiser_dashboard_home.dart';
 import 'package:first_app/login_and_register/screens/login.dart';
 import 'package:first_app/get_user.dart';
+import 'package:first_app/models/user.dart';
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
@@ -17,6 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   late int _selectedIndex;
   bool _isOrganizer = false;
   bool _isLoading   = true;
+  int _userId = 0;
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
     final profile = await getUserProfile();
     if (profile?.role == 'ORGANIZER') {
       _isOrganizer = true;
+      _userId = profile!.id;
     }
     setState(() => _isLoading = false);
   }
@@ -52,14 +55,12 @@ class _MainScreenState extends State<MainScreen> {
         if (_isOrganizer)
         const BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
       const BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login'),
-
-
     ];
 
     final screens = <Widget>[
       const Explore(),
       if (_isOrganizer)
-        const OrganiserDashboard(organiserId: 1, key: Key('organiser_dashboard_home')),
+        OrganiserDashboard(organiserId: _userId, key: Key('organiser_dashboard_home')),
       const LoginScreen(),
     ];
 

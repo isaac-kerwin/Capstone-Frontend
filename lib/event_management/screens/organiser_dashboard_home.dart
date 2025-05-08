@@ -8,14 +8,15 @@ class OrganiserDashboard extends StatefulWidget
 {
   final int organiserId;
   // Constructor to initialize the organiserId.
-  const OrganiserDashboard({super.key, required this.organiserId});
+  OrganiserDashboard({super.key, required this.organiserId});
+
 
   @override State<OrganiserDashboard> createState() => _OrganiserDashboardState();  
 
 }
 
-Future<Events> _getEventsByOrganizerId(int id) async {
-  return await getEventsByOrganizerId(id);
+Future<Events> _getOrganizersEvents() async {
+  return await getFilteredEvents("myEvents=true");
 }
 
 Widget _buildEventSlideshow(Future<Events> futureEvents, {Key? key}) {
@@ -30,7 +31,9 @@ Widget _buildEventSlideshow(Future<Events> futureEvents, {Key? key}) {
         return const Text('No events found.');
       } else {
         final eventsData = snapshot.data!;
-
+        eventsData.events.forEach((event) {
+          print('Event Name: ${event.name}');
+        });
         return EventSlideshow(events: eventsData, context: context, key: key,);
       }
     },
@@ -45,11 +48,12 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
   @override
   void initState() {
     super.initState();
-    futureEvents = _getEventsByOrganizerId(widget.organiserId);
+    futureEvents = _getOrganizersEvents();
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
