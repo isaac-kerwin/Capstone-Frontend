@@ -1,5 +1,3 @@
-// lib/main_screen.dart
-
 import 'package:first_app/network/users.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/event_exploration/screens/explore.dart';
@@ -36,16 +34,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _onItemTapped(int index) {
-    // Dashboard tab is at index 1
-    if (index == 1 && !_isOrganizer) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Access denied: Organizer dashboard is for organizers only.'),
-        ),
-
-      );
-      return;
-    }
     setState(() {
       _selectedIndex = index;
     });
@@ -59,22 +47,31 @@ class _MainScreenState extends State<MainScreen> {
       );
     }
 
+    final items = <BottomNavigationBarItem>[
+      const BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
+        if (_isOrganizer)
+        const BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
+      const BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login'),
+
+
+    ];
+
+    final screens = <Widget>[
+      const Explore(),
+      if (_isOrganizer)
+        const OrganiserDashboard(organiserId: 1, key: Key('organiser_dashboard_home')),
+      const LoginScreen(),
+    ];
+
+
     return Scaffold(
       appBar: AppBar(),
       body: IndexedStack(
         index: _selectedIndex,
-        children: const <Widget>[
-          Explore(),
-          OrganiserDashboard(organiserId: 1, key: Key('organiser_dashboard_home')),
-          LoginScreen(),
-        ],
+        children: screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login'),
-        ],
+        items: items,
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.black,
