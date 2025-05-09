@@ -4,6 +4,8 @@ import 'package:first_app/models/event.dart';
 import 'package:first_app/event_creation/screens/event_details.dart';
 import 'package:first_app/event_management/screens/details_page.dart';
 import 'package:first_app/event_management/widgets/event_info_tile.dart';
+import 'package:first_app/network/event.dart';
+import 'package:first_app/event_management/screens/organiser_dashboard_home.dart';
 
 
 class EventSlideshow extends StatelessWidget {
@@ -30,6 +32,26 @@ class EventSlideshow extends StatelessWidget {
       ),
     );  
   }
+
+  Future<void> _publish(EventDetails event) async {
+    try {
+      await publishEvent(event.id);                 // ← implement in network layer
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Event published!')),
+      );
+/*       Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OrganiserDashboard(),
+        ),
+      ); */
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not publish: $e')),
+      );
+    }
+  } 
+
   @override
   Widget build(BuildContext context) {
     final List<EventDetails> eventsList = events.events;
@@ -50,10 +72,19 @@ class EventSlideshow extends StatelessWidget {
                               onPressed: _createEvent,
                               key: Key('create_event_button')),
                 const SizedBox(height: 16),
-                ActionButton(text: "Event Details", 
-                            icon: Icons.arrow_forward, 
-                            onPressed: () => _moreDetails(event), 
-                            key: Key('event_details_button')),
+                event.status == "PUBLISHED"
+                    ? ActionButton(
+                        key: const Key('event_details_button'),
+                        text: 'Event Details',
+                        icon: Icons.arrow_forward,
+                        onPressed: () => _moreDetails(event),
+                      )
+                    : ActionButton(
+                        key: const Key('publish_event_button'),
+                        text: 'Publish',
+                        icon: Icons.upload,
+                        onPressed: () => _publish(event),
+                      ),
               ],
             ),
           );

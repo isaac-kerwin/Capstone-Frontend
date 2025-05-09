@@ -183,11 +183,6 @@ Future<bool> changePassword(String oldPassword, String newPassword) async {
         "currentPassword": oldPassword,
         "newPassword": newPassword,
       },
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer ${accessToken}',
-        },
-      ),
     );
     if (response.data["success"]) {
       print("Password changed successfully: ${response.data}");
@@ -201,3 +196,4 @@ Future<bool> changePassword(String oldPassword, String newPassword) async {
     return false;
   }
 }
+

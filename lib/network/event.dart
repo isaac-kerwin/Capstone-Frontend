@@ -110,3 +110,28 @@ Future<EventWithQuestions> getEventById(int id) async {
     throw Exception("Error getting event: $error");
   }
 }
+
+Future<bool> publishEvent(int id) async{
+  try {
+    final response = await dioClient.dio.patch(
+      "/events/${id}/status",
+      data: {
+        "status": "PUBLISHED",
+      },
+      options: Options(
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+      },
+    ));
+    if (response.data["success"]) {
+      print("Event published successfully: ${response.data}");
+      return true;
+    } else {
+      print("Failed to publish event: ${response.data}");
+      return false;
+    }
+  } catch (error) {
+    print("Error publishing event: $error");
+    return false;
+  }
+}
