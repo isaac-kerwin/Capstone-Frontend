@@ -13,27 +13,29 @@ import 'package:first_app/models/question.dart';
  }
  
  class _CommonQuestionsState extends State<CommonQuestions> {
-   bool enableFirstName = false;
-   bool enableLastName = false;
    bool enablePhoneNumber = false;
    bool enableDOB = false;
 
-   _addToggledQuestions(enableFirstName, enableLastName, enablePhoneNumber, enableDOB, questions) {
+   _addToggledQuestions(enablePhoneNumber, enableDOB, questions) {
+      questions.add(CreateQuestionDTO(
+          questionText: 'Email Address',
+          isRequired: true,
+          displayOrder: 1,
+      ));
+      
+      questions.add(CreateQuestionDTO(
+        questionText: 'First Name',
+        isRequired: true,
+        displayOrder: 1,
+      ));
 
-      if (enableFirstName) {
-          questions.add(CreateQuestionDTO(
-            questionText: 'First Name',
-            isRequired: true,
-            displayOrder: 1,
-          ));
-      }
-      if (enableLastName) {
-          questions.add(CreateQuestionDTO(
-            questionText: 'Last Name',
-            isRequired: true,
-            displayOrder: 2,
-          ));
-      }
+  
+      questions.add(CreateQuestionDTO(
+        questionText: 'Last Name',
+        isRequired: true,
+        displayOrder: 2,
+      ));
+
       if (enablePhoneNumber) {
           questions.add(CreateQuestionDTO(
             questionText: 'Phone Number',
@@ -52,7 +54,7 @@ import 'package:first_app/models/question.dart';
 
     _onContinue() {
       List<CreateQuestionDTO> questions = [];
-      _addToggledQuestions(enableFirstName, enableLastName, enablePhoneNumber, enableDOB, questions);
+      _addToggledQuestions(enablePhoneNumber, enableDOB, questions);
       widget.eventData['questions'] = questions;  
       Navigator.push(
         context,
@@ -72,24 +74,6 @@ import 'package:first_app/models/question.dart';
          padding: const EdgeInsets.all(16),
          child: Column(
            children: [
-             SwitchListTile(
-               title: const Text('First Name'),
-               value: enableFirstName,
-               onChanged: (bool value) {
-                 setState(() {
-                   enableFirstName = value;
-                 });
-               },
-             ),
-             SwitchListTile(
-               title: const Text('Last Name'),
-               value: enableLastName,
-               onChanged: (bool value) {
-                 setState(() {
-                   enableLastName = value;
-                 });
-               },
-             ),
              SwitchListTile(
                title: const Text('Phone Number'),
                value: enablePhoneNumber,

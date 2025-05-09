@@ -6,9 +6,8 @@ import 'package:first_app/event_management/widgets/events_slideshow.dart';
 
 class OrganiserDashboard extends StatefulWidget
 {
-  final int organiserId;
   // Constructor to initialize the organiserId.
-  OrganiserDashboard({super.key, required this.organiserId});
+  OrganiserDashboard({super.key});
 
 
   @override State<OrganiserDashboard> createState() => _OrganiserDashboardState();  

@@ -65,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
     final screens = <Widget>[
       const Explore(),
       if (_isOrganizer)
-        OrganiserDashboard(organiserId: _userId, key: Key('organiser_dashboard_home')),
+        OrganiserDashboard(key: Key('organiser_dashboard_home')),
       _isLoggedIn ? const ProfileScreen() : const LoginScreen(),
 
     ];

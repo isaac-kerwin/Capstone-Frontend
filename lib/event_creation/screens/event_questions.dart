@@ -4,8 +4,9 @@ import 'package:first_app/event_creation/widgets/create_question.dart';
 import 'package:first_app/models/event.dart';
 import 'package:first_app/models/tickets.dart';
 import 'package:first_app/network/event.dart';
-import 'package:first_app/event_management/screens/organiser_dashboard_home.dart';
+import 'package:first_app/main_screen.dart';
 import 'package:first_app/fundamental_widgets/action_button.dart';
+
 
 
 class CreateEventQuestions extends StatefulWidget {
@@ -21,7 +22,12 @@ class CreateEventQuestions extends StatefulWidget {
 }
 
 class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
-  
+  @override
+  void initState() {
+    super.initState();
+    // Ensure the key exists and is a List<CreateQuestionDTO>
+    widget.eventData.putIfAbsent('questions', () => <CreateQuestionDTO>[]);
+  }
   // Opens the pop-up dialog to create a new question.
   Future<void> _openCreateQuestionDialog() async {
     final  CreateQuestionDTO? newQuestion = await showDialog< CreateQuestionDTO>(
@@ -76,10 +82,13 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     await _unpackAndCreateEvent(widget.eventData);
     
         // Alternatively, if you want to remove all previous routes, use:
-     Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => OrganiserDashboard(organiserId: 1)),
-      (Route<dynamic> route) => false,
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (_) => MainScreen(
+          initialIndex: 1,           // Dashboard tab
+        ),
+      ),
+      (_) => false,
     );
   
   }
