@@ -64,3 +64,17 @@ Future<bool> registerUser(RegisterUserDTO data) async {
     return false;
   }
 }
+
+Future<bool> logoutUser() async {
+  try {
+    final response = await dioClient.dio.post("/auth/logout");
+    if (response.data["success"]) {
+      accessToken = null; // Clear the access token on logout
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}

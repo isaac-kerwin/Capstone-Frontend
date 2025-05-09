@@ -174,3 +174,30 @@ Future<String?> getUserRole() async {
     return null;
   }
 }
+
+Future<bool> changePassword(String oldPassword, String newPassword) async {
+  try {
+    final response = await dioClient.dio.post(
+      "/user/change-password",
+      data: {
+        "currentPassword": oldPassword,
+        "newPassword": newPassword,
+      },
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer ${accessToken}',
+        },
+      ),
+    );
+    if (response.data["success"]) {
+      print("Password changed successfully: ${response.data}");
+      return true;
+    } else {
+      print("Failed to change password: ${response.data}");
+      return false;
+    }
+  } catch (error) {
+    print("Error changing password: $error");
+    return false;
+  }
+}

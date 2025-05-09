@@ -5,6 +5,7 @@ import 'package:first_app/event_management/screens/organiser_dashboard_home.dart
 import 'package:first_app/login_and_register/screens/login.dart';
 import 'package:first_app/get_user.dart';
 import 'package:first_app/models/user.dart';
+import 'package:first_app/login_and_register/screens/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
@@ -18,6 +19,7 @@ class _MainScreenState extends State<MainScreen> {
   late int _selectedIndex;
   bool _isOrganizer = false;
   bool _isLoading   = true;
+  bool _isLoggedIn  = false;
   int _userId = 0;
 
   @override
@@ -29,9 +31,10 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _loadUserRole() async {
     final profile = await getUserProfile();
-    if (profile?.role == 'ORGANIZER') {
-      _isOrganizer = true;
-      _userId = profile!.id;
+    if (profile != null) {
+      _isLoggedIn  = true;
+      _isOrganizer = profile.role == 'ORGANIZER';
+      _userId = profile.id;
     }
     setState(() => _isLoading = false);
   }
@@ -51,17 +54,20 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     final items = <BottomNavigationBarItem>[
-      const BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
-        if (_isOrganizer)
+      const BottomNavigationBarItem(icon: Icon(Icons.explore),  label: 'Explore'),
+      if (_isOrganizer)
         const BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-      const BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login'),
+      _isLoggedIn
+          ? const BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account')
+          : const BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login'),
     ];
 
     final screens = <Widget>[
       const Explore(),
       if (_isOrganizer)
         OrganiserDashboard(organiserId: _userId, key: Key('organiser_dashboard_home')),
-      const LoginScreen(),
+      _isLoggedIn ? const ProfileScreen() : const LoginScreen(),
+
     ];
 
 
