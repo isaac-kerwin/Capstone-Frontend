@@ -1,16 +1,53 @@
-# app_mobile_frontend
+# Event Registration System - Moible Frontend
+This project is the mobile frontend component for the EventRegistrationSystem GitHub Organisation
 
-A new Flutter project.
+## How It's Made:
 
-## Getting Started
+**Tech used:** all code is written using the flutter frameworking in the dart language.
 
-This project is a starting point for a Flutter application.
+## Prequisites for local setup
+*Flutter Framework Installed:https://docs.flutter.dev/get-started/install
+*Android SDK installed: https://developer.android.com/about/versions/14/setup-sdk
+*Backend setup locally (will not require in future): https://github.com/EventRegistrationSystem/EventRegistrationSystem-Backend/blob/Staging/README.md
 
-A few resources to get you started if this is your first Flutter project:
+## Local Setup Instructions
+*Step 0: Install and setup all Prerequisites
+*Step 1: Clone Repository: ''''git clone https://github.com/EventRegistrationSystem/EventRegistrationSystem-MobileFrontend.git''''
+*Step 2: Import packages: In root directory of project enter the following command into the terminal ''''flutter pub get''''
+*Step 3: Run Project
+** in VSCode: In VSCode command bar enter ''''>flutter select device'''' then select your emulator, Navigate to main file and run project without debugging
+** from Command Line: ''''flutter run lib/main.dart''''
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Completed Features:
+###User Account Autentication and Management
+*User Login
+*User Registration
+*Change Password
+*User Logout
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+###Event Management
+*Event & Questionairre Creation
+*Event Drafting and publishing
+*Preliminary Event Management page
+
+###Event Exploration and Registration
+*Exploration Page shows events in backend
+*Exploration Page links to registration page
+
+##In Progress Features
+*Filtered Searching
+*All event management features completed
+**Edit Event Description
+**Edit Event Questions
+**Edit Event Tickets
+*Payment and Registration Backend integration
+
+## For more information see: Link to docs here
+
+## Branch Structure
+*Main - latest stable version
+*Staging - Any final steps before deployment of a feature to main
+*UAT - dedicated environment for User Acceptance Testing to be performed
+*development - environment for in-progress code
+*other features - before features are merged to development branch they are created and implemented in their seperate branch
+
