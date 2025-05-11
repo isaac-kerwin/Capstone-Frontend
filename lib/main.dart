@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/network/auth.dart';
+import 'package:app_mobile_frontend/network/auth.dart';
 import 'main_screen.dart';
-import 'package:first_app/themes/app_themes.dart';
-import 'package:first_app/network/dio_client.dart';
+import 'package:app_mobile_frontend/themes/app_themes.dart';
+import 'package:app_mobile_frontend/network/dio_client.dart';
 
 Future<void> main() async {
   runApp(const MyApp());

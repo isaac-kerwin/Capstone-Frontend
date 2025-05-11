@@ -1,5 +1,5 @@
-import "package:first_app/network/dio_client.dart";
-import "package:first_app/models/user.dart";
+import "package:app_mobile_frontend/network/dio_client.dart";
+import "package:app_mobile_frontend/models/user.dart";
 
 // TO DO NOT USE PRINTS FOR ERROR HANDLING
 // TO DO SECURE STORAGE FOR ACCESS TOKEN

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/network/auth.dart';
-import 'package:first_app/models/user.dart';
-import 'package:first_app/login_and_register/screens/registration_confirmation_page.dart';
+import 'package:app_mobile_frontend/network/auth.dart';
+import 'package:app_mobile_frontend/models/user.dart';
+import 'package:app_mobile_frontend/login_and_register/screens/registration_confirmation_page.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 

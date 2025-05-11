@@ -1,6 +1,6 @@
-import 'package:first_app/fundamental_widgets/form_widgets.dart';
+import 'package:app_mobile_frontend/fundamental_widgets/form_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:first_app/models/tickets.dart';
+import 'package:app_mobile_frontend/models/tickets.dart';
 
 class CreateTicketDialog extends StatefulWidget {
   final DateTime salesStart;

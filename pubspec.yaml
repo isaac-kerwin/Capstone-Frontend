@@ -1,5 +1,5 @@
-name: first_app
-description: "A new Flutter project."
+name: app_mobile_frontend
+description: "Mobile frontend component of the registration system being created for COS40006"
 publish_to: 'none'
 
 version: 1.0.0+1

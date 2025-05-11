@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/event_registration/screens/new_registration_form_generator.dart';
-import 'package:first_app/models/event.dart';
-import 'package:first_app/network/event.dart';
+import 'package:app_mobile_frontend/event_registration/screens/new_registration_form_generator.dart';
+import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/network/event.dart';
 
 class Explore extends StatefulWidget {
   const Explore({Key? key}) : super(key: key);

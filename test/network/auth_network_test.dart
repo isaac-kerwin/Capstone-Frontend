@@ -3,8 +3,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dio/dio.dart';
 
-import 'package:first_app/network/dio_client.dart';
-import 'package:first_app/network/auth.dart';
+import 'package:app_mobile_frontend/network/dio_client.dart';
+import 'package:app_mobile_frontend/network/auth.dart';
 import 'auth_network_test.mocks.dart';
 
 @GenerateMocks([Dio])

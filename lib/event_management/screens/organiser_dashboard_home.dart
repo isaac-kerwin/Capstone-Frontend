@@ -1,7 +1,7 @@
-import 'package:first_app/models/event.dart';
-import 'package:first_app/network/event.dart';
+import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/network/event.dart';
 import 'package:flutter/material.dart';
-import 'package:first_app/event_management/widgets/events_slideshow.dart';
+import 'package:app_mobile_frontend/event_management/widgets/events_slideshow.dart';
 
 
 class OrganiserDashboard extends StatefulWidget

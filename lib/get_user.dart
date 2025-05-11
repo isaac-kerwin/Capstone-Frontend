@@ -1,7 +1,7 @@
-import 'package:first_app/network/users.dart';
-import 'package:first_app/models/user.dart';
-import 'package:first_app/network/dio_client.dart';
-import 'package:first_app/network/auth.dart';
+import 'package:app_mobile_frontend/network/users.dart';
+import 'package:app_mobile_frontend/models/user.dart';
+import 'package:app_mobile_frontend/network/dio_client.dart';
+import 'package:app_mobile_frontend/network/auth.dart';
 
 void printuserprofile() async {
   UserProfile? userFuture = await getUserProfile();

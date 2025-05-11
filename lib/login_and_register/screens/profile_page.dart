@@ -1,13 +1,13 @@
-import 'package:first_app/network/users.dart';
+import 'package:app_mobile_frontend/network/users.dart';
 import 'package:flutter/material.dart';
-import 'package:first_app/event_exploration/screens/explore.dart';
-import 'package:first_app/event_management/screens/organiser_dashboard_home.dart';
-import 'package:first_app/login_and_register/screens/login.dart';
-import 'package:first_app/get_user.dart';
-import 'package:first_app/models/user.dart';
-import 'package:first_app/main_screen.dart';
-import 'package:first_app/network/auth.dart';
-import 'package:first_app/login_and_register/screens/change_password.dart';
+import 'package:app_mobile_frontend/event_exploration/screens/explore.dart';
+import 'package:app_mobile_frontend/event_management/screens/organiser_dashboard_home.dart';
+import 'package:app_mobile_frontend/login_and_register/screens/login.dart';
+import 'package:app_mobile_frontend/get_user.dart';
+import 'package:app_mobile_frontend/models/user.dart';
+import 'package:app_mobile_frontend/main_screen.dart';
+import 'package:app_mobile_frontend/network/auth.dart';
+import 'package:app_mobile_frontend/login_and_register/screens/change_password.dart';
 
 
 class ProfileScreen extends StatelessWidget {

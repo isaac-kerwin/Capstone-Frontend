@@ -4,10 +4,10 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:first_app/login_and_register/screens/register_account.dart';
-import 'package:first_app/network/auth.dart';
-import 'package:first_app/network/users.dart';           // ← getUserProfile()
-import 'package:first_app/main_screen.dart';
+import 'package:app_mobile_frontend/login_and_register/screens/register_account.dart';
+import 'package:app_mobile_frontend/network/auth.dart';
+import 'package:app_mobile_frontend/network/users.dart';           // ← getUserProfile()
+import 'package:app_mobile_frontend/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

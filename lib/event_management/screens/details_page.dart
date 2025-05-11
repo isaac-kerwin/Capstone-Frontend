@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'ticket_management_page.dart';
 import 'questionnaire_management_page.dart';
 import 'edit_event_page.dart';
-import 'package:first_app/event_management/services/report_service.dart';
-import 'package:first_app/models/event.dart'; // Assuming EventWithQuestions or Event is here
+import 'package:app_mobile_frontend/event_management/services/report_service.dart';
+import 'package:app_mobile_frontend/models/event.dart'; // Assuming EventWithQuestions or Event is here
 
 class DetailsPage extends StatefulWidget {
   final EventDetails event; 

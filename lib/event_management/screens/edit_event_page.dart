@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 
-import 'package:first_app/models/event.dart';
-import 'package:first_app/network/event.dart';
+import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/network/event.dart';
 
 class EditEventPage extends StatefulWidget {
   final EventDetails event;

@@ -1,8 +1,8 @@
 import 'dart:ffi';
-import 'package:first_app/network/dio_client.dart';
-import 'package:first_app/models/user.dart';
+import 'package:app_mobile_frontend/network/dio_client.dart';
+import 'package:app_mobile_frontend/models/user.dart';
 import 'package:dio/dio.dart';
-import 'package:first_app/network/auth.dart';
+import 'package:app_mobile_frontend/network/auth.dart';
 
 
 Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) async {

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.first_app"
+    namespace = "com.example.app_mobile_frontend"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

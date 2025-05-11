@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:dio/dio.dart';
-import 'package:first_app/models/event.dart';
-import 'package:first_app/network/dio_client.dart';
-import 'package:first_app/network/event.dart';
+import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/network/dio_client.dart';
+import 'package:app_mobile_frontend/network/event.dart';
 import 'event_network_test.mocks.dart';
 
 @GenerateMocks([Dio])

@@ -1,6 +1,6 @@
-import 'package:first_app/network/auth.dart';
-import "package:first_app/network/dio_client.dart";
-import "package:first_app/models/registration.dart";
+import 'package:app_mobile_frontend/network/auth.dart';
+import "package:app_mobile_frontend/network/dio_client.dart";
+import "package:app_mobile_frontend/models/registration.dart";
 import "package:dio/dio.dart";
 
 Future<bool> singleRegistration(int event, EventRegistrationDTO) async{

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:first_app/event_registration/screens/registration_form_generator.dart';
+import 'package:app_mobile_frontend/event_registration/screens/registration_form_generator.dart';
 
 class UrlService {  
   _generateExternalUrl(){
