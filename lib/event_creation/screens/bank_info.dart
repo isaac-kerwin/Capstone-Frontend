@@ -54,9 +54,9 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
   }
 
   void _onContinue() {
-    final accountName = _accountNameController.text.trim();
-    final accountNumber = _accountNumberController.text.trim();
-    final bsb = _bsbController.text.trim();
+    final accountName = _accountNameController.text?.trim() ?? '';
+    final accountNumber = _accountNumberController.text?.trim() ?? '';
+    final bsb = _bsbController.text?.trim() ?? '';
 
     // Basic validation
     if (accountName.isEmpty || accountNumber.isEmpty || bsb.isEmpty) {
@@ -71,7 +71,7 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
     widget.eventData['bsb'] = bsb;
 
     //Print all widget.eventData data to console for debugging 
-    print('Event Data: ${widget.eventData['eventName']}');
+    print('Event Data: \\${widget.eventData['eventName']}');
     
     // Navigate to the CreateRegistrationFormPage with all data
     Navigator.push(

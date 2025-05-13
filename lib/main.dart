@@ -3,8 +3,25 @@ import 'package:first_app/network/auth.dart';
 import 'main_screen.dart';
 import 'package:first_app/themes/app_themes.dart';
 import 'package:first_app/network/dio_client.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Set preferred orientations
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // Set system UI overlay style
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
+
   runApp(const MyApp());
 }
 
@@ -22,6 +39,7 @@ class _MyAppState extends State<MyApp> {
       themeMode: ThemeMode.system,
       theme: AppTheme.light,
       home: const MainScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 } 

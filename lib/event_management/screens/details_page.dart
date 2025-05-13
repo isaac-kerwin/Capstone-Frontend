@@ -4,6 +4,8 @@ import 'questionnaire_management_page.dart';
 import 'edit_event_page.dart';
 import 'package:first_app/event_management/services/report_service.dart';
 import 'package:first_app/models/event.dart'; // Assuming EventWithQuestions or Event is here
+import 'package:first_app/network/event.dart';
+import 'package:first_app/models/organizer.dart';
 
 class DetailsPage extends StatefulWidget {
   final EventDetails event; 
@@ -45,7 +47,7 @@ class _DetailsPageState extends State<DetailsPage> {
           children: [
             _buildDashboardButton(
               label: 'TICKET MANAGEMENT',
-              onPressed: () => _navigateTo(context, const TicketManagementPage()),
+              onPressed: () => _navigateTo(context, TicketManagementPage(event: widget.event)),
             ),
 /*             _buildDashboardButton(
               label: 'GENERATE EVENT REPORT',
@@ -60,7 +62,6 @@ class _DetailsPageState extends State<DetailsPage> {
             _buildDashboardButton(
               label: 'EDIT EVENT INFORMATION',
               onPressed: () {
-                // TODO: Replace with the correct Event instance
                 _navigateTo(context, EditEventPage(event: widget.event));
               },
             ),

@@ -52,17 +52,27 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      futureEvents = _getOrganizersEvents();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    
-    return Padding(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
             _buildEventSlideshow(futureEvents, key: Key('event_slideshow')),
             const SizedBox(height: 16),
           ],
         ),
-      );
+      ),
+    );
   }
 }

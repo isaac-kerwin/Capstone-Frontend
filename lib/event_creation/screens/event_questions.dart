@@ -6,6 +6,9 @@ import 'package:first_app/models/tickets.dart';
 import 'package:first_app/network/event.dart';
 import 'package:first_app/event_management/screens/organiser_dashboard_home.dart';
 import 'package:first_app/fundamental_widgets/action_button.dart';
+import 'package:dio/dio.dart';
+import 'package:first_app/network/dio_client.dart';
+import 'package:first_app/network/auth.dart';
 
 
 class CreateEventQuestions extends StatefulWidget {
@@ -30,62 +33,99 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     );
     if (newQuestion != null) {
       setState(() {
+        widget.eventData["questions"] ??= [];
         widget.eventData["questions"].add(newQuestion);
       });
     }
   }
 
-  _unpackAndCreateEvent(Map<String, dynamic> eventData) async {
-    // Unpack the event data
-    String name = eventData['eventName'];
-    String description = eventData['description'];
-    String location = eventData['location'];
-    String type = eventData['type'];
-    DateTime startDateTime = eventData['startDateTime'];
-    DateTime endDateTime = eventData['endDateTime'];
-    int capacity = eventData['capacity'];
-    List<TicketDTO> tickets = eventData['tickets'];
-    List<CreateQuestionDTO> questions = eventData['questions'];
-
-    // Create the event object
-    CreateEventDTO event = CreateEventDTO(
-      name : name,
-      description: description,
-      location: location,
-      eventType: type,
-      startDateTime: startDateTime,
-      endDateTime: endDateTime,
-      capacity: capacity,
-      tickets: tickets,
-      questions: questions,
-    );
-
-    // Call the API to create the event
-    await createEvent(event);
-  }
-
-  // Continue button action: check that at least one question is added and navigate.
   Future<void> _continue() async {
-    if (widget.eventData["questions"].isEmpty) {
+    print('Create Event button pressed');
+    if ((widget.eventData["questions"] ?? []).isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add at least one question.')),
       );
-
       return;
     }
-    await _unpackAndCreateEvent(widget.eventData);
-    
-        // Alternatively, if you want to remove all previous routes, use:
-     Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => OrganiserDashboard(organiserId: 1)),
-      (Route<dynamic> route) => false,
-    );
-  
+    try {
+      bool success = await _unpackAndCreateEvent(widget.eventData);
+      if (success) {
+        print('Event created successfully, navigating...');
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => OrganiserDashboard(organiserId: 1)),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        print('Event creation failed, not navigating.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to create event.')),
+        );
+      }
+    } catch (e, stack) {
+      print('Error in _continue: $e');
+      print(stack);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to create event: $e')),
+      );
+    }
+  }
+
+  Future<bool> _unpackAndCreateEvent(Map<String, dynamic> eventData) async {
+    try {
+      print('Unpacking event data...');
+      // Unpack the event data
+      String name = eventData['eventName'];
+      String description = eventData['description'];
+      String location = eventData['location'];
+      String type = eventData['type'];
+      DateTime startDateTime = eventData['startDateTime'];
+      DateTime endDateTime = eventData['endDateTime'];
+      int capacity = eventData['capacity'];
+      List<TicketDTO> tickets = eventData['tickets'];
+      List<CreateQuestionDTO> questions = List<CreateQuestionDTO>.from(eventData['questions']);
+
+      // Create the event object
+      CreateEventDTO event = CreateEventDTO(
+        name : name,
+        description: description,
+        location: location,
+        eventType: type,
+        startDateTime: startDateTime,
+        endDateTime: endDateTime,
+        capacity: capacity,
+        tickets: tickets,
+        questions: questions,
+      );
+
+      print('Calling createEvent API...');
+      // Call the API to create the event
+      final response = await dioClient.dio.post(
+        "/events",
+        data: event.toJson(),
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+      );
+      print('createEvent API call finished');
+      if (response.data["success"]) {
+        print("Event created successfully: \\${response.data}");
+        return true;
+      } else {
+        print("Failed to create event: \\${response.data}");
+        return false;
+      }
+    } catch (e, stack) {
+      print('Error in _unpackAndCreateEvent: $e');
+      print(stack);
+      return false;
+    }
   }
 
   _buildQuestionList() {
-    if (widget.eventData["questions"].isEmpty) {
+    if ((widget.eventData["questions"] ?? []).isEmpty) {
       return const Center(child: Text('No questions added yet.'));
     }
     return ListView.builder(

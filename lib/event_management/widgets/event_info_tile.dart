@@ -21,7 +21,9 @@ class _EventInfoTileState extends State<EventInfoTile> {
   Widget build(BuildContext context) {
     EventDetails event = widget.event;
 
-      return Padding(
+    return Container(
+      color: Colors.white,
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min, 
@@ -57,7 +59,7 @@ class _EventInfoTileState extends State<EventInfoTile> {
                 ],
               ),
             ),
-            const SizedBox(height: 48),
+            const SizedBox(height: 24),
             EventInfoItem(
               icon: Icons.calendar_today,
               iconColor: Colors.blue,
@@ -69,11 +71,11 @@ class _EventInfoTileState extends State<EventInfoTile> {
               icon: Icons.location_on,
               iconColor: Colors.blue,
               title: event.location,
-
             ),
             const SizedBox(height: 32),
           ],
         ),
-      );
+      ),
+    );
   }
 }
