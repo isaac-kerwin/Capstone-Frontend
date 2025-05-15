@@ -41,6 +41,23 @@ class Ticket {
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]));
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "eventId": eventId,
+      "name": name,
+      "description": description,
+      "price": price,
+      "quantityTotal": quantityTotal,
+      "quantitySold": quantitySold,
+      "salesStart": salesStart.toIso8601String(),
+      "salesEnd": salesEnd.toIso8601String(),
+      "status": status,
+      "createdAt": createdAt.toIso8601String(),
+      "updatedAt": updatedAt.toIso8601String(),
+    };
+  }
 }
 
 class TicketInformation{

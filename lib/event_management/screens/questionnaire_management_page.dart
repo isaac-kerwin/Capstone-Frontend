@@ -108,6 +108,9 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
     });
 
     try {
+      // Fetch the full event data first
+      final event = await getEventById(widget.eventId);
+
       // Convert questions to CreateQuestionDTO format
       final questionsToUpdate = _questions.map((q) => CreateQuestionDTO(
         questionText: q.questionText,
@@ -115,10 +118,18 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
         displayOrder: q.displayOrder,
       )).toList();
 
-      // Call the API to update questions
+      // Call the API to update the event with all required fields
       final response = await dioClient.dio.put(
-        "/events/${widget.eventId}/questions",
+        "/events/${widget.eventId}",
         data: {
+          "name": event.name,
+          "description": event.description,
+          "location": event.location,
+          "eventType": event.eventType,
+          "startDateTime": event.startDateTime.toIso8601String(),
+          "endDateTime": event.endDateTime.toIso8601String(),
+          "capacity": event.capacity,
+          "tickets": event.tickets.map((ticket) => ticket.toJson()).toList(),
           "questions": questionsToUpdate.map((q) => q.toJson()).toList(),
         },
         options: Options(
