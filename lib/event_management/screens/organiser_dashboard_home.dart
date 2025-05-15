@@ -16,7 +16,11 @@ class OrganiserDashboard extends StatefulWidget
 }
 
 Future<Events> _getOrganizersEvents() async {
-  return await getFilteredEvents("myEvents=true");
+  // Show all statuses for organizer's own events
+  final events = await getFilteredEvents("myEvents=true&status=");
+  print("Fetched events (names): "+ events.events.map((e) => e.name).toList().toString());
+  print("Fetched events (full): "+ events.events.toString());
+  return events;
 }
 
 Widget _buildEventSlideshow(Future<Events> futureEvents, {Key? key}) {

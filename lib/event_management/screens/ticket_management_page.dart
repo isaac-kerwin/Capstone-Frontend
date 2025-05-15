@@ -133,7 +133,7 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
 
       if (_isEditing) {
         // Update existing ticket
-        await updateTicket(widget.event.id, _tickets[_editingIndex!].id, ticket);
+        await updateTicket(_tickets[_editingIndex!].id, ticket);
         setState(() {
           _tickets[_editingIndex!] = Ticket(
             id: _tickets[_editingIndex!].id,
@@ -171,7 +171,7 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
 
   Future<void> _deleteTicket(int index) async {
     try {
-      await deleteTicket(widget.event.id, _tickets[index].id);
+      await deleteTicket(_tickets[index].id);
       setState(() {
         _tickets.removeAt(index);
       });

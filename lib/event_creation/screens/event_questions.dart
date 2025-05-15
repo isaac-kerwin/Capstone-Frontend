@@ -9,6 +9,7 @@ import 'package:first_app/fundamental_widgets/action_button.dart';
 import 'package:dio/dio.dart';
 import 'package:first_app/network/dio_client.dart';
 import 'package:first_app/network/auth.dart';
+import 'package:first_app/network/users.dart';
 
 
 class CreateEventQuestions extends StatefulWidget {
@@ -51,9 +52,12 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
       bool success = await _unpackAndCreateEvent(widget.eventData);
       if (success) {
         print('Event created successfully, navigating...');
+        // Fetch the current user's profile to get the correct organiserId
+        final profile = await getUserProfile();
+        final organiserId = profile?.id ?? 1;
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => OrganiserDashboard(organiserId: 1)),
+          MaterialPageRoute(builder: (context) => OrganiserDashboard(organiserId: organiserId)),
           (Route<dynamic> route) => false,
         );
       } else {

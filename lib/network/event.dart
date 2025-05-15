@@ -134,10 +134,10 @@ Future<Ticket> createTicket(int eventId, TicketDTO ticket) async {
   }
 }
 
-Future<Ticket> updateTicket(int eventId, int ticketId, TicketDTO ticket) async {
+Future<Ticket> updateTicket(int ticketId, TicketDTO ticket) async {
   try {
     final response = await dioClient.dio.put(
-      "/events/$eventId/tickets/$ticketId",
+      "/tickets/$ticketId",
       data: ticket.toJson(),
       options: Options(
         headers: {
@@ -155,10 +155,10 @@ Future<Ticket> updateTicket(int eventId, int ticketId, TicketDTO ticket) async {
   }
 }
 
-Future<void> deleteTicket(int eventId, int ticketId) async {
+Future<void> deleteTicket(int ticketId) async {
   try {
     final response = await dioClient.dio.delete(
-      "/events/$eventId/tickets/$ticketId",
+      "/tickets/$ticketId",
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
