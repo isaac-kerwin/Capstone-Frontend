@@ -2,6 +2,7 @@ import 'package:app_mobile_frontend/network/auth.dart';
 import "package:app_mobile_frontend/network/dio_client.dart";
 import "package:app_mobile_frontend/models/event.dart";
 import "package:dio/dio.dart";
+import "package:app_mobile_frontend/models/tickets.dart";
 
 // TO DO  
 Future<void> createEvent(CreateEventDTO event) async {
@@ -133,5 +134,23 @@ Future<bool> publishEvent(int id) async{
   } catch (error) {
     print("Error publishing event: $error");
     return false;
+  }
+}
+
+Future<Ticket> getTicketById(int eventId, int ticketId) async {
+  try {
+    print("/events/$eventId/tickets/$ticketId");
+    final response = await dioClient.dio.get("/events/$eventId/tickets/$ticketId");
+    if (response.data["success"]) {
+      final ticketData = response.data["data"];
+      print("Ticket data: $ticketData");
+      return Ticket.fromJson(ticketData);
+    } else {
+      print("Failed to get ticket: ${response.data}");
+      throw Exception("Failed to get ticket: ${response.data}");
+    }
+  } catch (error) {
+    print("Error getting ticket: $error");
+    throw Exception("Error getting ticket: $error");
   }
 }

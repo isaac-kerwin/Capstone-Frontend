@@ -6,7 +6,7 @@ import 'package:app_mobile_frontend/main_screen.dart';
 
 class RegistrationForm extends StatefulWidget {
   final int eventId;
-  const RegistrationForm({Key? key, required this.eventId}) : super(key: key);
+  const RegistrationForm({Key? key, required this.eventId, }) : super(key: key);
 
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
@@ -142,10 +142,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 102, 89, 175),
-                        foregroundColor: Colors.white,
-                      ),
                       onPressed: _isSubmitting ? null : _submitForm,
                       child: _isSubmitting
                           ? const CircularProgressIndicator(
@@ -164,3 +160,4 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
   }
 }
+ 

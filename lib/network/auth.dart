@@ -51,7 +51,6 @@ Future<void> refreshToken() async {
   }
 }
 
-// TO DO ADD PROPER SUCESSFUL RESPONSE HANDLING
 Future<bool> registerUser(RegisterUserDTO data) async {
   try {
     final response = await dioClient.dio.post("/auth/register", data: data.toJson());

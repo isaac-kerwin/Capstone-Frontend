@@ -28,7 +28,7 @@ Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) asyn
 Future<UserProfile?> getUserProfile() async {
   try {
     final response = await dioClient.dio.get(
-      "/user/profile",            // ← leading slash here
+      "/user/profile",         
       options: Options(
         headers: {
           'Authorization': 'Bearer $accessToken',
