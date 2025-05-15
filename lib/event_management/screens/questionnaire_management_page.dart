@@ -1,134 +1,181 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:first_app/models/question.dart';
+import 'package:first_app/event_creation/widgets/create_question.dart';
+import 'package:first_app/network/event.dart';
+import 'package:first_app/fundamental_widgets/action_button.dart';
+import 'package:first_app/fundamental_widgets/form_widgets.dart';
+import 'package:first_app/network/dio_client.dart';
+import 'package:first_app/network/auth.dart';
+import 'package:dio/dio.dart';
 
 class QuestionnaireManagementPage extends StatefulWidget {
-  const QuestionnaireManagementPage({super.key});
+  final int eventId;
+  final List<QuestionDTO> questions;
+
+  const QuestionnaireManagementPage({
+    super.key,
+    required this.eventId,
+    required this.questions,
+  });
 
   @override
   State<QuestionnaireManagementPage> createState() => _QuestionnaireManagementPageState();
 }
 
-class _QuestionnaireManagementPageState
-  extends State<QuestionnaireManagementPage> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _fieldNameController = TextEditingController();
-  String? _selectedInputType;
+class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPage> {
+  List<QuestionDTO> _questions = [];
+  bool _isLoading = false;
 
-  void _save() {
-    if (_firstNameController.text.isEmpty ||
-        _lastNameController.text.isEmpty ||
-        _phoneNumberController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill out all fields.')),
-      );
-      return;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Questionnaire updated successfully!')),
-    );
+  @override
+  void initState() {
+    super.initState();
+    _questions = List.from(widget.questions);
   }
 
-  void _showFieldEditDialog() {
-    _fieldNameController.clear();
-    _selectedInputType = null;
-
-    showDialog(
+  Future<void> _openCreateQuestionDialog() async {
+    final CreateQuestionDTO? newQuestion = await showDialog<CreateQuestionDTO>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+      builder: (context) => const CreateQuestionDialog(),
+    );
+    if (newQuestion != null) {
+      setState(() {
+        _questions.add(QuestionDTO(
+          id: 0, // Temporary ID for new questions
+          questionText: newQuestion.questionText,
+          isRequired: newQuestion.isRequired,
+          displayOrder: newQuestion.displayOrder,
+        ));
+      });
+    }
+  }
+
+  Future<void> _openEditQuestionDialog(QuestionDTO question) async {
+    final CreateQuestionDTO? editedQuestion = await showDialog<CreateQuestionDTO>(
+      context: context,
+      builder: (context) => CreateQuestionDialog(
+        initialQuestion: CreateQuestionDTO(
+          questionText: question.questionText,
+          isRequired: question.isRequired,
+          displayOrder: question.displayOrder,
+        ),
+      ),
+    );
+    if (editedQuestion != null) {
+      setState(() {
+        final index = _questions.indexWhere((q) => q.id == question.id);
+        if (index != -1) {
+          _questions[index] = QuestionDTO(
+            id: question.id,
+            questionText: editedQuestion.questionText,
+            isRequired: editedQuestion.isRequired,
+            displayOrder: editedQuestion.displayOrder,
+          );
+        }
+      });
+    }
+  }
+
+  Future<void> _deleteQuestion(QuestionDTO question) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Question'),
+        content: const Text('Are you sure you want to delete this question?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
           ),
-          contentPadding: const EdgeInsets.all(24),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Edit Field Details',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      setState(() {
+        _questions.removeWhere((q) => q.id == question.id);
+      });
+    }
+  }
+
+  Future<void> _saveChanges() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Convert questions to CreateQuestionDTO format
+      final questionsToUpdate = _questions.map((q) => CreateQuestionDTO(
+        questionText: q.questionText,
+        isRequired: q.isRequired,
+        displayOrder: q.displayOrder,
+      )).toList();
+
+      // Call the API to update questions
+      final response = await dioClient.dio.put(
+        "/events/${widget.eventId}/questions",
+        data: {
+          "questions": questionsToUpdate.map((q) => q.toJson()).toList(),
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+      );
+
+      if (response.data["success"]) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Questions updated successfully')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update questions')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating questions: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Widget _buildQuestionList() {
+    if (_questions.isEmpty) {
+      return const Center(child: Text('No questions added yet.'));
+    }
+    return ListView.builder(
+      itemCount: _questions.length,
+      itemBuilder: (context, index) {
+        final question = _questions[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          child: ListTile(
+            title: Text(question.questionText),
+            subtitle: Text(
+              'Required: ${question.isRequired ? "Yes" : "No"}, Order: ${question.displayOrder}',
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () => _openEditQuestionDialog(question),
                 ),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _fieldNameController,
-                decoration: InputDecoration(
-                  labelText: 'Field Name',
-                  hintText: 'Enter Field Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => _deleteQuestion(question),
                 ),
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Input Type',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                value: _selectedInputType,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedInputType = value!;
-                  });
-                },
-                items: const [
-                  DropdownMenuItem(value: 'Text', child: Text('Text')),
-                  DropdownMenuItem(value: 'Radial', child: Text('Radial')),
-                  DropdownMenuItem(
-                      value: 'Drop-Down Menu', child: Text('Drop-Down Menu')),
-                  DropdownMenuItem(value: 'Slider', child: Text('Slider')),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.deepPurple),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_fieldNameController.text.isNotEmpty &&
-                          _selectedInputType != null) {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                            'Field "${_fieldNameController.text}" saved as $_selectedInputType',
-                          ),
-                        ));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Please fill all fields.')),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4A55FF),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: const Text('Save Field',
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                ],
-              )
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -139,69 +186,29 @@ class _QuestionnaireManagementPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Questionnaire Fields'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
+        title: const Text('Question Management'),
       ),
-      backgroundColor: const Color(0xFFFCF7FF),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _firstNameController,
-              decoration: const InputDecoration(
-                labelText: 'Edit First Name',
-                border: OutlineInputBorder(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  TextButton(
+                    onPressed: _openCreateQuestionDialog,
+                    child: const Text('Add Question'),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(child: _buildQuestionList()),
+                  const SizedBox(height: 16),
+                  ActionButton(
+                    onPressed: _saveChanges,
+                    text: 'Save Changes',
+                    icon: Icons.save,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(
-                labelText: 'Edit Last Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _phoneNumberController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Edit Phone Number',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _save,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4A55FF),
-                minimumSize: const Size.fromHeight(50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text('Save Changes',
-                  style: TextStyle(color: Colors.white, fontSize: 16)),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _showFieldEditDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                minimumSize: const Size.fromHeight(50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text('Edit Field Details',
-                  style: TextStyle(color: Colors.white, fontSize: 16)),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

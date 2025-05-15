@@ -6,6 +6,7 @@ import 'package:first_app/event_management/services/report_service.dart';
 import 'package:first_app/models/event.dart'; // Assuming EventWithQuestions or Event is here
 import 'package:first_app/network/event.dart';
 import 'package:first_app/models/organizer.dart';
+import 'package:first_app/models/question.dart';
 
 class DetailsPage extends StatefulWidget {
   final EventDetails event; 
@@ -67,7 +68,34 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
             _buildDashboardButton(
               label: 'QUESTIONNAIRE MANAGEMENT',
-              onPressed: () => _navigateTo(context, const QuestionnaireManagementPage()),
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(child: CircularProgressIndicator()),
+                );
+                try {
+                  final eventWithQuestions = await getEventById(widget.event.id);
+                  Navigator.pop(context); // Remove loading dialog
+                  _navigateTo(
+                    context,
+                    QuestionnaireManagementPage(
+                      eventId: widget.event.id,
+                      questions: eventWithQuestions.questions.map((q) => QuestionDTO(
+                        id: q.id,
+                        questionText: q.question.questionText,
+                        isRequired: q.isRequired,
+                        displayOrder: q.displayOrder,
+                      )).toList(),
+                    ),
+                  );
+                } catch (e) {
+                  Navigator.pop(context); // Remove loading dialog
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to load questions: $e')),
+                  );
+                }
+              },
             ),
           ],
         ),

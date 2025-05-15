@@ -4,7 +4,12 @@ import 'package:first_app/models/question.dart';
 import 'package:first_app/event_creation/widgets/create_question.dart';
 
 class CreateQuestionDialog extends StatefulWidget {
-  const CreateQuestionDialog({super.key});
+  final CreateQuestionDTO? initialQuestion;
+
+  const CreateQuestionDialog({
+    super.key,
+    this.initialQuestion,
+  });
 
   @override
   State<CreateQuestionDialog> createState() => _CreateQuestionDialogState();
@@ -12,9 +17,26 @@ class CreateQuestionDialog extends StatefulWidget {
 
 class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _questionTextController = TextEditingController();
-  bool isRequired = false;
-  final TextEditingController _displayOrderController = TextEditingController();
+  late final TextEditingController _questionTextController;
+  late bool isRequired;
+  late final TextEditingController _displayOrderController;
+
+  @override
+  void initState() {
+    super.initState();
+    _questionTextController = TextEditingController(text: widget.initialQuestion?.questionText ?? '');
+    isRequired = widget.initialQuestion?.isRequired ?? false;
+    _displayOrderController = TextEditingController(
+      text: widget.initialQuestion?.displayOrder.toString() ?? '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _questionTextController.dispose();
+    _displayOrderController.dispose();
+    super.dispose();
+  }
 
   _buildIsRequiredSwitch() {
     return Row(
@@ -43,7 +65,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
     return null;
   }
 
-  _createQuestionDTO(){
+  _createQuestionDTO() {
     return CreateQuestionDTO(
       questionText: _questionTextController.text.trim(),
       isRequired: isRequired,
@@ -58,12 +80,12 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
       final question = _createQuestionDTO();
       Navigator.pop(context, question); // Return the created question.
     }
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Create Question'),
+      title: Text(widget.initialQuestion == null ? 'Create Question' : 'Edit Question'),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -71,14 +93,22 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Question Text field.
-              buildTextField(label: "Question Text", controller: _questionTextController),
+              buildTextField(
+                label: "Question Text",
+                controller: _questionTextController,
+              ),
               const SizedBox(height: 8),
               // isRequired field using a Switch.
               _buildIsRequiredSwitch(),
               const SizedBox(height: 8),
               // Display Order field.
-              buildTextField( label: "Display Order", controller: _displayOrderController, validator: validateDisplayOrder, isNumber: true, ),
-              const SizedBox(height: 8),  
+              buildTextField(
+                label: "Display Order",
+                controller: _displayOrderController,
+                validator: validateDisplayOrder,
+                isNumber: true,
+              ),
+              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -91,9 +121,8 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: () { _onPressed(); // Create question action.
-          },
-          child: const Text('Create'),
+          onPressed: _onPressed, // Create/Edit question action.
+          child: Text(widget.initialQuestion == null ? 'Create' : 'Save'),
         ),
       ],
     );
