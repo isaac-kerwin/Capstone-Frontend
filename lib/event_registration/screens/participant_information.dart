@@ -2,17 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/registration.dart';
 import 'package:app_mobile_frontend/models/tickets.dart';
 import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/event_registration/screens/new_registration_form_generator.dart';
+import 'package:app_mobile_frontend/models/question.dart';
+import 'package:app_mobile_frontend/network/event_registration.dart';
 
 class ParticipantInformationScreen extends StatefulWidget {
   final int eventId;
   final List<RegistrationTicketDTO> tickets; // Now takes DTOs
   final List<int> quantities;
+  final List<String> ticketNames;
+  final List<dynamic> questions;
 
   const ParticipantInformationScreen({
     Key? key,
     required this.eventId,
     required this.tickets,
     required this.quantities,
+    required this.ticketNames,
+    required this.questions,
   }) : super(key: key);
 
   @override
@@ -23,7 +30,7 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
   late final int totalParticipants;
   late final List<Map<String, String>> participantData;
   final _formKey = GlobalKey<FormState>();
-  List<String> ticketNames = [];
+  List<Map<String, String>> participantResponses = [];
 
   @override
   void initState() {
@@ -33,22 +40,7 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
       totalParticipants,
       (_) => {'firstname': '', 'lastname': '', 'email': '', 'phone': ''},
     );
-    _fetchTicketNames();
-  }
-
-  Future<void> _fetchTicketNames() async { 
-    List<String> names = [];
-    for (var ticket in widget.tickets) {
-      try {
-        final Ticket ticketObj = await getTicketById(widget.eventId, ticket.ticketId);
-        names.add(ticketObj.name);
-      } catch (e) {
-        names.add('Unknown');
-      }
-    }
-    setState(() {
-      ticketNames = names;
-    });
+    participantResponses = List.generate(totalParticipants, (_) => {});
   }
 
   String _getTicketNameForParticipant(int index) {
@@ -56,8 +48,8 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
     for (int i = 0; i < widget.tickets.length; i++) {
       runningTotal += widget.tickets[i].quantity;
       if (index < runningTotal) {
-        if (i < ticketNames.length) {
-          return ticketNames[i];
+        if (i < widget.ticketNames.length) {
+          return widget.ticketNames[i];
         } else {
           return '';
         }
@@ -117,17 +109,43 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
               },
               onChanged: (value) => participantData[index]['phone'] = value,
             ),
+            const SizedBox(height: 12),
+            DynamicQuestionForm(
+              questions: widget.questions,
+              onResponsesChanged: (responses) {
+                participantResponses[index] = responses;
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _continue() {
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All participant information is valid!')),
+      final registrationDTO = EventRegistrationDTO(
+        eventId: widget.eventId,
+        tickets: widget.tickets,
+        participants: List.generate(totalParticipants, (i) => RegistrationParticipantDTO(
+          firstName: participantData[i]['firstname'] ?? '',
+          lastName: participantData[i]['lastname'] ?? '',
+          email: participantData[i]['email'] ?? '',
+          phoneNumber: participantData[i]['phone'],
+          responses: participantResponses[i],
+        )),
       );
+      final success = await singleRegistration(widget.eventId, registrationDTO);
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful!')),
+        );
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration failed.')),
+        );
+      }
     }
   }
 
@@ -143,7 +161,7 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
-                onPressed: _continue,
+                onPressed: _submit,
                 child: const Text('Submit'),
               ),
             ),

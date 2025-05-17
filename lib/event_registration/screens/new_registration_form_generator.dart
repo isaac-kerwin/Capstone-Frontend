@@ -3,6 +3,7 @@ import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/models/tickets.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/main_screen.dart';
+import 'package:app_mobile_frontend/models/question.dart';
 
 class RegistrationForm extends StatefulWidget {
   final int eventId;
@@ -157,6 +158,67 @@ class _RegistrationFormState extends State<RegistrationForm> {
           );
         },
       ),
+    );
+  }
+}
+
+class DynamicQuestionForm extends StatefulWidget {
+  final List<dynamic> questions; // Accept both Question and QuestionDTO
+  final void Function(Map<String, String>) onResponsesChanged;
+
+  const DynamicQuestionForm({required this.questions, required this.onResponsesChanged, Key? key}) : super(key: key);
+
+  @override
+  _DynamicQuestionFormState createState() => _DynamicQuestionFormState();
+}
+
+class _DynamicQuestionFormState extends State<DynamicQuestionForm> {
+  final Map<int, TextEditingController> controllers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    for (int i = 0; i < widget.questions.length; i++) {
+      controllers[i] = TextEditingController();
+    }
+  }
+
+  @override
+  void dispose() {
+    controllers.values.forEach((c) => c.dispose());
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(widget.questions.length, (index) {
+        final q = widget.questions[index];
+        final questionText = q is Question ? q.question.questionText : q.questionText;
+        final isRequired = q is Question ? q.isRequired : q.isRequired;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: TextFormField(
+            controller: controllers[index],
+            decoration: InputDecoration(labelText: questionText),
+            validator: (value) {
+              if (isRequired && (value == null || value.isEmpty)) {
+                return 'This field is required';
+              }
+              return null;
+            },
+            onChanged: (_) {
+              final responses = <String, String>{};
+              controllers.forEach((i, c) {
+                final q = widget.questions[i];
+                final questionText = q is Question ? q.question.questionText : q.questionText;
+                responses[questionText] = c.text;
+              });
+              widget.onResponsesChanged(responses);
+            },
+          ),
+        );
+      }),
     );
   }
 }

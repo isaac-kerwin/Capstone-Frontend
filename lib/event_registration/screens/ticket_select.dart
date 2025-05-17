@@ -38,9 +38,10 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
     return total;
   }
 
-  void _navigateToParticipantForm() {
+  void _navigateToParticipantForm(List<dynamic> questions) {
     // Build a list of RegistrationTicketDTOs instead of maps
     final List<RegistrationTicketDTO> selectedTickets = [];
+    final List<String> selectedTicketNames = [];
     for (int i = 0; i < tickets.length; i++) {
       if (quantities[i] > 0) {
         selectedTickets.add(
@@ -49,6 +50,7 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
             quantity: quantities[i],
           ),
         );
+        selectedTicketNames.add(tickets[i].name);
       }
     }
 
@@ -59,6 +61,8 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
           eventId: widget.eventId,
           tickets: selectedTickets, // Pass RegistrationTicketDTO list
           quantities: quantities,
+          ticketNames: selectedTicketNames, // Pass ticket names
+          questions: questions, // Pass event questions
         ),
       ),
     );
@@ -171,7 +175,7 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: hasSelectedTickets ? _navigateToParticipantForm : null,
+                    onPressed: hasSelectedTickets ? () => _navigateToParticipantForm(snapshot.data!.questions) : null,
                     child: Text('Enter Your Details'),
                   ),
                 ),
