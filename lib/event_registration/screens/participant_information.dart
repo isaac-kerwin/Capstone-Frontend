@@ -7,12 +7,14 @@ class ParticipantInformationScreen extends StatefulWidget {
   final int eventId;
   final List<RegistrationTicketDTO> tickets; // Now takes DTOs
   final List<int> quantities;
+  final List<String> ticketNames;
 
   const ParticipantInformationScreen({
     Key? key,
     required this.eventId,
     required this.tickets,
     required this.quantities,
+    required this.ticketNames,
   }) : super(key: key);
 
   @override
@@ -23,7 +25,6 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
   late final int totalParticipants;
   late final List<Map<String, String>> participantData;
   final _formKey = GlobalKey<FormState>();
-  List<String> ticketNames = [];
 
   @override
   void initState() {
@@ -33,22 +34,6 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
       totalParticipants,
       (_) => {'firstname': '', 'lastname': '', 'email': '', 'phone': ''},
     );
-    _fetchTicketNames();
-  }
-
-  Future<void> _fetchTicketNames() async { 
-    List<String> names = [];
-    for (var ticket in widget.tickets) {
-      try {
-        final Ticket ticketObj = await getTicketById(widget.eventId, ticket.ticketId);
-        names.add(ticketObj.name);
-      } catch (e) {
-        names.add('Unknown');
-      }
-    }
-    setState(() {
-      ticketNames = names;
-    });
   }
 
   String _getTicketNameForParticipant(int index) {
@@ -56,8 +41,8 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
     for (int i = 0; i < widget.tickets.length; i++) {
       runningTotal += widget.tickets[i].quantity;
       if (index < runningTotal) {
-        if (i < ticketNames.length) {
-          return ticketNames[i];
+        if (i < widget.ticketNames.length) {
+          return widget.ticketNames[i];
         } else {
           return '';
         }

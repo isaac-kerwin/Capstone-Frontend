@@ -41,6 +41,7 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
   void _navigateToParticipantForm() {
     // Build a list of RegistrationTicketDTOs instead of maps
     final List<RegistrationTicketDTO> selectedTickets = [];
+    final List<String> selectedTicketNames = [];
     for (int i = 0; i < tickets.length; i++) {
       if (quantities[i] > 0) {
         selectedTickets.add(
@@ -49,6 +50,7 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
             quantity: quantities[i],
           ),
         );
+        selectedTicketNames.add(tickets[i].name);
       }
     }
 
@@ -59,6 +61,7 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
           eventId: widget.eventId,
           tickets: selectedTickets, // Pass RegistrationTicketDTO list
           quantities: quantities,
+          ticketNames: selectedTicketNames, // Pass ticket names
         ),
       ),
     );
