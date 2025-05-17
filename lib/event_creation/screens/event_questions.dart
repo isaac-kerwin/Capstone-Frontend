@@ -114,7 +114,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
         data: event.toJson(),
         options: Options(
           headers: {
-            'Authorization': 'Bearer $accessToken',
+            'Authorization': 'Bearer ${await getToken()}',
           },
         ),
       );

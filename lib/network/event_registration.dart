@@ -1,6 +1,5 @@
 import 'package:app_mobile_frontend/network/auth.dart';
 import "package:app_mobile_frontend/network/dio_client.dart";
-import "package:app_mobile_frontend/models/registration.dart";
 import "package:dio/dio.dart";
 
 Future<bool> singleRegistration(int event, EventRegistrationDTO) async{
@@ -10,7 +9,7 @@ Future<bool> singleRegistration(int event, EventRegistrationDTO) async{
       data: EventRegistrationDTO.toJson(),
       options: Options(
         headers: {
-          'Authorization': 'Bearer $accessToken',
+          'Authorization': 'Bearer ${await getToken()}',
         },
       ),
     );

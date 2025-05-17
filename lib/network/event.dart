@@ -14,7 +14,7 @@ Future<void> createEvent(CreateEventDTO event) async {
       data: event.toJson(),
           options: Options(
       headers: {
-        'Authorization': 'Bearer $accessToken',
+        'Authorization': 'Bearer ${await getToken()}',
       },
     ));
     if (response.data["success"]) {
@@ -34,7 +34,7 @@ Future<void> updateEvent(int id, UpdateEventDTO updatedEvent) async {
       data: updatedEvent.toJson(),
           options: Options(
       headers: {
-        'Authorization': 'Bearer $accessToken',}));
+        'Authorization': 'Bearer ${await getToken()}',}));
     if (response.data["success"]) {
       print("Event updated successfully: ${response.data}");
     } else {
@@ -52,7 +52,7 @@ Future<void> deleteEvent(int id) async {
       "/events/$id",
           options: Options(
       headers:
-        {'Authorization': 'Bearer $accessToken',}));
+        {'Authorization': 'Bearer ${await getToken()}',}));
     if (response.data["success"]) {
       print("Event deleted successfully: ${response.data}");
     } else {
@@ -124,7 +124,7 @@ Future<bool> publishEvent(int id) async{
       },
       options: Options(
       headers: {
-        'Authorization': 'Bearer $accessToken',
+        'Authorization': 'Bearer ${await getToken()}',
       },
     ));
     if (response.data["success"]) {
@@ -165,7 +165,7 @@ Future<Ticket> createTicket(int eventId, TicketDTO ticket) async {
       data: ticket.toJson(),
       options: Options(
         headers: {
-          'Authorization': 'Bearer $accessToken',
+          'Authorization': 'Bearer ${await getToken()}',
         },
       ),
     );
@@ -186,7 +186,7 @@ Future<Ticket> updateTicket(int ticketId, TicketDTO ticket) async {
       data: ticket.toJson(),
       options: Options(
         headers: {
-          'Authorization': 'Bearer $accessToken',
+          'Authorization': 'Bearer ${await getToken()}',
         },
       ),
     );
@@ -206,7 +206,7 @@ Future<void> deleteTicket(int ticketId) async {
       "/tickets/$ticketId",
       options: Options(
         headers: {
-          'Authorization': 'Bearer $accessToken',
+          'Authorization': 'Bearer ${await getToken()}',
         },
       ),
     );

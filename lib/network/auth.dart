@@ -1,11 +1,27 @@
+import "dart:convert";
 import "package:app_mobile_frontend/network/dio_client.dart";
 import "package:app_mobile_frontend/models/user.dart";
+import "package:flutter_secure_storage/flutter_secure_storage.dart";
 
-// TO DO NOT USE PRINTS FOR ERROR HANDLING
-// TO DO SECURE STORAGE FOR ACCESS TOKEN
+
 String? accessToken;
+final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
-//Implemented
+
+Future<void> saveToken(String token) async {
+  await _secureStorage.write(key: 'accessToken', value: token);
+}
+
+Future<String?> getToken() async {
+  String? token = await _secureStorage.read(key: "accessToken");
+  if (token != null) {
+    print("Token retrieved: $token");
+    return token;
+  }
+  print("No token found.");
+  return null;
+}
+
 Future<bool> loginUser(String email, String password) async {
   try {
     final response = await dioClient.dio.post(
@@ -13,9 +29,9 @@ Future<bool> loginUser(String email, String password) async {
       data: {"email": email, "password": password},
     );
     if (response.data["success"]) {
-      final Map<String, dynamic> responseData = response.data;
-      final String newAccessToken = responseData["data"]?["accessToken"];
-      handleAccessToken(newAccessToken);
+      print("access Token: ${response.data["data"]?["accessToken"]}");
+      final String token = response.data["data"]?["accessToken"];
+      saveToken(token);
       return true;
     } else {
       return false;
@@ -40,8 +56,7 @@ Future<void> refreshToken() async {
     final response = await dioClient.dio.post("/auth/refresh-token");
 
     if (response.data["success"]) {
-      final Map<String, dynamic> responseData = response.data;
-      final String newAccessToken = responseData["data"]?["accessToken"];
+      final String newAccessToken = response.data["data"]?["accessToken"];
       handleAccessToken(newAccessToken);
     } else {
       print("Refresh token failed: ${response.data}");
@@ -66,9 +81,9 @@ Future<bool> registerUser(RegisterUserDTO data) async {
 
 Future<bool> logoutUser() async {
   try {
+    clearToken();
     final response = await dioClient.dio.post("/auth/logout");
     if (response.data["success"]) {
-      accessToken = null; // Clear the access token on logout
       return true;
     } else {
       return false;
@@ -76,4 +91,10 @@ Future<bool> logoutUser() async {
   } catch (error) {
     return false;
   }
+}
+
+Future<void> clearToken() async {
+  await _secureStorage.delete(key: 'accessToken');
+  print("Deleted Token: ${getToken()}");
+  print("Token cleared");
 }

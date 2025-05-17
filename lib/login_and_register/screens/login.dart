@@ -1,8 +1,4 @@
 // lib/login_and_register/screens/login.dart
-
-import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/login_and_register/screens/register_account.dart';
 import 'package:app_mobile_frontend/network/auth.dart';

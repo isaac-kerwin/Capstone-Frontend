@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:app_mobile_frontend/models/question.dart';
 import 'package:app_mobile_frontend/event_creation/widgets/create_question.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/fundamental_widgets/action_button.dart';
-import 'package:app_mobile_frontend/fundamental_widgets/form_widgets.dart';
 import 'package:app_mobile_frontend/network/dio_client.dart';
 import 'package:app_mobile_frontend/network/auth.dart';
 import 'package:dio/dio.dart';
@@ -134,7 +132,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
         },
         options: Options(
           headers: {
-            'Authorization': 'Bearer $accessToken',
+            'Authorization': 'Bearer ${await getToken()}',
           },
         ),
       );

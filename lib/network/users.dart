@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:app_mobile_frontend/network/dio_client.dart';
 import 'package:app_mobile_frontend/models/user.dart';
 import 'package:dio/dio.dart';
@@ -13,7 +12,7 @@ Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) asyn
       options: Options(
         headers
           : {
-            'Authorization': 'Bearer ${accessToken}',
+            'Authorization': 'Bearer ${await getToken()}',
           },
     ));
     if (response.data["success"]) {
@@ -27,17 +26,18 @@ Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) asyn
 }
 Future<UserProfile?> getUserProfile() async {
   try {
+    print("Access Token: ${ await getToken()}");
     final response = await dioClient.dio.get(
       "/user/profile",         
       options: Options(
         headers: {
-          'Authorization': 'Bearer $accessToken',
+          'Authorization': 'Bearer ${await getToken()}',
         },
       ),
     );
 
-        print("Data: ${response.data["data"]}");
-        print("Success: ${response.data["success"]}");
+      print("Data: ${response.data["data"]}");
+      print("Success: ${response.data["success"]}");
 
 
     if (response.data["success"] == true) {

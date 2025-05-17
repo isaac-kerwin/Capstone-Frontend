@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/event_registration/screens/new_registration_form_generator.dart';
 import 'package:app_mobile_frontend/event_registration/screens/ticket_select.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';

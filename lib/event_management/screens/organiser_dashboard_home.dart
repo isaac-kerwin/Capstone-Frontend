@@ -17,8 +17,6 @@ class OrganiserDashboard extends StatefulWidget
 Future<Events> _getOrganizersEvents() async {
   // Show all statuses for organizer's own events
   final events = await getFilteredEvents("myEvents=true&status=");
-  print("Fetched events (names): "+ events.events.map((e) => e.name).toList().toString());
-  print("Fetched events (full): "+ events.events.toString());
   return events;
 }
 
@@ -66,7 +64,6 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        title: const Text('Organiser Dashboard'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -77,7 +74,6 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-
             _buildEventSlideshow(futureEvents, key: Key('event_slideshow')),
             const SizedBox(height: 16),
           ],

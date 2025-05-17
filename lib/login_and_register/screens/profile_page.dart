@@ -1,10 +1,5 @@
-import 'package:app_mobile_frontend/network/users.dart';
+
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/event_exploration/screens/explore.dart';
-import 'package:app_mobile_frontend/event_management/screens/organiser_dashboard_home.dart';
-import 'package:app_mobile_frontend/login_and_register/screens/login.dart';
-import 'package:app_mobile_frontend/get_user.dart';
-import 'package:app_mobile_frontend/models/user.dart';
 import 'package:app_mobile_frontend/main_screen.dart';
 import 'package:app_mobile_frontend/network/auth.dart';
 import 'package:app_mobile_frontend/login_and_register/screens/change_password.dart';

@@ -3,10 +3,8 @@ import 'edit_questions.dart';
 import 'edit_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:app_mobile_frontend/event_management/services/report_service.dart';
 import 'package:app_mobile_frontend/models/event.dart'; // Assuming EventWithQuestions or Event is here
 import 'package:app_mobile_frontend/network/event.dart';
-import 'package:app_mobile_frontend/models/organizer.dart';
 import 'package:app_mobile_frontend/event_management/widgets/event_info_tile.dart';
 import 'package:app_mobile_frontend/models/question.dart';
 
