@@ -5,6 +5,7 @@ import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/event_registration/screens/new_registration_form_generator.dart';
 import 'package:app_mobile_frontend/models/question.dart';
 import 'package:app_mobile_frontend/network/event_registration.dart';
+import 'package:app_mobile_frontend/event_registration/screens/questionnaire_page.dart';
 
 class ParticipantInformationScreen extends StatefulWidget {
   final int eventId;
@@ -109,44 +110,42 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
               },
               onChanged: (value) => participantData[index]['phone'] = value,
             ),
-            const SizedBox(height: 12),
-            DynamicQuestionForm(
-              questions: widget.questions,
-              onResponsesChanged: (responses) {
-                participantResponses[index] = responses;
-              },
-            ),
           ],
         ),
       ),
     );
   }
 
-  void _submit() async {
-    if (_formKey.currentState!.validate()) {
-      final registrationDTO = EventRegistrationDTO(
-        eventId: widget.eventId,
-        tickets: widget.tickets,
-        participants: List.generate(totalParticipants, (i) => RegistrationParticipantDTO(
-          firstName: participantData[i]['firstname'] ?? '',
-          lastName: participantData[i]['lastname'] ?? '',
-          email: participantData[i]['email'] ?? '',
-          phoneNumber: participantData[i]['phone'],
-          responses: participantResponses[i],
-        )),
-      );
-      final success = await singleRegistration(widget.eventId, registrationDTO);
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration successful!')),
-        );
-        Navigator.of(context).pop();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration failed.')),
-        );
+  void _goToQuestionnairePage() {
+    // Filter out default questions by questionText
+    final defaultFields = ['First Name', 'Last Name', 'Email', 'Phone Number'];
+    final customQuestions = widget.questions.where((q) {
+      String? questionText;
+      if (q is Question) {
+        questionText = q.question.questionText;
+      } else if (q is QuestionDTO) {
+        questionText = q.questionText;
+      } else if (q is Map && q['questionText'] != null) {
+        questionText = q['questionText'];
       }
-    }
+      return questionText != null && !defaultFields.contains(questionText);
+    }).toList();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QuestionnairePage(
+          questions: customQuestions,
+          onSubmit: (responses) {
+            // Handle final submission here, e.g., send all data to backend
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Registration complete!')),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -161,8 +160,12 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
-                onPressed: _submit,
-                child: const Text('Submit'),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _goToQuestionnairePage();
+                  }
+                },
+                child: const Text('Next'),
               ),
             ),
           ],
