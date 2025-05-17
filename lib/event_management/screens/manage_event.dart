@@ -1,11 +1,13 @@
-import 'ticket_management_page.dart';
-import 'questionnaire_management_page.dart';
-import 'edit_event_page.dart';
-
+import 'edit_tickets.dart';
+import 'edit_questions.dart';
+import 'edit_details.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:app_mobile_frontend/event_management/services/report_service.dart';
 import 'package:app_mobile_frontend/models/event.dart'; // Assuming EventWithQuestions or Event is here
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/models/organizer.dart';
+import 'package:app_mobile_frontend/event_management/widgets/event_info_tile.dart';
 import 'package:app_mobile_frontend/models/question.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -40,14 +42,15 @@ class _DetailsPageState extends State<DetailsPage> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFFCF7FF),
+
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            EventInfoTile(event: widget.event),
             _buildDashboardButton(
-              label: 'TICKET MANAGEMENT',
+              label: 'EDIT EVENT TICKETS',
               onPressed: () => _navigateTo(context, TicketManagementPage(event: widget.event)),
             ),
 /*             _buildDashboardButton(
@@ -67,7 +70,7 @@ class _DetailsPageState extends State<DetailsPage> {
               },
             ),
             _buildDashboardButton(
-              label: 'QUESTIONNAIRE MANAGEMENT',
+              label: 'EDIT EVENT QUESTIONS',
               onPressed: () async {
                 showDialog(
                   context: context,
@@ -116,7 +119,6 @@ class _DetailsPageState extends State<DetailsPage> {
 
   ButtonStyle _buttonStyle() {
     return ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFF4A55FF),
       padding: const EdgeInsets.symmetric(vertical: 18),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),

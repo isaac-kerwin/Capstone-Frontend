@@ -2,7 +2,7 @@ import 'package:app_mobile_frontend/fundamental_widgets/action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/event_creation/screens/event_details.dart';
-import 'package:app_mobile_frontend/event_management/screens/details_page.dart';
+import 'package:app_mobile_frontend/event_management/screens/manage_event.dart';
 import 'package:app_mobile_frontend/event_management/widgets/event_info_tile.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/event_management/screens/organiser_dashboard_home.dart';

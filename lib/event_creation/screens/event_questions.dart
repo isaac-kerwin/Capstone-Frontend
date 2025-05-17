@@ -62,7 +62,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
         final organiserId = profile?.id ?? 1;
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => OrganiserDashboard(organiserId: organiserId)),
+          MaterialPageRoute(builder: (context) => OrganiserDashboard()),
           (Route<dynamic> route) => false,
         );
       } else {

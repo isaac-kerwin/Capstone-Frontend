@@ -65,12 +65,19 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+        title: const Text('Organiser Dashboard'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
+
             _buildEventSlideshow(futureEvents, key: Key('event_slideshow')),
             const SizedBox(height: 16),
           ],

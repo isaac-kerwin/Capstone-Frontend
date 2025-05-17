@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:first_app/models/tickets.dart';
-import 'package:first_app/models/event.dart';
-import 'package:first_app/network/event.dart';
+import 'package:app_mobile_frontend/models/tickets.dart';
+import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/network/event.dart';
 
 class TicketManagementPage extends StatefulWidget {
   final EventDetails event;
@@ -321,7 +321,7 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
       itemBuilder: (context, index) {
         final ticket = _tickets[index];
         return Card(
-          color: const Color(0xFFF5F0FF),
+          
           margin: const EdgeInsets.only(bottom: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: ListTile(
@@ -368,7 +368,6 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFFCF7FF),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
