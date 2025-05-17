@@ -1,0 +1,2 @@
+C:/Users/bropa/Desktop/Capstone-Development-Sprint3/Capstone-Frontend/android/app/.cxx/Debug/556b6r66/x86/CMakeFiles/edit_cache.dir
+C:/Users/bropa/Desktop/Capstone-Development-Sprint3/Capstone-Frontend/android/app/.cxx/Debug/556b6r66/x86/CMakeFiles/rebuild_cache.dir
