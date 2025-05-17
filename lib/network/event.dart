@@ -1,3 +1,4 @@
+
 import 'package:app_mobile_frontend/network/auth.dart';
 import "package:app_mobile_frontend/network/dio_client.dart";
 import "package:app_mobile_frontend/models/event.dart";
@@ -7,6 +8,7 @@ import "package:app_mobile_frontend/models/tickets.dart";
 // TO DO  
 Future<void> createEvent(CreateEventDTO event) async {
   try {
+    print("Access Token used for createEvent: $accessToken");
     final response = await dioClient.dio.post(
       "/events",
       data: event.toJson(),
@@ -112,6 +114,7 @@ Future<EventWithQuestions> getEventById(int id) async {
   }
 }
 
+
 Future<bool> publishEvent(int id) async{
   try {
     final response = await dioClient.dio.patch(
@@ -152,5 +155,65 @@ Future<Ticket> getTicketById(int eventId, int ticketId) async {
   } catch (error) {
     print("Error getting ticket: $error");
     throw Exception("Error getting ticket: $error");
+  }
+}
+
+Future<Ticket> createTicket(int eventId, TicketDTO ticket) async {
+  try {
+    final response = await dioClient.dio.post(
+      "/events/$eventId/tickets",
+      data: ticket.toJson(),
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
+    if (response.data["success"]) {
+      return Ticket.fromJson(response.data["data"]);
+    } else {
+      throw Exception("Failed to create ticket: ${response.data}");
+    }
+  } catch (error) {
+    throw Exception("Error creating ticket: $error");
+  }
+}
+
+Future<Ticket> updateTicket(int ticketId, TicketDTO ticket) async {
+  try {
+    final response = await dioClient.dio.put(
+      "/tickets/$ticketId",
+      data: ticket.toJson(),
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
+    if (response.data["success"]) {
+      return Ticket.fromJson(response.data["data"]);
+    } else {
+      throw Exception("Failed to update ticket: ${response.data}");
+    }
+  } catch (error) {
+    throw Exception("Error updating ticket: $error");
+  }
+}
+
+Future<void> deleteTicket(int ticketId) async {
+  try {
+    final response = await dioClient.dio.delete(
+      "/tickets/$ticketId",
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      ),
+    );
+    if (!response.data["success"]) {
+      throw Exception("Failed to delete ticket: ${response.data}");
+    }
+  } catch (error) {
+    throw Exception("Error deleting ticket: $error");
   }
 }

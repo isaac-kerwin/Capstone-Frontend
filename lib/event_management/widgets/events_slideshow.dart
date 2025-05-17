@@ -54,7 +54,8 @@ class EventSlideshow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<EventDetails> eventsList = events.events;
+    final List<EventDetails> eventsList = List.from(events.events)
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     // PageView lets you swipe (slide) between pages
     return Expanded(
       child: PageView.builder(

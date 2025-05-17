@@ -15,7 +15,11 @@ class OrganiserDashboard extends StatefulWidget
 }
 
 Future<Events> _getOrganizersEvents() async {
-  return await getFilteredEvents("myEvents=true");
+  // Show all statuses for organizer's own events
+  final events = await getFilteredEvents("myEvents=true&status=");
+  print("Fetched events (names): "+ events.events.map((e) => e.name).toList().toString());
+  print("Fetched events (full): "+ events.events.toString());
+  return events;
 }
 
 Widget _buildEventSlideshow(Future<Events> futureEvents, {Key? key}) {
@@ -51,17 +55,27 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      futureEvents = _getOrganizersEvents();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    
-    return Padding(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
             _buildEventSlideshow(futureEvents, key: Key('event_slideshow')),
             const SizedBox(height: 16),
           ],
         ),
-      );
+      ),
+    );
   }
 }

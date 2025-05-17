@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
 import 'ticket_management_page.dart';
 import 'questionnaire_management_page.dart';
 import 'edit_event_page.dart';
+
 import 'package:app_mobile_frontend/event_management/services/report_service.dart';
 import 'package:app_mobile_frontend/models/event.dart'; // Assuming EventWithQuestions or Event is here
+import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/models/organizer.dart';
+import 'package:app_mobile_frontend/models/question.dart';
 
 class DetailsPage extends StatefulWidget {
   final EventDetails event; 
@@ -45,7 +48,7 @@ class _DetailsPageState extends State<DetailsPage> {
           children: [
             _buildDashboardButton(
               label: 'TICKET MANAGEMENT',
-              onPressed: () => _navigateTo(context, const TicketManagementPage()),
+              onPressed: () => _navigateTo(context, TicketManagementPage(event: widget.event)),
             ),
 /*             _buildDashboardButton(
               label: 'GENERATE EVENT REPORT',
@@ -60,13 +63,39 @@ class _DetailsPageState extends State<DetailsPage> {
             _buildDashboardButton(
               label: 'EDIT EVENT INFORMATION',
               onPressed: () {
-                // TODO: Replace with the correct Event instance
                 _navigateTo(context, EditEventPage(event: widget.event));
               },
             ),
             _buildDashboardButton(
               label: 'QUESTIONNAIRE MANAGEMENT',
-              onPressed: () => _navigateTo(context, const QuestionnaireManagementPage()),
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(child: CircularProgressIndicator()),
+                );
+                try {
+                  final eventWithQuestions = await getEventById(widget.event.id);
+                  Navigator.pop(context); // Remove loading dialog
+                  _navigateTo(
+                    context,
+                    QuestionnaireManagementPage(
+                      eventId: widget.event.id,
+                      questions: eventWithQuestions.questions.map((q) => QuestionDTO(
+                        id: q.id,
+                        questionText: q.question.questionText,
+                        isRequired: q.isRequired,
+                        displayOrder: q.displayOrder,
+                      )).toList(),
+                    ),
+                  );
+                } catch (e) {
+                  Navigator.pop(context); // Remove loading dialog
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to load questions: $e')),
+                  );
+                }
+              },
             ),
           ],
         ),

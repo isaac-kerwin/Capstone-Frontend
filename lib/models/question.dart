@@ -69,8 +69,6 @@ class QuestionGroup {
   }
 }
 
-
-
 class CreateQuestionDTO {
   final String questionText;
   final bool isRequired;
@@ -86,6 +84,38 @@ class CreateQuestionDTO {
       "questionText": questionText,
       "isRequired": isRequired,
       "displayOrder": displayOrder
+    };
+  }
+}
+
+class QuestionDTO {
+  final int id;
+  final String questionText;
+  final bool isRequired;
+  final int displayOrder;
+
+  QuestionDTO({
+    required this.id,
+    required this.questionText,
+    required this.isRequired,
+    required this.displayOrder,
+  });
+
+  factory QuestionDTO.fromJson(Map<String, dynamic> json) {
+    return QuestionDTO(
+      id: json["id"],
+      questionText: json["questionText"],
+      isRequired: json["isRequired"],
+      displayOrder: json["displayOrder"],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "questionText": questionText,
+      "isRequired": isRequired,
+      "displayOrder": displayOrder,
     };
   }
 }
