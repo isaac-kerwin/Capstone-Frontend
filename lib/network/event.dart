@@ -95,6 +95,23 @@ Future<Events> getFilteredEvents(String filter) async{
   }
 }
 
+// Future<Events> searchEvents(String searchTerm) async {
+//   try {
+//     final encodedSearchTerm = Uri.encodeComponent(searchTerm);
+//     final response = await dioClient.dio.get("/events?search=$encodedSearchTerm");
+    
+//     if (response.data["success"]) {
+//       final responseData = response.data;
+//       Events events = Events.fromJson(responseData["data"]);
+//       return events;
+//     } else {
+//       throw Exception("Failed to search events: ${response.data}");
+//     }
+//   } catch (error) {
+//     throw Exception("Error searching events: $error");
+//   }
+// }
+
 Future<EventWithQuestions> getEventById(int id) async {
   try {
     print("ID: $id");
