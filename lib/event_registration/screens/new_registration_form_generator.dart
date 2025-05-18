@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/event.dart';
-import 'package:app_mobile_frontend/models/tickets.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/main_screen.dart';
-import 'package:app_mobile_frontend/models/question.dart';
+
 
 class RegistrationForm extends StatefulWidget {
   final int eventId;
-  const RegistrationForm({Key? key, required this.eventId, }) : super(key: key);
+  final List<String> ticketNames;
+  final List<Map<String, int>> tickets;
+  final List<Map<String, String>> participantData;
+  // final List<Map<String, dynamic>> questions;
+  const RegistrationForm({Key? key, 
+  required this.eventId,
+  required this.tickets,
+  required this.ticketNames,
+  required this.participantData
+  }) : super(key: key);
 
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
@@ -17,7 +25,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
   late Future<EventWithQuestions> eventFuture;
   final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false;
-  String? selectedTicket;
   final Map<int, TextEditingController> controllers = {};
 
   @override
@@ -32,41 +39,184 @@ class _RegistrationFormState extends State<RegistrationForm> {
     super.dispose();
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // Process the registration data.
-      // You can collect the selectedTicket and text field responses here.
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Form Submitted Successfully')),
-      );
+
+
+/// Parses the quantity value safely from dynamic input.
+int _parseQuantity(dynamic quantityValue) {
+  if (quantityValue is int) return quantityValue;
+  if (quantityValue is String) return int.tryParse(quantityValue) ?? 0;
+  return 0;
+}
+
+/// Generates a unique index for mapping controllers to ticket/person/question.
+int _generateControllerIndex(int ticketIndex, int copyIndex, int questionIndex, int questionCount) {
+  return (ticketIndex * 1000) + (copyIndex * questionCount) + questionIndex;
+}
+
+Map<String, dynamic> _buildRegistrationPayload(EventWithQuestions event) {
+  final List<Map<String, dynamic>> ticketSelections = [];
+  final List<Map<String, dynamic>> participants = [];
+
+  for (int ticketIndex = 0; ticketIndex < widget.tickets.length; ticketIndex++) {
+    final ticket = widget.tickets[ticketIndex];
+    final ticketId = ticket['ticketId'];
+    final int quantity = _parseQuantity(ticket['quantity']);
+
+    ticketSelections.add({
+      'ticketId': ticketId,
+      'quantity': quantity,
+    });
+
+    for (int copyIndex = 0; copyIndex < quantity; copyIndex++) {
+      int participantIndex = participants.length;
+      final participantResponses = <Map<String, dynamic>>[];
+      _setParticipantResponses(event, participantIndex, ticketIndex, copyIndex, participants, participantResponses);
+
+            // Replace these with actual form inputs if needed
+      final email = widget.participantData[participantIndex]['email'] ?? '';
+      final firstName = widget.participantData[participantIndex]['firstname'] ?? '';
+      final lastName = widget.participantData[participantIndex]['lastname'] ?? '';
+      final phoneNumber = widget.participantData[participantIndex]['phone'] ?? '';
+
+      participants.add({
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'phoneNumber': phoneNumber,
+        'responses': participantResponses,
+      });
+    }
+
     
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const MainScreen()),
-        (Route<dynamic> route) => false,
+  }
+  print(event.id);
+  print(ticketSelections);
+  print(participants);
+  
+  return {
+    'eventId': event.id,
+    'tickets': ticketSelections,
+    'participants': participants,
+  };
+}
+
+_setParticipantResponses(event, participantIndex, ticketIndex, copyIndex, participants, participantResponses) {  
+      
+      for (int questionIndex = 0; questionIndex < event.questions.length; questionIndex++) {
+        int controllerIndex = _generateControllerIndex(ticketIndex, copyIndex, questionIndex, event.questions.length);
+        final controller = controllers[controllerIndex];
+        final question = event.questions[questionIndex];
+
+        participantResponses.add({
+          'eventQuestionId': question.question.id,
+          'responseText': controller!.text.trim(),
+        });
+      }
+      return participantResponses;
+}
+
+void _submitForm(eventId, tickets, participantData, responses, event) {
+  if (_formKey.currentState!.validate()) {
+    // Process the registration data.
+    // You can collect the selectedTicket and text field responses here.
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Form Submitted Successfully')),
+    );
+  
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const MainScreen()),
+      (Route<dynamic> route) => false,
+    );
+      setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      final registrationPayload = _buildRegistrationPayload(event);
+
+      // TODO: send to backend using Dio 
+      
+      // Navigate or show confirmation
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration submitted!')),
       );
+    } catch (e) {
+      debugPrint('Submission error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      setState(() {
+        _isSubmitting = false;
+      });
     }
   }
+}
 
-  _buildTicketDropDown(List<Ticket> tickets) {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(labelText: 'Select Ticket'),
-      value: selectedTicket,
-      items: tickets.map((ticket) {
-        return DropdownMenuItem<String>(
-          value: ticket.name,
-          child: Text(ticket.name),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          selectedTicket = value;
-        });
-      },
-      validator: (value) => value == null ? 'Please select a ticket' : null,
-    );
-  }
+Widget _buildQuestionFields(EventWithQuestions event) {
+  int questionCount = event.questions.length;
 
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: List.generate(widget.tickets.length, (ticketIndex) {
+      final ticket = widget.tickets[ticketIndex];
+      final ticketName = widget.ticketNames[ticketIndex];
+      final quantity = widget.tickets.fold<int>(
+        0,
+        (sum, ticket) {
+          final int q = ticket['quantity']!;
+          if (q is int) return sum + q;
+          if (q is String) return sum + q ?? 0;
+          return sum;
+        },
+      );
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(quantity, (copyIndex) {
+          int ticketNumber = ticketIndex + 1;
+          int personNumber = copyIndex + 1;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 12),
+              Text(
+                '$ticketName Ticket #$personNumber',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              ...List.generate(questionCount, (questionIndex) {
+                int controllerIndex = (ticketIndex * 1000) + (copyIndex * questionCount) + questionIndex;
+                final question = event.questions[questionIndex];
+
+                controllers.putIfAbsent(controllerIndex, () => TextEditingController());
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: TextFormField(
+                    controller: controllers[controllerIndex],
+                    decoration: InputDecoration(
+                      labelText: question.question.questionText,
+                      border: const OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (question.isRequired && (value == null || value.isEmpty)) {
+                        return 'This field is required';
+                      }
+                      return null;
+                    },
+                  ),
+                );
+              }),
+            ],
+          );
+        }),
+      );
+    }),
+  );
+}
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -96,60 +246,27 @@ class _RegistrationFormState extends State<RegistrationForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Dynamic questions
-                  ...List.generate(event.questions.length, (index) {
-                    final question = event.questions[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: TextFormField(
-                        controller: controllers[index],
-                        decoration: InputDecoration(
-                          labelText: question.question.questionText,
-                          border: const OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (question.isRequired &&
-                              (value == null || value.isEmpty)) {
-                            return 'This field is required';
-                          }
-                          return null;
-                        },
-                      ),
-                    );
-                  }),
-                  const SizedBox(height: 20),
-                  // Ticket dropdown
-                  DropdownButtonFormField<String>(
-                    decoration:
-                        const InputDecoration(labelText: 'Select Ticket'),
-                    value: selectedTicket,
-                    items: event.tickets.map((ticket) {
-                      return DropdownMenuItem<String>(
-                        value: ticket.name,
-                        child: Text(ticket.name),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedTicket = value;
-                      });
-                    },
-                    validator: (value) =>
-                        value == null ? 'Please select a ticket' : null,
-                  ),
+                  _buildQuestionFields(event),
                   const SizedBox(height: 20),
                   Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _isSubmitting ? null : _submitForm,
-                      child: _isSubmitting
-                          ? const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : const Text('PROCEED TO PAYMENT'),
-                    ),
+                      onPressed: _isSubmitting ? null : () async {
+                    if (_formKey.currentState?.validate() != true) return;
+
+                    final registrationPayload = _buildRegistrationPayload(event);
+
+                    // TODO: send `registrationPayload` to backend
+                  },      
+
+                  child: _isSubmitting
+                      ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : const Text('PROCEED TO PAYMENT'),
+                  ),
                   ),
                 ),
                 ],
@@ -162,64 +279,4 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 }
 
-class DynamicQuestionForm extends StatefulWidget {
-  final List<dynamic> questions; // Accept both Question and QuestionDTO
-  final void Function(Map<String, String>) onResponsesChanged;
-
-  const DynamicQuestionForm({required this.questions, required this.onResponsesChanged, Key? key}) : super(key: key);
-
-  @override
-  _DynamicQuestionFormState createState() => _DynamicQuestionFormState();
-}
-
-class _DynamicQuestionFormState extends State<DynamicQuestionForm> {
-  final Map<int, TextEditingController> controllers = {};
-
-  @override
-  void initState() {
-    super.initState();
-    for (int i = 0; i < widget.questions.length; i++) {
-      controllers[i] = TextEditingController();
-    }
-  }
-
-  @override
-  void dispose() {
-    controllers.values.forEach((c) => c.dispose());
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(widget.questions.length, (index) {
-        final q = widget.questions[index];
-        final questionText = q is Question ? q.question.questionText : q.questionText;
-        final isRequired = q is Question ? q.isRequired : q.isRequired;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: TextFormField(
-            controller: controllers[index],
-            decoration: InputDecoration(labelText: questionText),
-            validator: (value) {
-              if (isRequired && (value == null || value.isEmpty)) {
-                return 'This field is required';
-              }
-              return null;
-            },
-            onChanged: (_) {
-              final responses = <String, String>{};
-              controllers.forEach((i, c) {
-                final q = widget.questions[i];
-                final questionText = q is Question ? q.question.questionText : q.questionText;
-                responses[questionText] = c.text;
-              });
-              widget.onResponsesChanged(responses);
-            },
-          ),
-        );
-      }),
-    );
-  }
-}
  

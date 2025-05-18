@@ -1,8 +1,8 @@
 
 class EventRegistrationDTO{
   final int eventId;
-  final List<RegistrationTicketDTO> tickets;
-  final List<RegistrationParticipantDTO> participants;
+  final List<Map<String, dynamic>>  tickets;
+  final List<Map<String, dynamic>>  participants;
 
   EventRegistrationDTO({
     required this.eventId,
@@ -13,65 +13,69 @@ class EventRegistrationDTO{
   Map<String, dynamic> toJson() {
     return {
       "eventId": eventId,
-      "tickets": tickets.map((ticket) => ticket.toJson()).toList(),
-      "participants": participants.map((participant) => participant.toJson()).toList(),
+      "tickets": tickets,
+      "participants": participants,
     };
   }
 }
 
-class RegistrationTicketDTO {
+
+class QuestionResponse {
+  final int questionId;
+  final String responseData;
+
+  QuestionResponse({required this.questionId, required this.responseData});
+
+  Map<String, dynamic> toJson() => {
+    'questionId': questionId,
+    'responseData': responseData,
+  };
+}
+
+class TicketSelection {
   final int ticketId;
   final int quantity;
 
-  RegistrationTicketDTO({
-    required this.ticketId,
-    required this.quantity,
-  });
+  TicketSelection({required this.ticketId, required this.quantity});
 
-  Map<String, dynamic> toJson() {
-    return {
-      "ticketId": ticketId,
-      "quantity": quantity,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'ticketId': ticketId,
+    'quantity': quantity,
+  };
 }
 
-class ParticipantInformation {
+class ParticipantResponse {
+  final int eventQuestionId;
+  final String responseText;
+
+  ParticipantResponse({required this.eventQuestionId, required this.responseText});
+
+  Map<String, dynamic> toJson() => {
+    'eventQuestionId': eventQuestionId,
+    'responseText': responseText,
+  };
+}
+
+class Participant {
+  final String email;
   final String firstName;
   final String lastName;
-  final String email;
   final String phoneNumber;
+  final List<ParticipantResponse> responses;
 
-  ParticipantInformation({
+  Participant({
+    required this.email,
     required this.firstName,
     required this.lastName,
-    required this.email,
     required this.phoneNumber,
-  });
-}
-
-class RegistrationParticipantDTO {
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String? phoneNumber;
-  final Map<String, dynamic>? responses;
-
-  RegistrationParticipantDTO({
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    this.phoneNumber,
-    this.responses,
+    required this.responses,
   });
 
-  Map<String, dynamic> toJson() {
-    return {
-      "firstName": firstName,
-      "lastName": lastName,
-      "email": email,
-      "phoneNumber": phoneNumber,
-      "responses": responses,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'email': email,
+    'firstName': firstName,
+    'lastName': lastName,
+    'phoneNumber': phoneNumber,
+    'responses': responses.map((r) => r.toJson()).toList(),
+  };
 }

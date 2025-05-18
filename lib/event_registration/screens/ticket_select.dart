@@ -39,17 +39,15 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
   }
 
   void _navigateToParticipantForm(List<dynamic> questions) {
-    // Build a list of RegistrationTicketDTOs instead of maps
-    final List<RegistrationTicketDTO> selectedTickets = [];
+    // Build a list of maps instead of RegistrationTicketDTOs
+    final List<Map<String, int>> selectedTickets = [];
     final List<String> selectedTicketNames = [];
     for (int i = 0; i < tickets.length; i++) {
       if (quantities[i] > 0) {
-        selectedTickets.add(
-          RegistrationTicketDTO(
-            ticketId: tickets[i].id,
-            quantity: quantities[i],
-          ),
-        );
+        selectedTickets.add({
+          'ticketId': tickets[i].id,
+          'quantity': quantities[i],
+        });
         selectedTicketNames.add(tickets[i].name);
       }
     }
@@ -59,15 +57,13 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
       MaterialPageRoute(
         builder: (context) => ParticipantInformationScreen(
           eventId: widget.eventId,
-          tickets: selectedTickets, // Pass RegistrationTicketDTO list
-          quantities: quantities,
-          ticketNames: selectedTicketNames, // Pass ticket names
-          questions: questions, // Pass event questions
+          tickets: selectedTickets, // Pass List<Map<String, dynamic>>
+          ticketNames: selectedTicketNames,
+          questions: questions,
         ),
       ),
     );
   }
-
   bool get hasSelectedTickets => quantities.any((q) => q > 0);
 
   Widget ticketTextRow(int index) {
@@ -96,6 +92,49 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
     );
   }
 
+  Widget ticketSelectColumn(){
+    return ListView.builder(
+                itemCount: tickets.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: SizedBox(
+                      height: 56,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: quantities[index] > 0
+                                ? () {
+                                    setState(() {
+                                      quantities[index]--;
+                                    });
+                                  }
+                                : null,
+                          ),
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: ticketTextRow(index),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              setState(() {
+                                quantities[index]++;
+                    });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<EventWithQuestions>(
@@ -112,46 +151,7 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
           body: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  itemCount: tickets.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                      child: SizedBox(
-                        height: 56,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.remove),
-                              onPressed: quantities[index] > 0
-                                  ? () {
-                                      setState(() {
-                                        quantities[index]--;
-                                      });
-                                    }
-                                  : null,
-                            ),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: ticketTextRow(index),
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                setState(() {
-                                  quantities[index]++;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child: ticketSelectColumn(),
               ),
               Divider(),
               Padding(

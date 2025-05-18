@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/models/registration.dart';
-import 'package:app_mobile_frontend/models/tickets.dart';
-import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/event_registration/screens/new_registration_form_generator.dart';
-import 'package:app_mobile_frontend/models/question.dart';
-import 'package:app_mobile_frontend/network/event_registration.dart';
-import 'package:app_mobile_frontend/event_registration/screens/questionnaire_page.dart';
 
 class ParticipantInformationScreen extends StatefulWidget {
   final int eventId;
-  final List<RegistrationTicketDTO> tickets; // Now takes DTOs
-  final List<int> quantities;
+  final List<Map<String, int>>  tickets; 
   final List<String> ticketNames;
   final List<dynamic> questions;
 
@@ -18,7 +11,6 @@ class ParticipantInformationScreen extends StatefulWidget {
     Key? key,
     required this.eventId,
     required this.tickets,
-    required this.quantities,
     required this.ticketNames,
     required this.questions,
   }) : super(key: key);
@@ -36,7 +28,16 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
   @override
   void initState() {
     super.initState();
-    totalParticipants = widget.quantities.fold(0, (a, b) => a + b);
+    // Sum the 'quantity' field from each ticket map
+    totalParticipants = widget.tickets.fold<int>(
+      0,
+      (sum, ticket) {
+        final int q = ticket['quantity']!;
+        if (q is int) return sum + q;
+        if (q is String) return sum + q ?? 0;
+        return sum;
+      },
+    );
     participantData = List.generate(
       totalParticipants,
       (_) => {'firstname': '', 'lastname': '', 'email': '', 'phone': ''},
@@ -44,20 +45,22 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
     participantResponses = List.generate(totalParticipants, (_) => {});
   }
 
-  String _getTicketNameForParticipant(int index) {
-    int runningTotal = 0;
-    for (int i = 0; i < widget.tickets.length; i++) {
-      runningTotal += widget.tickets[i].quantity;
-      if (index < runningTotal) {
-        if (i < widget.ticketNames.length) {
-          return widget.ticketNames[i];
-        } else {
-          return '';
-        }
+String _getTicketNameForParticipant(int index) {
+  int runningTotal = 0;
+  for (int i = 0; i < widget.tickets.length; i++) {
+    final quantity = widget.tickets[i]['quantity'] ?? 0;
+    runningTotal += quantity is int ? quantity : int.tryParse(quantity.toString()) ?? 0;
+    if (index < runningTotal) {
+      // Defensive: ticketNames and tickets should be in the same order
+      if (i < widget.ticketNames.length) {
+        return widget.ticketNames[i];
+      } else {
+        return '';
       }
     }
-    return '';
   }
+  return '';
+}
 
   Widget _buildParticipantForm(int index) {
     final ticketName = _getTicketNameForParticipant(index);
@@ -117,37 +120,13 @@ class _ParticipantInformationScreenState extends State<ParticipantInformationScr
   }
 
   void _goToQuestionnairePage() {
-    // Filter out default questions by questionText
-    final defaultFields = ['First Name', 'Last Name', 'Email', 'Phone Number'];
-    final customQuestions = widget.questions.where((q) {
-      String? questionText;
-      if (q is Question) {
-        questionText = q.question.questionText;
-      } else if (q is QuestionDTO) {
-        questionText = q.questionText;
-      } else if (q is Map && q['questionText'] != null) {
-        questionText = q['questionText'];
-      }
-      return questionText != null && !defaultFields.contains(questionText);
-    }).toList();
-
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => QuestionnairePage(
-          questions: customQuestions,
-          onSubmit: (responses) {
-            // Handle final submission here, e.g., send all data to backend
-            Navigator.of(context).popUntil((route) => route.isFirst);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Registration complete!')),
-            );
-          },
-        ),
+        builder: (_) => RegistrationForm(eventId: widget.eventId, tickets: widget.tickets, ticketNames: widget.ticketNames, participantData: participantData,),
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

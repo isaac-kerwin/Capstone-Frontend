@@ -3,6 +3,7 @@ import 'package:app_mobile_frontend/event_registration/screens/new_registration_
 import 'package:app_mobile_frontend/event_exploration/screens/filter_events.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/event_registration/screens/ticket_select.dart';
 
 class Explore extends StatefulWidget {
   const Explore({Key? key}) : super(key: key);
