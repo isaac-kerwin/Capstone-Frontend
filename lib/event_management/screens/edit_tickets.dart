@@ -122,6 +122,7 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
     }
 
     try {
+      List<TicketDTO> tickets = [];
       final ticket = TicketDTO(
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
@@ -130,10 +131,14 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
         salesStart: _salesStart!,
         salesEnd: _salesEnd!,
       );
+      tickets.add(ticket);
 
       if (_isEditing) {
         // Update existing ticket
-        await updateTicket(_tickets[_editingIndex!].id, ticket);
+        UpdateEventDTO ticketUpdate = UpdateEventDTO(
+          tickets: tickets,
+        );
+        await updateEvent(widget.event.id, ticketUpdate);
         setState(() {
           _tickets[_editingIndex!] = Ticket(
             id: _tickets[_editingIndex!].id,
@@ -171,7 +176,7 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
 
   Future<void> _deleteTicket(int index) async {
     try {
-      await deleteTicket(_tickets[index].id);
+      await deleteTicket(widget.event.id, _tickets[index].id);
       setState(() {
         _tickets.removeAt(index);
       });

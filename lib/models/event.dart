@@ -201,34 +201,39 @@ class CreateEventDTO {
 }
 
 class UpdateEventDTO {
-  final String name;
-  final String description;
-  final String location;
-  final int capacity;
-  final String eventType;
-  final DateTime startDateTime;
-  final DateTime endDateTime;
+  final String? name;
+  final String? description;
+  final String? location;
+  final int? capacity;
+  final String? eventType;
+  final DateTime? startDateTime;
+  final DateTime? endDateTime;
+  final List<TicketDTO>? tickets;
+  final List<QuestionDTO>? questions;
 
-
-  UpdateEventDTO(
-      {required this.name,
-      required this.description,
-      required this.location,
-      required this.capacity,
-      required this.eventType,
-      required this.startDateTime,
-      required this.endDateTime,
-      });
+  UpdateEventDTO({
+    this.name,
+    this.description,
+    this.location,
+    this.capacity,
+    this.eventType,
+    this.startDateTime,
+    this.endDateTime,
+    this.tickets,
+    this.questions,
+  });
 
   Map<String, dynamic> toJson() {
     return {
-      "name": name,
-      "description": description,
-      "location": location,
-      "capacity": capacity,
-      "eventType": eventType,
-      "startDateTime": startDateTime.toIso8601String(),
-      "endDateTime": endDateTime.toIso8601String(),
+      if (name != null) "name": name,
+      if (description != null) "description": description,
+      if (location != null) "location": location,
+      if (capacity != null) "capacity": capacity,
+      if (eventType != null) "eventType": eventType,
+      if (startDateTime != null) "startDateTime": startDateTime!.toIso8601String(),
+      if (endDateTime != null) "endDateTime": endDateTime!.toIso8601String(),
+      if (tickets != null) "tickets": tickets!.map((ticket) => ticket.toJson()).toList(),
+      if (questions != null) "questions": questions!.map((question) => question.toJson()).toList(),
     };
   }
 }

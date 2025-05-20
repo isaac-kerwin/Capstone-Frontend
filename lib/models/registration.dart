@@ -1,4 +1,4 @@
-
+import 'dart:convert';
 class EventRegistrationDTO{
   final int eventId;
   final List<Map<String, dynamic>>  tickets;
@@ -9,6 +9,7 @@ class EventRegistrationDTO{
     required this.tickets,
     required this.participants,
   });
+  
 
   Map<String, dynamic> toJson() {
     return {
@@ -78,4 +79,10 @@ class Participant {
     'phoneNumber': phoneNumber,
     'responses': responses.map((r) => r.toJson()).toList(),
   };
+}
+
+void prettyPrintEventRegistrationDTO(EventRegistrationDTO dto) {
+  const encoder = JsonEncoder.withIndent('  ');
+  final prettyJson = encoder.convert(dto.toJson());
+  print(prettyJson);
 }

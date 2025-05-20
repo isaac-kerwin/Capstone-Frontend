@@ -16,7 +16,7 @@ class OrganiserDashboard extends StatefulWidget
 
 Future<Events> _getOrganizersEvents() async {
   // Show all statuses for organizer's own events
-  final events = await getFilteredEvents("myEvents=true&status=");
+  final events = await getFilteredEvents("myEvents=true");
   return events;
 }
 

@@ -124,7 +124,7 @@ class _TicketSelectPageState extends State<TicketSelectPage> {
                             onPressed: () {
                               setState(() {
                                 quantities[index]++;
-                    });
+                      });
                     },
                   ),
                 ],

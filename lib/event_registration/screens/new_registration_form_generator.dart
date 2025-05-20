@@ -1,7 +1,10 @@
+import 'package:app_mobile_frontend/models/registration.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/main_screen.dart';
+import 'package:app_mobile_frontend/network/event_registration.dart';
+
 
 
 class RegistrationForm extends StatefulWidget {
@@ -41,19 +44,19 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
 
 
-/// Parses the quantity value safely from dynamic input.
-int _parseQuantity(dynamic quantityValue) {
-  if (quantityValue is int) return quantityValue;
-  if (quantityValue is String) return int.tryParse(quantityValue) ?? 0;
-  return 0;
-}
+  /// Parses the quantity value safely from dynamic input.
+  int _parseQuantity(dynamic quantityValue) {
+    if (quantityValue is int) return quantityValue;
+    if (quantityValue is String) return int.tryParse(quantityValue) ?? 0;
+    return 0;
+  }
 
-/// Generates a unique index for mapping controllers to ticket/person/question.
-int _generateControllerIndex(int ticketIndex, int copyIndex, int questionIndex, int questionCount) {
-  return (ticketIndex * 1000) + (copyIndex * questionCount) + questionIndex;
-}
+  /// Generates a unique index for mapping controllers to ticket/person/question.
+  int _generateControllerIndex(int ticketIndex, int copyIndex, int questionIndex, int questionCount) {
+    return (ticketIndex * 1000) + (copyIndex * questionCount) + questionIndex;
+  }
 
-Map<String, dynamic> _buildRegistrationPayload(EventWithQuestions event) {
+  Map<String, dynamic> _buildRegistrationPayload(EventWithQuestions event) {
   final List<Map<String, dynamic>> ticketSelections = [];
   final List<Map<String, dynamic>> participants = [];
 
@@ -72,7 +75,7 @@ Map<String, dynamic> _buildRegistrationPayload(EventWithQuestions event) {
       final participantResponses = <Map<String, dynamic>>[];
       _setParticipantResponses(event, participantIndex, ticketIndex, copyIndex, participants, participantResponses);
 
-            // Replace these with actual form inputs if needed
+      // Replace these with actual form inputs if needed
       final email = widget.participantData[participantIndex]['email'] ?? '';
       final firstName = widget.participantData[participantIndex]['firstname'] ?? '';
       final lastName = widget.participantData[participantIndex]['lastname'] ?? '';
@@ -86,12 +89,7 @@ Map<String, dynamic> _buildRegistrationPayload(EventWithQuestions event) {
         'responses': participantResponses,
       });
     }
-
-    
   }
-  print(event.id);
-  print(ticketSelections);
-  print(participants);
   
   return {
     'eventId': event.id,
@@ -101,18 +99,20 @@ Map<String, dynamic> _buildRegistrationPayload(EventWithQuestions event) {
 }
 
 _setParticipantResponses(event, participantIndex, ticketIndex, copyIndex, participants, participantResponses) {  
-      
-      for (int questionIndex = 0; questionIndex < event.questions.length; questionIndex++) {
-        int controllerIndex = _generateControllerIndex(ticketIndex, copyIndex, questionIndex, event.questions.length);
-        final controller = controllers[controllerIndex];
-        final question = event.questions[questionIndex];
+  for (int questionIndex = 0; questionIndex < event.questions.length; questionIndex++) {
+    int controllerIndex = _generateControllerIndex(ticketIndex, copyIndex, questionIndex, event.questions.length);
+    final controller = controllers[controllerIndex];
+    final question = event.questions[questionIndex];
 
-        participantResponses.add({
-          'eventQuestionId': question.question.id,
-          'responseText': controller!.text.trim(),
-        });
-      }
-      return participantResponses;
+    final text = controller?.text.trim();
+    if (text == null || text.isEmpty) continue;
+
+    participantResponses.add({
+      'eventQuestionId': question.question.id,
+      'responseText': text,
+    });
+  }
+  return participantResponses;
 }
 
 void _submitForm(eventId, tickets, participantData, responses, event) {
@@ -134,8 +134,13 @@ void _submitForm(eventId, tickets, participantData, responses, event) {
 
     try {
       final registrationPayload = _buildRegistrationPayload(event);
-
+      EventRegistrationDTO registrationDTO = EventRegistrationDTO(
+        eventId: eventId,
+        tickets: tickets,
+        participants: registrationPayload['participants'], 
+      );
       // TODO: send to backend using Dio 
+      createRegistration(registrationDTO);
       
       // Navigate or show confirmation
       ScaffoldMessenger.of(context).showSnackBar(
@@ -206,17 +211,18 @@ Widget _buildQuestionFields(EventWithQuestions event) {
                         return 'This field is required';
                       }
                       return null;
-                    },
-                  ),
-                );
-              }),
-            ],
-          );
-        }),
-      );
-    }),
-  );
-}
+                      },
+                    ),
+                  );
+                }),
+              ],
+            );
+          }),
+        );
+      }),
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -254,18 +260,24 @@ Widget _buildQuestionFields(EventWithQuestions event) {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _isSubmitting ? null : () async {
-                    if (_formKey.currentState?.validate() != true) return;
+                        if (_formKey.currentState?.validate() != true) return;
 
-                    final registrationPayload = _buildRegistrationPayload(event);
-
-                    // TODO: send `registrationPayload` to backend
-                  },      
+                        final registrationPayload = _buildRegistrationPayload(event);
+                        _submitForm(
+                          widget.eventId,
+                          widget.tickets,
+                          widget.participantData,
+                          event.questions,
+                          event,
+                        );
+                        // TODO: send `registrationPayload` to backend
+                      },      
 
                   child: _isSubmitting
                       ? const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         )
-                      : const Text('PROCEED TO PAYMENT'),
+                      : const Text('Complete Registration'),
                   ),
                   ),
                 ),

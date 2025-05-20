@@ -217,10 +217,10 @@ Future<Ticket> updateTicket(int ticketId, TicketDTO ticket) async {
   }
 }
 
-Future<void> deleteTicket(int ticketId) async {
+Future<void> deleteTicket(int eventId, int ticketId) async {
   try {
-    final response = await dioClient.dio.delete(
-      "/tickets/$ticketId",
+    final response = await dioClient.dio.put(
+      "/events/$eventId/tickets/$ticketId",
       options: Options(
         headers: {
           'Authorization': 'Bearer ${await getToken()}',
