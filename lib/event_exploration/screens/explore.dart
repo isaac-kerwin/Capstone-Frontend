@@ -142,7 +142,7 @@ class _ExploreState extends State<Explore> {
 
     final now = DateTime.now();
 
-    // ✅ Handle Explicit Date Range Selection First (High Priority)
+    // Handle Explicit Date Range Selection First (High Priority)
     if (filters['startDate'] != null && filters['endDate'] != null) {
       final startDateStr = (filters['startDate'] as DateTime).toIso8601String();
       final endDateStr = (filters['endDate'] as DateTime).toIso8601String();

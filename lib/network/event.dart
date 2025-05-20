@@ -19,6 +19,8 @@ Future<void> createEvent(CreateEventDTO event) async {
     ));
     if (response.data["success"]) {
       print("Event created successfully: ${response.data}");
+      // Update event to published status
+      await publishEvent(response.data["data"]["id"]);
     } else {
       print("Failed to create event: ${response.data}");
     }

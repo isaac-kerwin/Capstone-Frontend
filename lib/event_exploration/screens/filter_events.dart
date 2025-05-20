@@ -396,7 +396,7 @@ class _EventFilterModalState extends State<EventFilterModal> {
               ),
             ),
           ),
-          
+        
           const Spacer(),
           
           // Action buttons
@@ -432,7 +432,7 @@ class _EventFilterModalState extends State<EventFilterModal> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 6),
               Expanded(
                 flex: 3,
                 child: ElevatedButton(

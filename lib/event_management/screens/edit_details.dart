@@ -168,35 +168,6 @@ class _EditEventPageState extends State<EditEventPage> {
     );
   }
 
-  Widget _buildEventTypeDropdown() {
-    const List<DropdownMenuEntry<String>> items = [
-      DropdownMenuEntry(value: 'SPORTS', label: 'SPORTS'),
-      DropdownMenuEntry(value: 'MUSIC', label: 'MUSIC'),
-      DropdownMenuEntry(value: 'FOOD', label: 'FOOD'),
-      DropdownMenuEntry(value: 'ART', label: 'ART'),
-    ];
-
-    return DropdownButtonFormField<String>(
-      value: _selectedEventType,
-      decoration: const InputDecoration(
-        labelText: 'Event Type',
-        border: OutlineInputBorder(),
-        filled: true,
-        fillColor: Colors.white,
-      ),
-      items: items.map((item) {
-        return DropdownMenuItem<String>(
-          value: item.value,
-          child: Text(item.label),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _selectedEventType = value;
-        });
-      },
-    );
-  }
 
   Widget _buildDateTimeRow({
     required String label,
@@ -262,7 +233,6 @@ class _EditEventPageState extends State<EditEventPage> {
         ),
         _buildButton(
           text: "Save Changes",
-          color: Colors.blue,
           onPressed: saveChanges,
         ),
       ],
@@ -271,7 +241,7 @@ class _EditEventPageState extends State<EditEventPage> {
 
   Widget _buildButton({
     required String text,
-    required Color color,
+    Color? color,
     required VoidCallback onPressed,
   }) {
     return ElevatedButton(
@@ -297,7 +267,6 @@ class _EditEventPageState extends State<EditEventPage> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFFCF7FF),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
@@ -319,8 +288,6 @@ class _EditEventPageState extends State<EditEventPage> {
                 controller: descriptionController,
                 maxLines: 3,
               ),
-              const SizedBox(height: 15),
-              _buildEventTypeDropdown(),
               const SizedBox(height: 15),
               _buildDateTimeRow(
                 label: 'Starts on: ${_formatDateTime(_startDateTime)}',
