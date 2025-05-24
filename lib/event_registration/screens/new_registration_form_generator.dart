@@ -4,6 +4,8 @@ import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/main_screen.dart';
 import 'package:app_mobile_frontend/network/event_registration.dart';
+import 'package:app_mobile_frontend/models/email.dart';
+import 'package:app_mobile_frontend/network/email.dart';
 
 
 
@@ -41,8 +43,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
     controllers.forEach((_, controller) => controller.dispose());
     super.dispose();
   }
-
-
 
   /// Parses the quantity value safely from dynamic input.
   int _parseQuantity(dynamic quantityValue) {
@@ -115,20 +115,9 @@ _setParticipantResponses(event, participantIndex, ticketIndex, copyIndex, partic
   return participantResponses;
 }
 
-void _submitForm(eventId, tickets, participantData, responses, event) {
+void _submitForm(eventId, tickets, participantData, responses, event) async {
   if (_formKey.currentState!.validate()) {
-    // Process the registration data.
-    // You can collect the selectedTicket and text field responses here.
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Form Submitted Successfully')),
-    );
-  
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const MainScreen()),
-      (Route<dynamic> route) => false,
-    );
-      setState(() {
+    setState(() {
       _isSubmitting = true;
     });
 
@@ -137,14 +126,45 @@ void _submitForm(eventId, tickets, participantData, responses, event) {
       EventRegistrationDTO registrationDTO = EventRegistrationDTO(
         eventId: eventId,
         tickets: tickets,
-        participants: registrationPayload['participants'], 
+        participants: registrationPayload['participants'],
       );
-      // TODO: send to backend using Dio 
-      createRegistration(registrationDTO);
-      
+
+      // Send registration to backend and get registrationId
+      final registrationId = await createRegistration(registrationDTO);
+
+      if (registrationId != null) {
+        // Build and send email for the first participant (or loop for all if needed)
+        final participant = participantData.isNotEmpty ? participantData[0] : {};
+        final email = participant['email'] ?? '';
+        final eventName = event.name ?? '';
+        final startDateTime = event.startDateTime ?? DateTime.now();
+        final endDateTime = event.endDateTime ?? DateTime.now();
+        final location = event.location ?? '';
+        final type = 'confirmation';
+        
+
+        final emailDTO = EmailDTO(
+          email: email,
+          registrationID: registrationId,
+          eventName: eventName,
+          startDateTime: startDateTime,
+          endDateTime: endDateTime,
+          location: location,
+          type: type,
+        );
+        print(emailDTO.toJson());
+
+        await sendRegistrationEmail(emailDTO);
+      }
+
       // Navigate or show confirmation
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration submitted!')),
+      );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+        (Route<dynamic> route) => false,
       );
     } catch (e) {
       debugPrint('Submission error: $e');

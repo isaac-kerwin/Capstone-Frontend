@@ -35,22 +35,13 @@ class EventDetails {
   final int registrationsCount;
 
 // For Get Event Details
-  EventDetails(
-      {required this.id,
-      required this.organiserId,
-      required this.name,
-      required this.description,
-      required this.location,
-      required this.eventType,
-      required this.capacity,
-      required this.startDateTime,
-      required this.endDateTime,
-      required this.status,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.organizer,
-      required this.tickets,
-      required this.registrationsCount});
+  EventDetails({
+    required this.id, required this.organiserId, required this.name,
+    required this.description, required this.location, required this.eventType,
+    required this.capacity, required this.startDateTime, required this.endDateTime,
+    required this.status, required this.createdAt, required this.updatedAt,
+    required this.organizer, required this.tickets, required this.registrationsCount
+  });
 
   factory EventDetails.fromJson(Map<String, dynamic> json) {
     return EventDetails(
@@ -117,23 +108,14 @@ class EventWithQuestions {
   final List<Question> questions;
   final int registrationsCount;
 
-  EventWithQuestions(
-      {required this.id,
-      required this.organiserId,
-      required this.name,
-      required this.description,
-      required this.location,
-      required this.capacity,
-      required this.eventType,
-      required this.startDateTime,
-      required this.endDateTime,
-      required this.status,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.organizer,
-      required this.tickets,
-      required this.questions,
-      required this.registrationsCount});
+  EventWithQuestions({
+    required this.id, required this.organiserId, required this.name,
+    required this.description, required this.location, required this.capacity,
+    required this.eventType, required this.startDateTime, required this.endDateTime,
+    required this.status, required this.createdAt, required this.updatedAt,
+    required this.organizer, required this.tickets, required this.questions,
+    required this.registrationsCount
+  });
 
   factory EventWithQuestions.fromJson(Map<String, dynamic> json) {
     return EventWithQuestions(
@@ -174,16 +156,11 @@ class CreateEventDTO {
   final List<TicketDTO> tickets;
   final List<CreateQuestionDTO> questions;
 
-  CreateEventDTO(
-      {required this.name,
-      required this.description,
-      required this.location,
-      required this.eventType,
-      required this.startDateTime,
-      required this.endDateTime,
-      required this.capacity,
-      required this.tickets,
-      required this.questions});
+  CreateEventDTO({
+    required this.name, required this.description, required this.location,
+    required this.eventType, required this.startDateTime, required this.endDateTime,
+    required this.capacity, required this.tickets, required this.questions
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -212,15 +189,9 @@ class UpdateEventDTO {
   final List<QuestionDTO>? questions;
 
   UpdateEventDTO({
-    this.name,
-    this.description,
-    this.location,
-    this.capacity,
-    this.eventType,
-    this.startDateTime,
-    this.endDateTime,
-    this.tickets,
-    this.questions,
+    this.name, this.description, this.location,
+    this.capacity, this.eventType, this.startDateTime,
+    this.endDateTime, this.tickets, this.questions,
   });
 
   Map<String, dynamic> toJson() {

@@ -3,22 +3,21 @@ import "package:app_mobile_frontend/network/dio_client.dart";
 import 'package:app_mobile_frontend/models/registration.dart';  
 import "package:dio/dio.dart";
 
-Future<bool> createRegistration ( EventRegistrationDTO registrationDTO ) async{
+Future<String?> createRegistration(EventRegistrationDTO registrationDTO) async {
   try {
     final response = await dioClient.dio.post(
       "/registrations",
       data: registrationDTO.toJson(),
     );
-    if (response.data["success"]) {
+    if (response.data["registrationId"] != null) {
       print("Event registration successful: ${response.data}");
-      return true;
+      return response.data["registrationId"].toString();
     } else {
       print("Failed to register for event: ${response.data}");
-      return false;
+      return null;
     }
   } catch (error) {
     print("Error registering for event: $error");
-    return false;
+    return null;
   }
 }
-
