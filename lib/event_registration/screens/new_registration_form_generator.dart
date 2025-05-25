@@ -137,7 +137,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           location: event.location ?? '',
           type: 'confirmation',
         );
-        sendRegistrationEmail(emailDto);
+        await sendRegistrationEmail(emailDto);
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -148,141 +148,125 @@ class _RegistrationFormState extends State<RegistrationForm> {
         MaterialPageRoute(builder: (_) => const MainScreen()),
         (r) => false,
       );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: \$e')));
+    } catch (e, stack) {
+      debugPrint('Error during submission: \$e');
+      debugPrintStack(stackTrace: stack);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: \${e.toString()}')),
+      );
     } finally {
       setState(() => _isSubmitting = false);
     }
   }
 
   Widget _buildQuestionFields(EventWithQuestions event) {
-    int questionCount = event.questions.length;
-
+    final questionCount = event.questions.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(widget.tickets.length, (ticketIndex) {
         final ticket = widget.tickets[ticketIndex];
         final ticketName = widget.ticketNames[ticketIndex];
-        final quantity = widget.tickets.fold<int>(
-          0,
-          (sum, ticket) {
-            final int q = ticket['quantity']!;
-            if (q is int) return sum + q;
-            if (q is String) return sum + q ?? 0;
-            return sum;
-          },
-        );
+        final quantity = _parseQuantity(ticket['quantity']);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: List.generate(quantity, (copyIndex) {
-            int ticketNumber = ticketIndex + 1;
-            int personNumber = copyIndex + 1;
-
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 24.0), // Add space between each participant's section
+            return Container(
+              margin: const EdgeInsets.symmetric(vertical: 12.0),
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(8),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 12),
                   Text(
-                    '$ticketName Ticket #$personNumber',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    '$ticketName Ticket #${copyIndex + 1}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   ...List.generate(questionCount, (questionIndex) {
-                    int controllerIndex = (ticketIndex * 1000) + (copyIndex * questionCount) + questionIndex;
+                    final composite = ticketIndex * 1000 + copyIndex * questionCount + questionIndex;
                     final question = event.questions[questionIndex];
+                    final qText = question.question.questionText;
+                    final qType = question.question.questionType.toLowerCase();
 
-                    // For checkboxes, store selections as a Set<int> in controllers
-                    if (question.question.questionType.toLowerCase() == 'checkbox') {
-                      controllers.putIfAbsent(controllerIndex, () => TextEditingController());
-                      final options = question.question.options ?? [];
-                      Set<int> selectedOptions = {};
+                    controllers.putIfAbsent(composite, () => TextEditingController());
+                    if (qType == 'checkbox') {
+                      checkboxSelections.putIfAbsent(composite, () => <int>{});
+                      final opts = question.question.options ?? [];
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0), // Space after each checkbox group
+                        padding: const EdgeInsets.only(bottom: 16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(question.question.questionText, style: const TextStyle(fontWeight: FontWeight.w500)),
-                            ...options.map((opt) {
-                              final isChecked = selectedOptions.contains(opt.id);
-                              return StatefulBuilder(
-                                builder: (context, setState) {
-                                  return CheckboxListTile(
-                                    title: Text(opt.optionText),
-                                    value: isChecked,
-                                    onChanged: (checked) {
-                                      setState(() {
-                                        if (checked == true) {
-                                          selectedOptions.add(opt.id);
-                                        } else {
-                                          selectedOptions.remove(opt.id);
-                                        }
-                                        controllers[controllerIndex]?.text = selectedOptions.join(',');
-                                      });
-                                    },
-                                    controlAffinity: ListTileControlAffinity.leading,
-                                  );
+                            Text(qText, style: const TextStyle(fontWeight: FontWeight.w500)),
+                            const SizedBox(height: 8),
+                            ...opts.map((opt) {
+                              final checked = checkboxSelections[composite]!.contains(opt.id);
+                              return CheckboxListTile(
+                                title: Text(opt.optionText),
+                                value: checked,
+                                controlAffinity: ListTileControlAffinity.leading,
+                                contentPadding: EdgeInsets.zero,
+                                onChanged: (val) {
+                                  setState(() {
+                                    if (val == true) {
+                                      checkboxSelections[composite]!.add(opt.id);
+                                    } else {
+                                      checkboxSelections[composite]!.remove(opt.id);
+                                    }
+                                    controllers[composite]!.text = checkboxSelections[composite]!.join(',');
+                                  });
                                 },
                               );
                             }).toList(),
                           ],
                         ),
                       );
-                    }
-
-                    // For dropdowns
-                    if (question.question.questionType.toLowerCase() == 'dropdown') {
-                      controllers.putIfAbsent(controllerIndex, () => TextEditingController());
-                      final options = question.question.options ?? [];
+                    } else if (qType == 'dropdown') {
+                      dropdownSelections.putIfAbsent(composite, () => null);
+                      final opts = question.question.options ?? [];
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0), // Space after each dropdown
+                        padding: const EdgeInsets.only(bottom: 16.0),
                         child: DropdownButtonFormField<int>(
-                          value: controllers[controllerIndex]?.text.isNotEmpty == true
-                              ? int.tryParse(controllers[controllerIndex]!.text)
-                              : null,
+                          value: dropdownSelections[composite],
                           decoration: InputDecoration(
-                            labelText: question.question.questionText,
+                            labelText: qText,
                             border: const OutlineInputBorder(),
                           ),
-                          items: options
+                          items: opts
                               .map((opt) => DropdownMenuItem<int>(
                                     value: opt.id,
                                     child: Text(opt.optionText),
                                   ))
                               .toList(),
-                          onChanged: (value) {
-                            controllers[controllerIndex]?.text = value?.toString() ?? '';
+                          onChanged: (val) {
+                            setState(() {
+                              dropdownSelections[composite] = val;
+                              controllers[composite]!.text = val?.toString() ?? '';
+                            });
                           },
-                          validator: (value) {
-                            if (question.isRequired && (value == null || value.toString().isEmpty)) {
-                              return 'This field is required';
-                            }
-                            return null;
-                          },
+                          validator: (val) => question.isRequired && (val == null) ? 'This field is required' : null,
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: TextFormField(
+                          controller: controllers[composite],
+                          decoration: InputDecoration(
+                            labelText: qText,
+                            border: const OutlineInputBorder(),
+                          ),
+                          validator: (val) => question.isRequired && (val == null || val.isEmpty) ? 'This field is required' : null,
                         ),
                       );
                     }
-
-                    // Default: Text input
-                    controllers.putIfAbsent(controllerIndex, () => TextEditingController());
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0), // Space after each text field
-                      child: TextFormField(
-                        controller: controllers[controllerIndex],
-                        decoration: InputDecoration(
-                          labelText: question.question.questionText,
-                          border: const OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (question.isRequired && (value == null || value.isEmpty)) {
-                            return 'This field is required';
-                          }
-                          return null;
-                        },
-                      ),
-                    );
                   }),
                 ],
               ),
@@ -316,7 +300,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildQuestionFields(event),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
