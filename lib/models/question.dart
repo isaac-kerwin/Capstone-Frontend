@@ -24,14 +24,7 @@ class Question {
         displayOrder: json["displayOrder"],
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
-        question: QuestionDetails(
-            id: json["question"]["id"],
-            questionText: json["question"]["questionText"],
-            questionType: json["question"]["questionType"],
-            category: json["question"]["category"],
-            validationRules: json["question"]["validationRules"],
-            createdAt: DateTime.parse(json["question"]["createdAt"]),
-            updatedAt: DateTime.parse(json["question"]["updatedAt"])));
+        question: QuestionDetails.fromJson(json["question"]));
   }
 }
 
@@ -43,6 +36,7 @@ class QuestionDetails {
   final String? validationRules;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final List<QuestionOption>? options;
 
   QuestionDetails(
       {required this.id,
@@ -51,7 +45,42 @@ class QuestionDetails {
       required this.category,
       required this.validationRules,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      this.options});
+
+  factory QuestionDetails.fromJson(Map<String, dynamic> json) {
+    return QuestionDetails(
+      id: json["id"],
+      questionText: json["questionText"],
+      questionType: json["questionType"],
+      category: json["category"],
+      validationRules: json["validationRules"],
+      createdAt: DateTime.parse(json["createdAt"]),
+      updatedAt: DateTime.parse(json["updatedAt"]),
+      options: json["options"] != null
+          ? (json["options"] as List)
+              .map((opt) => QuestionOption.fromJson(opt))
+              .toList()
+          : null,
+    );
+  }
+}
+
+class QuestionOption {
+  final int id;
+  final String optionText;
+  final int? displayOrder;
+
+  QuestionOption(
+      {required this.id, required this.optionText, this.displayOrder});
+
+  factory QuestionOption.fromJson(Map<String, dynamic> json) {
+    return QuestionOption(
+      id: json["id"],
+      optionText: json["optionText"],
+      displayOrder: json["displayOrder"],
+    );
+  }
 }
 
 class QuestionGroup {
