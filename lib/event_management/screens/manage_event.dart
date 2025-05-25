@@ -1,3 +1,5 @@
+import 'package:app_mobile_frontend/event_management/screens/edit_registrations.dart';
+
 import 'edit_tickets.dart';
 import 'edit_questions.dart';
 import 'edit_details.dart';
@@ -7,6 +9,7 @@ import 'package:app_mobile_frontend/models/event.dart'; // Assuming EventWithQue
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/event_management/widgets/event_info_tile.dart';
 import 'package:app_mobile_frontend/models/question.dart';
+import 'package:app_mobile_frontend/event_management/screens/edit_registrations.dart';   
 
 class DetailsPage extends StatefulWidget {
   final EventDetails event; 
@@ -41,66 +44,70 @@ class _DetailsPageState extends State<DetailsPage> {
         elevation: 0,
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            EventInfoTile(event: widget.event),
-            _buildDashboardButton(
-              label: 'EDIT EVENT TICKETS',
-              onPressed: () => _navigateTo(context, TicketManagementPage(event: widget.event)),
-            ),
-/*             _buildDashboardButton(
-              label: 'GENERATE EVENT REPORT',
-              //onPressed: _createReport,
-            ), */
-            _buildDashboardButton(
-              label: 'GENERATE EXTERNAL URL',
-              onPressed: () {
-                // TODO: Implement external URL logic
-              },
-            ),
-            _buildDashboardButton(
-              label: 'EDIT EVENT INFORMATION',
-              onPressed: () {
-                _navigateTo(context, EditEventPage(event: widget.event));
-              },
-            ),
-            _buildDashboardButton(
-              label: 'EDIT EVENT QUESTIONS',
-              onPressed: () async {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) => const Center(child: CircularProgressIndicator()),
-                );
-                try {
-                  final eventWithQuestions = await getEventById(widget.event.id);
-                  Navigator.pop(context); // Remove loading dialog
-                  _navigateTo(
-                    context,
-                    QuestionnaireManagementPage(
-                      eventId: widget.event.id,
-                      questions: eventWithQuestions.questions.map((q) => QuestionDTO(
-                        id: q.id,
-                        questionText: q.question.questionText,
-                        isRequired: q.isRequired,
-                        displayOrder: q.displayOrder,
-                      )).toList(),
-                    ),
-                  );
-                } catch (e) {
-                  Navigator.pop(context); // Remove loading dialog
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to load questions: $e')),
-                  );
-                }
-              },
-            ),
-          ],
+body: Padding(
+  padding: const EdgeInsets.all(24.0),
+  child: SingleChildScrollView(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        EventInfoTile(event: widget.event),
+        _buildDashboardButton(
+          label: 'EDIT EVENT TICKETS',
+          onPressed: () => _navigateTo(context, TicketManagementPage(event: widget.event)),
         ),
-      ),
+        _buildDashboardButton(
+          label: 'GENERATE EXTERNAL URL',
+          onPressed: () {
+            // TODO: Implement external URL logic
+          },
+        ),
+        _buildDashboardButton(
+          label: 'EDIT EVENT INFORMATION',
+          onPressed: () {
+            _navigateTo(context, EditEventPage(event: widget.event));
+          },
+        ),
+        _buildDashboardButton(
+          label: 'EDIT EVENT REGISTRATIONS',
+          onPressed: () {
+            _navigateTo(context, EditRegistrationsScreen(eventId: widget.event.id));
+          },
+        ),
+        _buildDashboardButton(
+          label: 'EDIT EVENT QUESTIONS',
+          onPressed: () async {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(child: CircularProgressIndicator()),
+            );  
+            try {
+              final eventWithQuestions = await getEventById(widget.event.id);
+              Navigator.pop(context); // Remove loading dialog
+              _navigateTo(
+                context,
+                QuestionnaireManagementPage(
+                  eventId: widget.event.id,
+                  questions: eventWithQuestions.questions.map((q) => QuestionDTO(
+                    id: q.id,
+                    questionText: q.question.questionText,
+                    isRequired: q.isRequired,
+                    displayOrder: q.displayOrder,
+                  )).toList(),
+                ),
+              );
+            } catch (e) {
+              Navigator.pop(context); // Remove loading dialog
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to load questions: $e')),
+              );
+            }
+          },
+        ),
+      ],
+    ),
+  ),
+),
     );
   }
 

@@ -1,9 +1,12 @@
+import 'package:app_mobile_frontend/network/auth.dart';
+import 'package:app_mobile_frontend/network/event_registration.dart';
 import 'package:app_mobile_frontend/network/users.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/event_exploration/screens/explore.dart';
 import 'package:app_mobile_frontend/event_management/screens/organiser_dashboard_home.dart';
 import 'package:app_mobile_frontend/login_and_register/screens/login.dart';
 import 'package:app_mobile_frontend/login_and_register/screens/profile_page.dart';
+import 'package:app_mobile_frontend/network/event.dart';
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
@@ -27,6 +30,7 @@ class _MainScreenState extends State<MainScreen> {
     _selectedIndex = widget.initialIndex;  // pick up initialIndex from login.dart
     _loadUserRole();
   }
+
              
   Future<void> _loadUserRole() async {
     final profile = await getUserProfile();

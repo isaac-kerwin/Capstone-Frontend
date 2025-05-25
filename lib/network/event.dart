@@ -236,3 +236,39 @@ Future<void> deleteTicket(int eventId, int ticketId) async {
     throw Exception("Error deleting ticket: $error");
   }
 }
+
+Future<List<dynamic>> getEventRegistrations(String eventId, bool pendingOnly) async {
+  if (pendingOnly) {
+    // If pendingOnly is true, filter registrations
+    try {
+      final response = await dioClient.dio.get(
+        "/events/$eventId/registrations?status=PENDING",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${await getToken()}',
+          },
+        ),
+      );
+      return response.data["data"];
+    } catch (error) {
+      print("Error fetching pending registrations for event: $error");
+      rethrow;
+    }
+  }
+  else {
+    try {
+      final response = await dioClient.dio.get(
+          "/events/$eventId/registrations",
+          options: Options(
+          headers: {
+            'Authorization': 'Bearer ${await getToken()}',
+          },
+        ),
+      );
+      return response.data["data"];
+    } catch (error) {
+      print("Error fetching registrations for event: $error");
+      rethrow;
+    }
+  }
+}
