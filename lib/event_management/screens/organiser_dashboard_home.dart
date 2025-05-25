@@ -8,8 +8,6 @@ class OrganiserDashboard extends StatefulWidget
 {
   // Constructor to initialize the organiserId.
   OrganiserDashboard({super.key});
-
-
   @override State<OrganiserDashboard> createState() => _OrganiserDashboardState();  
 
 }
