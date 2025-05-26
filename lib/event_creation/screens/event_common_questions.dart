@@ -21,12 +21,14 @@ import 'package:app_mobile_frontend/models/question.dart';
           questionText: 'Email Address',
           isRequired: true,
           displayOrder: 1,
+          questionType: "text"
       ));
       
       questions.add(CreateQuestionDTO(
         questionText: 'First Name',
         isRequired: true,
         displayOrder: 1,
+        questionType: "text"
       ));
 
   
@@ -34,6 +36,7 @@ import 'package:app_mobile_frontend/models/question.dart';
         questionText: 'Last Name',
         isRequired: true,
         displayOrder: 2,
+        questionType: "text"
       ));
 
       if (enablePhoneNumber) {
@@ -41,6 +44,7 @@ import 'package:app_mobile_frontend/models/question.dart';
             questionText: 'Phone Number',
             isRequired: true,
             displayOrder: 3,
+            questionType: "text"
           ));
       }
       if (enableDOB) {
@@ -48,6 +52,7 @@ import 'package:app_mobile_frontend/models/question.dart';
             questionText: 'Date of Birth',
             isRequired: true,
             displayOrder: 4,
+            questionType: "text"
           ));
       }
    }

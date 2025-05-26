@@ -102,17 +102,24 @@ class CreateQuestionDTO {
   final String questionText;
   final bool isRequired;
   final int displayOrder;
+  final String questionType;
+  final List<String>? options;
 
-  CreateQuestionDTO(
-      {required this.questionText,
-      required this.isRequired,
-      required this.displayOrder});
+  CreateQuestionDTO({
+    required this.questionText,
+    required this.isRequired,
+    required this.displayOrder,
+    required this.questionType,
+    this.options,
+  });
 
   Map<String, dynamic> toJson() {
     return {
       "questionText": questionText,
       "isRequired": isRequired,
-      "displayOrder": displayOrder
+      "displayOrder": displayOrder,
+      "questionType": questionType,
+      if (options != null) "options": options,
     };
   }
 }

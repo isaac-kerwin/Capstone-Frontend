@@ -56,6 +56,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
           questionText: question.questionText,
           isRequired: question.isRequired,
           displayOrder: question.displayOrder,
+          questionType: 'text', // Assuming all questions are text type for simplicity
         ),
       ),
     );
@@ -114,6 +115,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
         questionText: q.questionText,
         isRequired: q.isRequired,
         displayOrder: q.displayOrder,
+        questionType: 'text', // Assuming all questions are text type for simplicity
       )).toList();
 
       // Call the API to update the event with all required fields
