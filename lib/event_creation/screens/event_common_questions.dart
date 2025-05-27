@@ -59,7 +59,6 @@ import 'package:app_mobile_frontend/models/question.dart';
 
     _onContinue() {
       List<CreateQuestionDTO> questions = [];
-      _addToggledQuestions(enablePhoneNumber, enableDOB, questions);
       widget.eventData['questions'] = questions;  
       Navigator.push(
         context,

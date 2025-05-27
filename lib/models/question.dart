@@ -103,7 +103,7 @@ class CreateQuestionDTO {
   final bool isRequired;
   final int displayOrder;
   final String questionType;
-  final List<String>? options;
+  final List<Map<String, dynamic>>? options;  // already correct
 
   CreateQuestionDTO({
     required this.questionText,
@@ -114,15 +114,20 @@ class CreateQuestionDTO {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      "questionText": questionText,
-      "isRequired": isRequired,
-      "displayOrder": displayOrder,
-      "questionType": questionType,
-      if (options != null) "options": options,
+    final data = {
+      'questionText': questionText,
+      'isRequired': isRequired,
+      'displayOrder': displayOrder,
+      'questionType': questionType,
+      'options': options?.map((option) => {
+        'optionText': option['optionText'],
+        'displayOrder': option['displayOrder'],
+      }).toList(),
     };
+    return data;
   }
 }
+
 
 class QuestionDTO {
   final int id;

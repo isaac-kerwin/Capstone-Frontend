@@ -8,7 +8,6 @@ import "package:app_mobile_frontend/models/tickets.dart";
 // TO DO  
 Future<void> createEvent(CreateEventDTO event) async {
   try {
-    print("Access Token used for createEvent: $accessToken");
     final response = await dioClient.dio.post(
       "/events",
       data: event.toJson(),

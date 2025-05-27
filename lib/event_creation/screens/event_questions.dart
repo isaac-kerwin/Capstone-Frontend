@@ -16,7 +16,7 @@ class CreateEventQuestions extends StatefulWidget {
     super.key,
     required this.eventData,
   });
-  
+
   @override
   State<CreateEventQuestions> createState() => _CreateEventQuestionsScreenState();
 }
@@ -35,6 +35,8 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
       builder: (context) => const CreateQuestionDialog(),
     );
     if (newQuestion != null) {
+          print("New Question: ${newQuestion.questionType}");
+          print("question Options: ${newQuestion.options![0]}");
       setState(() {
         widget.eventData["questions"].add(newQuestion);
       });
@@ -53,11 +55,15 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     List<TicketDTO> tickets = eventData['tickets'];
     List<CreateQuestionDTO> questions = eventData['questions'];
 
+    for (var question in questions) {
+      print(question.toJson());
+    }
+
     // Create the event object
     CreateEventDTO event = CreateEventDTO(
       name : name,
       description: description,
-      location: location,
+      location: location, 
       eventType: type,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
@@ -67,6 +73,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     );
 
     // Call the API to create the event
+    print(event.toJson());
     await createEvent(event);
   }
 
@@ -79,6 +86,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
 
       return;
     }
+
     await _unpackAndCreateEvent(widget.eventData);
     
         // Alternatively, if you want to remove all previous routes, use:

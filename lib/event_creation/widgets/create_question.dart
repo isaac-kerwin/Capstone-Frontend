@@ -22,7 +22,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   late final TextEditingController _displayOrderController;
 
   // Add these for question type and options
-  String _questionType = 'text';
+  String _questionType = 'TEXT';
   List<TextEditingController> _optionControllers = [];
 
   @override
@@ -71,14 +71,14 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
         DropdownButton<String>(
           value: _questionType,
           items: const [
-            DropdownMenuItem(value: 'text', child: Text('Text')),
-            DropdownMenuItem(value: 'dropdown', child: Text('Dropdown Menu')),
+            DropdownMenuItem(value: 'TEXT', child: Text('Text')),
+            DropdownMenuItem(value: 'DROPDOWN', child: Text('Dropdown Menu')),
           ],
           onChanged: (value) {
             if (value == null) return;
             setState(() {
               _questionType = value;
-              if (_questionType == 'dropdown' && _optionControllers.isEmpty) {
+              if (_questionType == 'DROPDOWN' && _optionControllers.isEmpty) {
                 _optionControllers.add(TextEditingController());
               }
             });
@@ -89,7 +89,8 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   }
 
   Widget _buildOptionsFields() {
-    if (_questionType != 'dropdown') return const SizedBox.shrink();
+    if (_questionType != 'DROPDOWN') return const SizedBox.shrink();
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -110,7 +111,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
                       border: const OutlineInputBorder(),
                     ),
                     validator: (val) {
-                      if (_questionType == 'dropdown' && (val == null || val.trim().isEmpty)) {
+                      if (_questionType == 'DROPDOWN' && (val == null || val.trim().isEmpty)) {
                         return 'Option cannot be empty';
                       }
                       return null;
@@ -153,22 +154,33 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
     return null;
   }
 
-  _createQuestionDTO() {
-    return CreateQuestionDTO(
-      questionText: _questionTextController.text.trim(),
-      isRequired: isRequired,
-      displayOrder: int.parse(_displayOrderController.text.trim()),
-      questionType: _questionType,
-      options: _questionType == 'dropdown'
-          ? _optionControllers.map((c) => c.text.trim()).where((t) => t.isNotEmpty).toList()
-          : null,
-    );
-  }
+_createQuestionDTO() {
+  return CreateQuestionDTO(
+    questionText: _questionTextController.text.trim(),
+    isRequired: isRequired,
+    displayOrder: int.parse(_displayOrderController.text.trim()),
+    questionType: _questionType,
+    options: _questionType == 'DROPDOWN'
+      ? _optionControllers
+          .asMap()
+          .entries
+          .where((e) => e.value.text.trim().isNotEmpty)
+          .map((e) => <String, dynamic>{
+                // no id field
+                'optionText': e.value.text.trim(),
+                'displayOrder': e.key + 1,
+              })
+          .toList()
+      : null,
+  );
+}
 
   _onPressed() {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
+      print("questionType: $_questionType");
       final question = _createQuestionDTO();
+      print("event questionTyp: ${question.questionType}");
       Navigator.pop(context, question);
     }
   }
