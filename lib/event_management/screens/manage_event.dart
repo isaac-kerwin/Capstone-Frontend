@@ -10,6 +10,7 @@ import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/event_management/widgets/event_info_tile.dart';
 import 'package:app_mobile_frontend/models/question.dart';
 import 'package:app_mobile_frontend/event_management/screens/edit_registrations.dart';   
+import 'package:app_mobile_frontend/event_management/screens/event_report.dart'; 
 
 class DetailsPage extends StatefulWidget {
   final EventDetails event; 
@@ -60,6 +61,12 @@ body: Padding(
           onPressed: () {
             // TODO: Implement external URL logic
           },
+        ),
+        _buildDashboardButton(
+          label: 'EVENT REPORT',
+          onPressed: () {
+            _navigateTo(context, ReportScreen(eventId: widget.event.id));
+          }
         ),
         _buildDashboardButton(
           label: 'EDIT EVENT INFORMATION',
