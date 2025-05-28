@@ -26,14 +26,12 @@ class Remaining {
 class Participant{
   final String name;
   final String email;
-  final String phone;
   final String ticketType;
   final List<Map<String, dynamic>> questionResponses;
 
   Participant({
     required this.name,
     required this.email,
-    required this.phone,
     required this.ticketType,
     required this.questionResponses,
   });
@@ -59,4 +57,32 @@ class Report{
     required this.remaining,
     required this.participants,
   });
+
+  factory Report.fromJson(Map<String, dynamic> json) {
+    return Report(
+      eventName: json["eventName"],
+      eventDescription: json["eventDescription"],
+      eventLocation: json["eventLocation"],
+      startDateTime: DateTime.parse(json["startDateTime"]),
+      endDateTime: DateTime.parse(json["endDateTime"]),
+      sales: Sales(
+        totalTickets: json["sales"]["totalTickets"],
+        revenue: json["sales"]["revenue"],
+        ticketTypes: List<Map<String, dynamic>>.from(json["sales"]["soldByTickets"]),
+        revenueByTicket: List<Map<String, dynamic>>.from(json["sales"]["revenueByTicket"]),
+      ),
+      remaining: Remaining(
+        remainingTickets: json["remaining"]["remainingTickets"],
+        remainingByTicket: Map<String, dynamic>.from(json["remaining"]["remainingByTicket"]),
+      ),
+      participants: List<Participant>.from(
+        json["participants"].map((p) => Participant(
+          name: p["name"],
+          email: p["email"],
+          ticketType: p["ticket"],
+          questionResponses: List<Map<String, dynamic>>.from(p["questionairreResponses"]),
+        )),
+      ),
+    );
+  }
 }

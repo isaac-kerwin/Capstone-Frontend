@@ -82,10 +82,10 @@ class Pagination {
 
   factory Pagination.fromJson(Map<String, dynamic> json) {
     return Pagination(
-        total: json["total"],
-        pages: json["pages"],
-        page: json["page"],
-        limit: json["limit"]);
+      total: json["total"],
+      pages: json["pages"],
+      page: json["page"],
+      limit: json["limit"]);
   }
 }
 
