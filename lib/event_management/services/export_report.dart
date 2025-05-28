@@ -1,14 +1,17 @@
-import 'package:intl/intl.dart';
-import 'package:pdf/widgets.dart' as pw;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/pdf.dart' show PdfPageFormat;
+import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-Future<void> exportReportAsPdf(Map<String, dynamic> report) async {
+import 'package:csv/csv.dart';
+import 'package:intl/intl.dart';
+
+
+Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
   final pdf = pw.Document();
+
   final fontBase  = await PdfGoogleFonts.robotoRegular();
   final fontBold  = await PdfGoogleFonts.robotoBold();
-
   // Collect all unique question texts for columns
   final participants = report['participants'] ?? [];
   final Set<String> questionSet = {};
@@ -23,7 +26,7 @@ Future<void> exportReportAsPdf(Map<String, dynamic> report) async {
 
   pdf.addPage(
     pw.MultiPage(
-      theme: pw.ThemeData.withFont(base: fontBase, bold: fontBold),
+        theme: pw.ThemeData.withFont(base: fontBase, bold: fontBold),
       pageFormat: PdfPageFormat.a4,
       build: (context) => [
         pw.Text(report['eventName'] ?? '', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold)),
@@ -58,10 +61,11 @@ Future<void> exportReportAsPdf(Map<String, dynamic> report) async {
   );
 
   // Trigger download/share dialog
-  await Printing.layoutPdf(
-    onLayout: (PdfPageFormat format) async => pdf.save(),
-    name: '${report['eventName'] ?? "event_report"}.pdf',
-  );
+  final output = await getTemporaryDirectory();
+  var dir = getDownloadsDirectory();
+  final file = File('/storage/emulated/0/Download/melbourne_italian_festa_participants.pdf');
+  await file.writeAsBytes(await pdf.save());
+  return file;
 }
 
 pw.Widget _buildParticipantsTablePdf(List participants, List<String> questionColumns) {
