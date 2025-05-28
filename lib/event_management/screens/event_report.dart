@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/network/report.dart';
-import 'package:app_mobile_frontend/models/report.dart';
+import 'package:app_mobile_frontend/event_management/services/export_report.dart';
 
 class ReportScreen extends StatefulWidget {
   final int eventId;
@@ -11,7 +11,7 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
-  late Future<Report> reportFuture;
+  late Future<dynamic> reportFuture;
 
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Event Report')),
-      body: FutureBuilder<Report>(
+      body: FutureBuilder<dynamic>(
         future: reportFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,42 +33,50 @@ class _ReportScreenState extends State<ReportScreen> {
           } else if (!snapshot.hasData) {
             return const Center(child: Text('No report data found.'));
           }
+
           final report = snapshot.data!;
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(report.eventName,
+                Text(report['eventName'] ?? '',
                     style: const TextStyle(
                         fontSize: 22, fontWeight: FontWeight.bold)),
+                ElevatedButton(
+                onPressed: () async {
+                  if (snapshot.hasData) {
+                    await exportReportAsPdf(snapshot.data!);
+                  }
+                },
+                child: const Text('Export as PDF'),
+              ),
                 const SizedBox(height: 8),
-                Text(report.eventDescription),
+                Text(report['eventDescription'] ?? ''),
                 const SizedBox(height: 8),
-                Text('Location: ${report.eventLocation}'),
-                Text('Start: ${report.startDateTime}'),
-                Text('End: ${report.endDateTime}'),
+                Text('Start: ${report['start'] ?? ''}'),
+                Text('End: ${report['end'] ?? ''}'),
                 const Divider(height: 32),
                 Text('Sales', style: Theme.of(context).textTheme.titleMedium),
-                Text('Total Tickets: ${report.sales.totalTickets}'),
-                Text('Revenue: \$${report.sales.revenue}'),
+                Text('Total Tickets: ${report['sales']?['totalTickets'] ?? ''}'),
+                Text('Revenue: \$${report['sales']?['revenue'] ?? ''}'),
                 const SizedBox(height: 8),
                 Text('Tickets Sold by Type:'),
-                ...report.sales.ticketTypes
-                    .map((t) => Text('${t['type']}: ${t['count']}')),
+                ...((report['sales']?['soldByTickets'] ?? []) as List)
+                    .map<Widget>((t) => Text('${t['name']}: ${t['total']}')),
                 const SizedBox(height: 8),
                 Text('Revenue by Ticket:'),
-                ...report.sales.revenueByTicket
-                    .map((t) => Text('${t['type']}: \$${t['revenue']}')),
+                ...((report['sales']?['revenueByTickets'] ?? []) as List)
+                    .map<Widget>((t) => Text('${t['name']}: \$${t['total']}')),
                 const Divider(height: 32),
                 Text('Remaining', style: Theme.of(context).textTheme.titleMedium),
-                Text('Remaining Tickets: ${report.remaining.remainingTickets}'),
-                ...report.remaining.remainingByTicket.entries
-                    .map((e) => Text('${e.key}: ${e.value}')),
+                Text('Remaining Tickets: ${report['remaining']?['remainingTickets'] ?? ''}'),
+                ...((report['remaining']?['remainingByTicket'] ?? []) as List)
+                    .map<Widget>((r) => Text('${r['name']}: ${r['total']}')),
                 const Divider(height: 32),
                 Text('Participants', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
-                _buildParticipantsTable(report.participants),
+                _buildParticipantsTable(report['participants'] ?? []),
               ],
             ),
           );
@@ -77,7 +85,7 @@ class _ReportScreenState extends State<ReportScreen> {
     );
   }
 
-  Widget _buildParticipantsTable(List<Participant> participants) {
+  Widget _buildParticipantsTable(List participants) {
     if (participants.isEmpty) {
       return const Text('No participants.');
     }
@@ -85,9 +93,9 @@ class _ReportScreenState extends State<ReportScreen> {
     // Collect all unique question texts for columns
     final Set<String> questionSet = {};
     for (final p in participants) {
-      for (final resp in p.questionResponses) {
-        if (resp.containsKey('questionText')) {
-          questionSet.add(resp['questionText']);
+      for (final resp in (p['questionnaireResponses'] ?? [])) {
+        if (resp.containsKey('question')) {
+          questionSet.add(resp['question']);
         }
       }
     }
@@ -102,19 +110,18 @@ class _ReportScreenState extends State<ReportScreen> {
           const DataColumn(label: Text('Ticket Type')),
           ...questionColumns.map((q) => DataColumn(label: Text(q))),
         ],
-        rows: participants.map((p) {
+        rows: participants.map<DataRow>((p) {
           Map<String, String> respMap = {};
-          for (final resp in p.questionResponses) {
-            if (resp.containsKey('questionText') &&
-                resp.containsKey('response')) {
-              respMap[resp['questionText']] = resp['response'].toString();
+          for (final resp in (p['questionnaireResponses'] ?? [])) {
+            if (resp.containsKey('question') && resp.containsKey('response')) {
+              respMap[resp['question']] = resp['response'].toString();
             }
           }
           return DataRow(
             cells: [
-              DataCell(Text(p.name)),
-              DataCell(Text(p.email)),
-              DataCell(Text(p.ticketType)),
+              DataCell(Text(p['name'] ?? '')),
+              DataCell(Text(p['email'] ?? '')),
+              DataCell(Text(p['ticket'] ?? '')),
               ...questionColumns.map((q) => DataCell(Text(respMap[q] ?? ''))),
             ],
           );

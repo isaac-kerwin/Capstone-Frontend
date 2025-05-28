@@ -39,10 +39,6 @@ class _MainScreenState extends State<MainScreen> {
     if (profile != null) {
       _isLoggedIn  = true;
       _isOrganizer = profile.role == 'ORGANIZER';
-      if (_isOrganizer){
-        Report report = await getEventReport(1);
-        report.prettyPrint();
-      }
       _userId = profile.id;
     }
     setState(() => _isLoading = false);

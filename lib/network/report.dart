@@ -3,7 +3,7 @@ import 'package:app_mobile_frontend/network/dio_client.dart';
 import 'package:app_mobile_frontend/network/auth.dart';
 import 'package:dio/dio.dart';
 
-Future<Report> getEventReport(int eventId) async {
+Future<dynamic> getEventReport(int eventId) async {
   try {
     final response = await dioClient.dio.get(
       '/events/$eventId/report',
@@ -15,7 +15,7 @@ Future<Report> getEventReport(int eventId) async {
     );
     if (response.statusCode == 200 && response.data != null) {
       print("Event report fetched successfully: ${response.data}"); 
-      return Report.fromJson(response.data["data"]);
+      return response.data;
     } else {
       throw Exception('Failed to fetch event report: ${response.data}');
     }

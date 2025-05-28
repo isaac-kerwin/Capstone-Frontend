@@ -15,7 +15,7 @@ class Sales {
 
 class Remaining {
   final int remainingTickets;
-  final Map<String, dynamic> remainingByTicket;
+  final List<Map<String, dynamic>> remainingByTicket;   // <- List
 
   Remaining({
     required this.remainingTickets,
@@ -40,7 +40,6 @@ class Participant{
 class Report{
   final String eventName;
   final String eventDescription;
-  final String eventLocation;
   final DateTime startDateTime;
   final DateTime endDateTime;
   final Sales sales;
@@ -50,7 +49,6 @@ class Report{
   Report({
     required this.eventName,
     required this.eventDescription,
-    required this.eventLocation,
     required this.startDateTime,
     required this.endDateTime,
     required this.sales,
@@ -59,37 +57,39 @@ class Report{
   });
 
   factory Report.fromJson(Map<String, dynamic> json) {
-    return Report(
+     Report report = Report(
       eventName: json["eventName"],
       eventDescription: json["eventDescription"],
-      eventLocation: json["eventLocation"],
-      startDateTime: DateTime.parse(json["startDateTime"]),
-      endDateTime: DateTime.parse(json["endDateTime"]),
+      startDateTime: DateTime.parse(json["start"]),
+      endDateTime: DateTime.parse(json["end"]),
       sales: Sales(
         totalTickets: json["sales"]["totalTickets"],
         revenue: json["sales"]["revenue"],
         ticketTypes: List<Map<String, dynamic>>.from(json["sales"]["soldByTickets"]),
-        revenueByTicket: List<Map<String, dynamic>>.from(json["sales"]["revenueByTicket"]),
+        revenueByTicket: List<Map<String, dynamic>>.from(json["sales"]["revenueByTickets"]),
       ),
       remaining: Remaining(
         remainingTickets: json["remaining"]["remainingTickets"],
-        remainingByTicket: Map<String, dynamic>.from(json["remaining"]["remainingByTicket"]),
+        remainingByTicket: List<Map<String, dynamic>>
+            .from(json["remaining"]["remainingByTicket"]),
       ),
       participants: List<Participant>.from(
         json["participants"].map((p) => Participant(
           name: p["name"],
           email: p["email"],
           ticketType: p["ticket"],
-          questionResponses: List<Map<String, dynamic>>.from(p["questionairreResponses"]),
+          questionResponses: List<Map<String, dynamic>>.from(p["questionaireResponses"]),
         )),
       ),
     );
+    report.prettyPrint();
+    return report;
   }
 
   prettyPrint() {
+    print("Event Report:"); 
     print("Event Name: $eventName");
     print("Description: $eventDescription");
-    print("Location: $eventLocation");
     print("Start Time: $startDateTime");
     print("End Time: $endDateTime");
     print("Total Tickets Sold: ${sales.totalTickets}");
