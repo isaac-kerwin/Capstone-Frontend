@@ -19,6 +19,7 @@ class _ReportScreenState extends State<ReportScreen> {
     reportFuture = getEventReport(widget.eventId);
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,9 +46,19 @@ class _ReportScreenState extends State<ReportScreen> {
                         fontSize: 22, fontWeight: FontWeight.bold)),
                 ElevatedButton(
                 onPressed: () async {
-                  if (snapshot.hasData) {
-                    await exportReportAsPdf(snapshot.data!);
+                  try{
+                    if (snapshot.hasData) {
+                      await exportReportAsPdf(snapshot.data!);
+                      
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Report saved to Downloads'),
+                          duration: Duration(seconds: 3),
+                        ),
+                      );
+                    }
                   }
+                  catch (e) {}
                 },
                 child: const Text('Export as PDF'),
               ),

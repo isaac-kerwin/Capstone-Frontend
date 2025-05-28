@@ -63,7 +63,7 @@ Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
   // Trigger download/share dialog
   final output = await getTemporaryDirectory();
   var dir = getDownloadsDirectory();
-  final file = File('/storage/emulated/0/Download/melbourne_italian_festa_participants.pdf');
+  final file = File('/storage/emulated/0/Download/${report['eventName']}.pdf');
   await file.writeAsBytes(await pdf.save());
   return file;
 }
