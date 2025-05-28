@@ -85,4 +85,16 @@ class Report{
       ),
     );
   }
+
+  prettyPrint() {
+    print("Event Name: $eventName");
+    print("Description: $eventDescription");
+    print("Location: $eventLocation");
+    print("Start Time: $startDateTime");
+    print("End Time: $endDateTime");
+    print("Total Tickets Sold: ${sales.totalTickets}");
+    print("Total Revenue: \$${sales.revenue}");
+    print("Remaining Tickets: ${remaining.remainingTickets}");
+    print("Participants Count: ${participants.length}");
+  }
 }

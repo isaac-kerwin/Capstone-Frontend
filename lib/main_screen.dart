@@ -7,6 +7,8 @@ import 'package:app_mobile_frontend/event_management/screens/organiser_dashboard
 import 'package:app_mobile_frontend/login_and_register/screens/login.dart';
 import 'package:app_mobile_frontend/login_and_register/screens/profile_page.dart';
 import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/network/report.dart';
+import 'package:app_mobile_frontend/models/report.dart';
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
@@ -37,6 +39,10 @@ class _MainScreenState extends State<MainScreen> {
     if (profile != null) {
       _isLoggedIn  = true;
       _isOrganizer = profile.role == 'ORGANIZER';
+      if (_isOrganizer){
+        Report report = await getEventReport(1);
+        report.prettyPrint();
+      }
       _userId = profile.id;
     }
     setState(() => _isLoading = false);
