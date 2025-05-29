@@ -70,6 +70,19 @@ Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
         pw.Divider(),
         pw.Text('Participants', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
         pw.SizedBox(height: 8),
+        pw.Text('See next page for full participant table.', style: pw.TextStyle(fontSize: 12, fontStyle: pw.FontStyle.italic)),
+      ],
+    ),
+  );
+
+  // Add participant table on a new landscape page
+  pdf.addPage(
+    pw.MultiPage(
+      theme: pw.ThemeData.withFont(base: fontBase, bold: fontBold),
+      pageFormat: PdfPageFormat.a4.landscape,
+      build: (context) => [
+        pw.Text('Participants Table', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
+        pw.SizedBox(height: 12),
         _buildParticipantsTablePdf(participants, questionColumns),
       ],
     ),
