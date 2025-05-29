@@ -5,6 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
+import 'package:app_mobile_frontend/event_management/services/date_and_time_parser.dart';
 
 
 Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
@@ -24,6 +25,20 @@ Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
   }
   final List<String> questionColumns = questionSet.toList();
 
+  // Format start and end date/time
+  String startStr = '';
+  String endStr = '';
+  try {
+    if (report['start'] != null) {
+      final startDate = DateTime.parse(report['start']);
+      startStr = '${formatDateAsWords(startDate)} at ${formatTimeAmPm(startDate)}';
+    }
+    if (report['end'] != null) {
+      final endDate = DateTime.parse(report['end']);
+      endStr = '${formatDateAsWords(endDate)} at ${formatTimeAmPm(endDate)}';
+    }
+  } catch (_) {}
+
   pdf.addPage(
     pw.MultiPage(
       theme: pw.ThemeData.withFont(base: fontBase, bold: fontBold),
@@ -33,8 +48,8 @@ Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
         pw.SizedBox(height: 8),
         pw.Text(report['eventDescription'] ?? ''),
         pw.SizedBox(height: 8),
-        pw.Text('Start: ${report['start'] ?? ''}'),
-        pw.Text('End: ${report['end'] ?? ''}'),
+        pw.Text('Start: $startStr'),
+        pw.Text('End: $endStr'),
         pw.Divider(),
         pw.Text('Sales', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
         pw.Text('Total Tickets: ${report['sales']?['totalTickets'] ?? ''}'),

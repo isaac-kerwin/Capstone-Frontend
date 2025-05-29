@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/network/report.dart';
 import 'package:app_mobile_frontend/event_management/services/export_report.dart';
+import 'package:app_mobile_frontend/event_management/services/date_and_time_parser.dart';
 
 class ReportScreen extends StatefulWidget {
   final int eventId;
@@ -19,7 +20,6 @@ class _ReportScreenState extends State<ReportScreen> {
     reportFuture = getEventReport(widget.eventId);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +36,23 @@ class _ReportScreenState extends State<ReportScreen> {
           }
 
           final report = snapshot.data!;
+
+          // Format start and end date/time
+          String startStr = '';
+          String endStr = '';
+          try {
+            if (report['start'] != null) {
+              final startDate = DateTime.parse(report['start']);
+              startStr =
+                  '${formatDateAsWords(startDate)} at ${formatTimeAmPm(startDate)}';
+            }
+            if (report['end'] != null) {
+              final endDate = DateTime.parse(report['end']);
+              endStr =
+                  '${formatDateAsWords(endDate)} at ${formatTimeAmPm(endDate)}';
+            }
+          } catch (_) {}
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -45,28 +62,27 @@ class _ReportScreenState extends State<ReportScreen> {
                     style: const TextStyle(
                         fontSize: 22, fontWeight: FontWeight.bold)),
                 TextButton(
-                onPressed: () async {
-                  try{
-                    if (snapshot.hasData) {
-                      await exportReportAsPdf(snapshot.data!);
-                      
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Report saved to Downloads'),
-                          duration: Duration(seconds: 3),
-                        ),
-                      );
-                    }
-                  }
-                  catch (e) {}
-                },
-                child: const Text('Export as PDF'),
-              ),
+                  onPressed: () async {
+                    try {
+                      if (snapshot.hasData) {
+                        await exportReportAsPdf(snapshot.data!);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Report saved to Downloads'),
+                            duration: Duration(seconds: 3),
+                          ),
+                        );
+                      }
+                    } catch (e) {}
+                  },
+                  child: const Text('Export as PDF'),
+                ),
                 const SizedBox(height: 8),
                 Text(report['eventDescription'] ?? ''),
                 const SizedBox(height: 8),
-                Text('Start: ${report['start'] ?? ''}'),
-                Text('End: ${report['end'] ?? ''}'),
+                Text('Start: $startStr'),
+                Text('End: $endStr'),
                 const Divider(height: 32),
                 Text('Sales', style: Theme.of(context).textTheme.titleMedium),
                 Text('Total Tickets: ${report['sales']?['totalTickets'] ?? ''}'),
