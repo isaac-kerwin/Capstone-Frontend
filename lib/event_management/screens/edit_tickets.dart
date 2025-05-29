@@ -64,11 +64,55 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
   }
 
   Future<void> _pickDateTime(bool isStart) async {
+    DateTime now = DateTime.now();
+    late DateTime firstDate;
+    late DateTime lastDate;
+
+    // Get event start date for validation
+    final eventStart = widget.event.startDateTime;
+    DateTime eventStartDate = eventStart is DateTime
+        ? eventStart
+        : DateTime.tryParse(eventStart.toString()) ?? DateTime(now.year + 5);
+
+    if (isStart) {
+      firstDate = DateTime(now.year, now.month, now.day);
+      lastDate = _salesEnd != null && _salesEnd!.isBefore(eventStartDate)
+          ? _salesEnd!
+          : eventStartDate.subtract(const Duration(days: 1));
+    } else {
+      firstDate = _salesStart != null
+          ? _salesStart!.add(const Duration(days: 1))
+          : DateTime(now.year, now.month, now.day);
+      lastDate = eventStartDate.subtract(const Duration(days: 0));
+    }
+
+    // Prevent invalid range
+    if (lastDate.isBefore(firstDate)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(isStart
+              ? 'No valid start dates available before event start.'
+              : 'No valid end dates available after ticket start and before event start.'),
+        ),
+      );
+      return;
+    }
+
+    // Ensure initialDate is valid
+    DateTime initialDate;
+    if (isStart) {
+      initialDate = (_salesStart != null && _salesStart!.isAfter(firstDate)) ? _salesStart! : firstDate;
+      if (initialDate.isAfter(lastDate)) initialDate = lastDate;
+    } else {
+      initialDate = (_salesEnd != null && _salesEnd!.isAfter(firstDate)) ? _salesEnd! : firstDate;
+      if (initialDate.isAfter(lastDate)) initialDate = lastDate;
+    }
+
     final DateTime? date = await showDatePicker(
       context: context,
-      initialDate: isStart ? _salesStart ?? DateTime.now() : _salesEnd ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
 
     if (date != null) {
@@ -88,6 +132,10 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
           );
           if (isStart) {
             _salesStart = dateTime;
+            // If end is before new start, clear end
+            if (_salesEnd != null && _salesEnd!.isBefore(_salesStart!)) {
+              _salesEnd = null;
+            }
           } else {
             _salesEnd = dateTime;
           }
