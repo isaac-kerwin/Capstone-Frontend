@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app_mobile_frontend/fundamental_widgets/form_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/question.dart';
@@ -23,7 +25,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   late bool isRequired;
 
   // Add these for question type and options
-  String _questionType = 'TEXT';
+  String _questionType = "TEXT";
   List<TextEditingController> _optionControllers = [];
 
   @override
@@ -68,7 +70,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
         DropdownButton<String>(
           value: _questionType,
           items: const [
-            DropdownMenuItem(value: 'TEXT', child: Text('Text')),
+            DropdownMenuItem(value: "TEXT", child: Text('Text')),
             DropdownMenuItem(value: 'DROPDOWN', child: Text('Dropdown Menu')),
           ],
           onChanged: (value) {
@@ -142,6 +144,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   }
 
 _createQuestionDTO() {
+  if (_questionType == 'DROPDOWN'){
   return CreateQuestionDTO(
     questionText: _questionTextController.text.trim(),
     isRequired: isRequired,
@@ -160,14 +163,21 @@ _createQuestionDTO() {
           .toList()
       : null,
   );
+  }
+  else {
+    return CreateQuestionDTO(
+      questionText: _questionTextController.text.trim(),
+      isRequired: isRequired,
+      displayOrder: widget.displayOrder,
+      questionType: _questionType,
+    );
+  }
 }
 
   _onPressed() {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState!.save();
-      print("questionType: $_questionType");
       final question = _createQuestionDTO();
-      print("event questionTyp: ${question.questionType}");
       Navigator.pop(context, question);
     }
   }

@@ -36,8 +36,6 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
       builder: (context) => CreateQuestionDialog(displayOrder: widget.eventData['questions'].length + 1 ), 
     );
     if (newQuestion != null) {
-          print("New Question: ${newQuestion.questionType}");
-          print("question Options: ${newQuestion.options![0]}");
       setState(() {
         widget.eventData["questions"].add(newQuestion);
       });
