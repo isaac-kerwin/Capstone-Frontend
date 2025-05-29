@@ -20,18 +20,21 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
   List<TicketDTO> tickets = [];
 
   // Helper to pick a date.
-  Future<DateTime?> _pickDate(DateTime? initialDate) async {
+  Future<DateTime?> _pickDate(DateTime? initialDate, {DateTime? lastDate, DateTime? firstDate}) async {
     DateTime now = DateTime.now();
     return await showDatePicker(
       context: context,
       initialDate: initialDate ?? now,
-      firstDate: DateTime(now.year - 1),
-      lastDate: DateTime(now.year + 5),
+      firstDate: firstDate ?? DateTime(now.year, now.month, now.day),
+      lastDate: lastDate ?? DateTime(now.year + 5),
     );
   }
 
   Future<void> _selectSalesStart() async {
-    final DateTime? picked = await _pickDate(salesStart);
+    final DateTime? picked = await _pickDate(
+      salesStart,
+      firstDate: DateTime.now(),
+    );
     if (picked != null) {
       setState(() {
         salesStart = picked;
@@ -40,7 +43,19 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
   }
 
   Future<void> _selectSalesEnd() async {
-    final DateTime? picked = await _pickDate(salesEnd ?? salesStart);
+    // Block dates later than event start date and earlier than or equal to salesStart
+    final eventStart = widget.eventData['startDateTime'];
+    DateTime? eventStartDate;
+    if (eventStart is DateTime) {
+      eventStartDate = eventStart;
+    } else if (eventStart is String) {
+      eventStartDate = DateTime.tryParse(eventStart);
+    }
+    final DateTime? picked = await _pickDate(
+      salesEnd ?? salesStart,
+      lastDate: eventStartDate ?? DateTime.now().add(const Duration(days: 365 * 5)),
+      firstDate: salesStart != null ? salesStart!.add(const Duration(days: 1)) : DateTime.now(),
+    );
     if (picked != null) {
       setState(() {
         salesEnd = picked;

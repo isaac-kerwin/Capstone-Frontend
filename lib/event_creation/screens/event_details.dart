@@ -218,14 +218,17 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Future<void> _pickDateTime({required bool isStart}) async {
     final DateTime now = DateTime.now();
     final DateTime? current = isStart ? _startDateTime : _endDateTime;
-    final DateTime? minDate = isStart ? DateTime(2020) : _startDateTime;
-    final DateTime initialDate = current ?? (isStart ? now : (minDate ?? now));
+    final DateTime? minDate = isStart ? DateTime(now.year, now.month, now.day + 1) : _startDateTime;
+    final DateTime initialDate = current ?? (isStart ? minDate! : (minDate ?? now));
 
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,
-      firstDate: minDate ?? DateTime(2020),
+      firstDate: minDate ?? DateTime(now.year, now.month, now.day + 1),
       lastDate: DateTime(2030),
+      selectableDayPredicate: isStart
+          ? (date) => date.isAfter(DateTime(now.year, now.month, now.day).subtract(const Duration(days: 1)))
+          : null,
     );
 
     if (pickedDate == null) return;
@@ -275,6 +278,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
     final location = _locationController.text.trim();
     final capacity = int.tryParse(_capacityController.text.trim()) ?? 0;
 
+    final now = DateTime.now();
+
     if (eventName.isEmpty ||
         description.isEmpty ||
         location.isEmpty ||
@@ -282,6 +287,20 @@ class _CreateEventPageState extends State<CreateEventPage> {
         _endDateTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill out all fields!')),
+      );
+      return;
+    }
+
+    if (_startDateTime!.isBefore(now)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Start date must be later than today!')),
+      );
+      return;
+    }
+
+    if (_endDateTime!.isBefore(_startDateTime!)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('End date/time cannot be before start date/time!')),
       );
       return;
     }
