@@ -17,33 +17,11 @@ import 'package:app_mobile_frontend/models/question.dart';
    bool enableDOB = false;
 
    _addToggledQuestions(enablePhoneNumber, enableDOB, questions) {
-      questions.add(CreateQuestionDTO(
-          questionText: 'Email Address',
-          isRequired: true,
-          displayOrder: 1,
-          questionType: "text"
-      ));
-      
-      questions.add(CreateQuestionDTO(
-        questionText: 'First Name',
-        isRequired: true,
-        displayOrder: 1,
-        questionType: "text"
-      ));
-
-  
-      questions.add(CreateQuestionDTO(
-        questionText: 'Last Name',
-        isRequired: true,
-        displayOrder: 2,
-        questionType: "text"
-      ));
-
       if (enablePhoneNumber) {
           questions.add(CreateQuestionDTO(
             questionText: 'Phone Number',
             isRequired: true,
-            displayOrder: 3,
+            displayOrder: questions.length + 1,
             questionType: "text"
           ));
       }
@@ -51,7 +29,7 @@ import 'package:app_mobile_frontend/models/question.dart';
           questions.add(CreateQuestionDTO(
             questionText: 'Date of Birth',
             isRequired: true,
-            displayOrder: 4,
+            displayOrder: questions.length + 1,
             questionType: "text"
           ));
       }
@@ -60,6 +38,7 @@ import 'package:app_mobile_frontend/models/question.dart';
     _onContinue() {
       List<CreateQuestionDTO> questions = [];
       widget.eventData['questions'] = questions;  
+      _addToggledQuestions(enablePhoneNumber, enableDOB, questions);
       Navigator.push(
         context,
         MaterialPageRoute(

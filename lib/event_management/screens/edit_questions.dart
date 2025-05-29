@@ -34,7 +34,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
   Future<void> _openCreateQuestionDialog() async {
     final CreateQuestionDTO? newQuestion = await showDialog<CreateQuestionDTO>(
       context: context,
-      builder: (context) => const CreateQuestionDialog(),
+      builder: (context) => CreateQuestionDialog(displayOrder: _questions.length + 1),
     );
     if (newQuestion != null) {
       setState(() {
@@ -58,6 +58,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
           displayOrder: question.displayOrder,
           questionType: 'text', // Assuming all questions are text type for simplicity
         ),
+        displayOrder: question.displayOrder,
       ),
     );
     if (editedQuestion != null) {

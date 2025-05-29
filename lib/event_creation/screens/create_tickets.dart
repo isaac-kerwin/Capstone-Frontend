@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/tickets.dart';
 import 'package:app_mobile_frontend/event_creation/widgets/create_ticket.dart';
-import 'package:app_mobile_frontend/event_creation/screens/bank_info.dart';
 import 'package:app_mobile_frontend/fundamental_widgets/action_button.dart';
+import 'package:app_mobile_frontend/event_creation/screens/event_common_questions.dart';
 
 class TicketManagementScreen extends StatefulWidget {
   
@@ -91,7 +91,7 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
     widget.eventData['tickets'] = tickets;
     Navigator.push(context,
       MaterialPageRoute(
-        builder: (context) => EditBankInformationPage( eventData: widget.eventData,),
+        builder: (context) => CommonQuestions( eventData: widget.eventData,),
       ),
     );
   }

@@ -27,12 +27,13 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     super.initState();
     // Ensure the key exists and is a List<CreateQuestionDTO>
     widget.eventData.putIfAbsent('questions', () => <CreateQuestionDTO>[]);
+
   }
   // Opens the pop-up dialog to create a new question.
   Future<void> _openCreateQuestionDialog() async {
     final  CreateQuestionDTO? newQuestion = await showDialog< CreateQuestionDTO>(
       context: context,
-      builder: (context) => const CreateQuestionDialog(),
+      builder: (context) => CreateQuestionDialog(displayOrder: widget.eventData['questions'].length + 1 ), 
     );
     if (newQuestion != null) {
           print("New Question: ${newQuestion.questionType}");

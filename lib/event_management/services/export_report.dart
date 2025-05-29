@@ -26,7 +26,7 @@ Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
 
   pdf.addPage(
     pw.MultiPage(
-        theme: pw.ThemeData.withFont(base: fontBase, bold: fontBold),
+      theme: pw.ThemeData.withFont(base: fontBase, bold: fontBold),
       pageFormat: PdfPageFormat.a4,
       build: (context) => [
         pw.Text(report['eventName'] ?? '', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold)),
@@ -61,8 +61,6 @@ Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
   );
 
   // Trigger download/share dialog
-  final output = await getTemporaryDirectory();
-  var dir = getDownloadsDirectory();
   final file = File('/storage/emulated/0/Download/${report['eventName']}.pdf');
   await file.writeAsBytes(await pdf.save());
   return file;

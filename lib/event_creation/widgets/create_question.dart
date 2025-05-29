@@ -5,10 +5,12 @@ import 'package:app_mobile_frontend/event_creation/widgets/create_question.dart'
 
 class CreateQuestionDialog extends StatefulWidget {
   final CreateQuestionDTO? initialQuestion;
+  final int displayOrder;
 
   const CreateQuestionDialog({
     super.key,
     this.initialQuestion,
+    required this.displayOrder,
   });
 
   @override
@@ -19,7 +21,6 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _questionTextController;
   late bool isRequired;
-  late final TextEditingController _displayOrderController;
 
   // Add these for question type and options
   String _questionType = 'TEXT';
@@ -30,16 +31,12 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
     super.initState();
     _questionTextController = TextEditingController(text: widget.initialQuestion?.questionText ?? '');
     isRequired = widget.initialQuestion?.isRequired ?? false;
-    _displayOrderController = TextEditingController(
-      text: widget.initialQuestion?.displayOrder.toString() ?? '',
-    );
     // Optionally, initialize _questionType and _optionControllers from initialQuestion if editing
   }
 
   @override
   void dispose() {
     _questionTextController.dispose();
-    _displayOrderController.dispose();
     for (var c in _optionControllers) {
       c.dispose();
     }
@@ -144,21 +141,11 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
     );
   }
 
-  String? validateDisplayOrder(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Please enter the display order';
-    }
-    if (int.tryParse(value.trim()) == null) {
-      return 'Enter a valid number';
-    }
-    return null;
-  }
-
 _createQuestionDTO() {
   return CreateQuestionDTO(
     questionText: _questionTextController.text.trim(),
     isRequired: isRequired,
-    displayOrder: int.parse(_displayOrderController.text.trim()),
+    displayOrder: widget.displayOrder,
     questionType: _questionType,
     options: _questionType == 'DROPDOWN'
       ? _optionControllers
@@ -209,14 +196,6 @@ _createQuestionDTO() {
               const SizedBox(height: 8),
               // Options fields for dropdown type.
               _buildOptionsFields(),
-              const SizedBox(height: 8),
-              // Display Order field.
-              buildTextField(
-                label: "Display Order",
-                controller: _displayOrderController,
-                validator: validateDisplayOrder,
-                isNumber: true,
-              ),
               const SizedBox(height: 8),
             ],
           ),

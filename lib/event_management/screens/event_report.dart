@@ -44,7 +44,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 Text(report['eventName'] ?? '',
                     style: const TextStyle(
                         fontSize: 22, fontWeight: FontWeight.bold)),
-                ElevatedButton(
+                TextButton(
                 onPressed: () async {
                   try{
                     if (snapshot.hasData) {
