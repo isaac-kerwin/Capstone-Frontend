@@ -2,10 +2,7 @@ import 'package:app_mobile_frontend/models/registration.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
-import 'package:app_mobile_frontend/main_screen.dart';
-import 'package:app_mobile_frontend/network/event_registration.dart';
-import 'package:app_mobile_frontend/models/email.dart';
-import 'package:app_mobile_frontend/network/email.dart';
+import 'package:app_mobile_frontend/event_registration/screens/registration_summary.dart';
 
 class RegistrationForm extends StatefulWidget {
   final int eventId;
@@ -50,21 +47,17 @@ class _RegistrationFormState extends State<RegistrationForm> {
     return 0;
   }
 
-  Map<String, dynamic> _buildRegistrationPayload(EventWithQuestions event) {
-    final ticketsPayload = <Map<String, dynamic>>[];
-    final participantsPayload = <Map<String, dynamic>>[];
+  /// Collects all answers for each participant in a list of maps.
+  List<Map<String, dynamic>> _collectAnswers(EventWithQuestions event) {
+    final answers = <Map<String, dynamic>>[];
     final questionCount = event.questions.length;
 
     for (var tIndex = 0; tIndex < widget.tickets.length; tIndex++) {
       final ticket = widget.tickets[tIndex];
       final qty = _parseQuantity(ticket['quantity']);
-      ticketsPayload.add({
-        'ticketId': ticket['ticketId'],
-        'quantity': qty,
-      });
 
       for (var copy = 0; copy < qty; copy++) {
-        final responses = <Map<String, dynamic>>[];
+        final answerMap = <String, dynamic>{};
         for (var qIndex = 0; qIndex < questionCount; qIndex++) {
           final composite = tIndex * 1000 + copy * questionCount + qIndex;
           final question = event.questions[qIndex];
@@ -88,75 +81,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
             text = texts.join(', ');
           }
 
-          responses.add({
-            'eventQuestionId': question.question.id,
-            'responseText': text,
-          });
+          answerMap[question.question.questionText] = text;
         }
-
-        final pData = widget.participantData[participantsPayload.length];
-        participantsPayload.add({
-          'email': pData['email'] ?? '',
-          'firstName': pData['firstname'] ?? '',
-          'lastName': pData['lastname'] ?? '',
-          'phoneNumber': pData['phone'] ?? '',
-          'responses': responses,
-        });
+        answers.add(answerMap);
       }
     }
-
-    return {
-      'eventId': event.id,
-      'tickets': ticketsPayload,
-      'participants': participantsPayload,
-    };
-  }
-
-  void _submitForm(int eventId, List<Map<String, int>> tickets, List<Map<String, String>> pdata, EventWithQuestions event) async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() => _isSubmitting = true);
-
-    try {
-      final payload = _buildRegistrationPayload(event);
-      final dto = EventRegistrationDTO(
-        eventId: payload['eventId'],
-        tickets: payload['tickets'],
-        participants: payload['participants'],
-      );
-      print('Payload: \${dto.toJson()}');
-
-      final regId = await createRegistration(dto);
-      if (regId != null) {
-        final first = pdata.first;
-        final emailDto = EmailDTO(
-          email: first['email'] ?? '',
-          registrationID: regId,
-          eventName: event.name ?? '',
-          startDateTime: event.startDateTime ?? DateTime.now(),
-          endDateTime: event.endDateTime ?? DateTime.now(),
-          location: event.location ?? '',
-          type: 'confirmation',
-        );
-        await sendRegistrationEmail(emailDto);
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration submitted!')),
-      );
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const MainScreen()),
-        (r) => false,
-      );
-    } catch (e, stack) {
-      debugPrint('Error during submission: \$e');
-      debugPrintStack(stackTrace: stack);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: \${e.toString()}')),
-      );
-    } finally {
-      setState(() => _isSubmitting = false);
-    }
+    return answers;
   }
 
   Widget _buildQuestionFields(EventWithQuestions event) {
@@ -277,6 +207,25 @@ class _RegistrationFormState extends State<RegistrationForm> {
     );
   }
 
+  void _goToSummary(EventWithQuestions event) {
+    if (!_formKey.currentState!.validate()) return;
+    final answers = _collectAnswers(event);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => RegistrationSummaryScreen(
+          eventId: widget.eventId,
+          participantData: widget.participantData,
+          tickets: widget.tickets,
+          ticketNames: widget.ticketNames,
+          answers: answers,
+          event: event,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -287,7 +236,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: \${snapshot.error}'));  
+            return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
             return const Center(child: Text('No event data found.'));
           }
@@ -306,15 +255,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: ElevatedButton(
                       onPressed: _isSubmitting
                           ? null
-                          : () => _submitForm(
-                                widget.eventId,
-                                widget.tickets,
-                                widget.participantData,
-                                event,
-                              ),
+                          : () => _goToSummary(event),
                       child: _isSubmitting
                           ? const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
-                          : const Text('Complete Registration'),
+                          : const Text('Review Registration'),
                     ),
                   ),
                 ],
