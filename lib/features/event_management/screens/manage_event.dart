@@ -1,4 +1,4 @@
-import 'package:app_mobile_frontend/event_management/screens/edit_registrations.dart';
+import 'package:app_mobile_frontend/features/event_management/screens/edit_registrations.dart';
 import 'edit_tickets.dart';
 import 'edit_questions.dart';
 import 'edit_details.dart';
@@ -8,7 +8,7 @@ import 'package:app_mobile_frontend/models/event.dart'; // Assuming EventWithQue
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/features/event_management/widgets/event_info_tile.dart';
 import 'package:app_mobile_frontend/models/question.dart';
-import 'package:app_mobile_frontend/event_management/screens/edit_registrations.dart';   
+import 'package:app_mobile_frontend/features/event_management/screens/edit_registrations.dart';   
 import 'package:app_mobile_frontend/features/event_management/screens/event_report.dart'; 
 
 class DetailsPage extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/network/report.dart';
-import 'package:app_mobile_frontend/event_management/services/export_report.dart';
-import 'package:app_mobile_frontend/event_management/services/date_and_time_parser.dart';
+import 'package:app_mobile_frontend/features/event_management/services/export_report.dart';
+import 'package:app_mobile_frontend/features/event_management/services/date_and_time_parser.dart';
 
 class ReportScreen extends StatefulWidget {
   final int eventId;

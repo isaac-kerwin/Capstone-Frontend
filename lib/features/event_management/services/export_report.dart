@@ -5,7 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:csv/csv.dart';
 import 'package:intl/intl.dart';
-import 'package:app_mobile_frontend/event_management/services/date_and_time_parser.dart';
+import 'package:app_mobile_frontend/features/event_management/services/date_and_time_parser.dart';
 
 
 Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
