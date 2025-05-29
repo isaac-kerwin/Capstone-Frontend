@@ -15,7 +15,10 @@ import 'package:app_mobile_frontend/models/question.dart';
  class _CommonQuestionsState extends State<CommonQuestions> {
    bool enablePhoneNumber = false;
    bool enableDOB = false;
-
+   bool enableEmergencyContact = false;
+   bool enablePrefferedName = false;
+   bool enableCompanyName = false;
+  
    _addToggledQuestions(enablePhoneNumber, enableDOB, questions) {
       if (enablePhoneNumber) {
           questions.add(CreateQuestionDTO(
@@ -33,6 +36,31 @@ import 'package:app_mobile_frontend/models/question.dart';
             questionType: "text"
           ));
       }
+      if (enableEmergencyContact) {
+      questions.add(CreateQuestionDTO(
+        questionText: 'Emergency Contact',
+        isRequired: true,
+        displayOrder: questions.length + 1,
+        questionType: "text"
+      ));
+      }
+      if (enablePrefferedName) {
+      questions.add(CreateQuestionDTO(
+        questionText: 'Preferred Name',
+        isRequired: true,
+        displayOrder: questions.length + 1,
+        questionType: "text"
+      ));
+      }
+      if (enableCompanyName) {
+      questions.add(CreateQuestionDTO(
+        questionText: 'Company Name',
+        isRequired: true,
+        displayOrder: questions.length + 1,
+        questionType: "text"
+      ));
+      }
+      
    }
 
     _onContinue() {
@@ -52,7 +80,7 @@ import 'package:app_mobile_frontend/models/question.dart';
    @override
    Widget build(BuildContext context) {
      return Scaffold(
-       appBar: AppBar(title: const Text('Select Fields')),
+       appBar: AppBar(title: const Text('Add Common Questions')),
        body: SingleChildScrollView(
          padding: const EdgeInsets.all(16),
          child: Column(
@@ -75,6 +103,34 @@ import 'package:app_mobile_frontend/models/question.dart';
                  });
                },
              ),
+              SwitchListTile(
+                title: const Text('Emergency Contact'),
+                value: enableEmergencyContact,
+                onChanged: (bool value) {
+                  setState(() {
+                    enableEmergencyContact = value;
+                  });
+                },
+              ),
+              SwitchListTile(
+                title: const Text('Preferred Name'),
+                value: enablePrefferedName,
+                onChanged: (bool value) {
+                  setState(() {
+                    enablePrefferedName = value;
+                  });
+                },
+              ),
+              SwitchListTile(
+                title: const Text('Company Name'),
+                value: enableCompanyName,
+                onChanged: (bool value) {
+                  setState(() {
+                    enableCompanyName = value;
+                  });
+                },
+              ),
+
              const SizedBox(height: 20),
              ElevatedButton(
                onPressed: () {

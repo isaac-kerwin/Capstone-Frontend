@@ -123,7 +123,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Question Management'),
+        title: const Text('Add Custom Questions'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
