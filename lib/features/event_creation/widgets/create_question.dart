@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:app_mobile_frontend/fundamental_widgets/form_widgets.dart';
+import 'package:app_mobile_frontend/core/fundamental_widgets/form_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/question.dart';
-import 'package:app_mobile_frontend/event_creation/widgets/create_question.dart';
+import 'package:app_mobile_frontend/features/event_creation/widgets/create_question.dart';
 
 class CreateQuestionDialog extends StatefulWidget {
   final CreateQuestionDTO? initialQuestion;

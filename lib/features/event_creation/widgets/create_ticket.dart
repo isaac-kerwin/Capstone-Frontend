@@ -1,4 +1,4 @@
-import 'package:app_mobile_frontend/fundamental_widgets/form_widgets.dart';
+import 'package:app_mobile_frontend/core/fundamental_widgets/form_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/tickets.dart';
 

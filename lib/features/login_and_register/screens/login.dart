@@ -1,6 +1,6 @@
 // lib/login_and_register/screens/login.dart
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/login_and_register/screens/register_account.dart';
+import 'package:app_mobile_frontend/features/login_and_register/screens/register_account.dart';
 import 'package:app_mobile_frontend/network/auth.dart';
 import 'package:app_mobile_frontend/network/users.dart';           // ← getUserProfile()
 import 'package:app_mobile_frontend/main_screen.dart';

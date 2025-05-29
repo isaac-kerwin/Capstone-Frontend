@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main_screen.dart';
-import 'package:app_mobile_frontend/themes/app_themes.dart';
+import 'package:app_mobile_frontend/core/themes/app_themes.dart';
 import 'package:flutter/services.dart';
 
 Future<void> main() async {

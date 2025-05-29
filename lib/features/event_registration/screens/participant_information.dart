@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/event_registration/screens/new_registration_form_generator.dart';
+import 'package:app_mobile_frontend/features/event_registration/screens/new_registration_form_generator.dart';
 
 class ParticipantInformationScreen extends StatefulWidget {
   final int eventId;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/event_creation/screens/event_tickets.dart';
-import 'package:app_mobile_frontend/fundamental_widgets/form_widgets.dart';
+import 'package:app_mobile_frontend/features/event_creation/screens/event_tickets.dart';
+import 'package:app_mobile_frontend/core/fundamental_widgets/form_widgets.dart';
 import 'package:app_mobile_frontend/models/tickets.dart';
-import 'package:app_mobile_frontend/event_creation/screens/event_common_questions.dart';
+import 'package:app_mobile_frontend/features/event_creation/screens/event_common_questions.dart';
 
 class CreateEventPage extends StatefulWidget {
   const CreateEventPage({Key? key}) : super(key: key);

@@ -1,9 +1,9 @@
 import 'package:app_mobile_frontend/network/users.dart';
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/event_exploration/screens/explore.dart';
-import 'package:app_mobile_frontend/event_management/screens/organiser_dashboard_home.dart';
-import 'package:app_mobile_frontend/login_and_register/screens/login.dart';
-import 'package:app_mobile_frontend/login_and_register/screens/profile_page.dart';
+import 'package:app_mobile_frontend/features/event_exploration/screens/explore.dart';
+import 'package:app_mobile_frontend/features/event_management/screens/organiser_dashboard_home.dart';
+import 'package:app_mobile_frontend/features/login_and_register/screens/login.dart';
+import 'package:app_mobile_frontend/features/login_and_register/screens/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
