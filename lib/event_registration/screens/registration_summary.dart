@@ -42,6 +42,12 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
     final participantsPayload = <Map<String, dynamic>>[];
     final questionCount = widget.event.questions.length;
 
+    // Build a map from question text to question id for this event
+    final Map<String, dynamic> questionTextToId = {
+      for (final q in widget.event.questions)
+        q.question.questionText: q.question.id
+    };
+
     for (var tIndex = 0; tIndex < widget.tickets.length; tIndex++) {
       final ticket = widget.tickets[tIndex];
       final qty = _parseQuantity(ticket['quantity']);
@@ -55,10 +61,13 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
         if (widget.answers.length > participantsPayload.length) {
           final answerMap = widget.answers[participantsPayload.length];
           for (final entry in answerMap.entries) {
-            responses.add({
-              'eventQuestionId': entry.key,
-              'responseText': entry.value,
-            });
+            final questionId = questionTextToId[entry.key];
+            if (questionId != null) {
+              responses.add({
+                'eventQuestionId': questionId,
+                'responseText': entry.value,
+              });
+            }
           }
         }
         final pData = widget.participantData[participantsPayload.length];

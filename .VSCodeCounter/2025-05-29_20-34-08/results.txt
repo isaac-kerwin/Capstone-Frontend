@@ -1,0 +1,94 @@
+Date : 2025-05-29 20:34:08
+Directory : c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib
+Total : 51 files,  6506 codes, 211 comments, 610 blanks, all 7327 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |         51 |      6,506 |        211 |        610 |      7,327 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                      | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                         |         51 |      6,506 |        211 |        610 |      7,327 |
+| . (Files)                                                                                                                 |          2 |        114 |          2 |         22 |        138 |
+| event_creation                                                                                                            |          6 |      1,057 |         31 |        100 |      1,188 |
+| event_creation\screens                                                                                                    |          4 |        738 |         20 |         73 |        831 |
+| event_creation\widgets                                                                                                    |          2 |        319 |         11 |         27 |        357 |
+| event_exploration                                                                                                         |          2 |        820 |         12 |         46 |        878 |
+| event_exploration\screens                                                                                                 |          2 |        820 |         12 |         46 |        878 |
+| event_management                                                                                                          |         12 |      1,724 |         30 |        157 |      1,911 |
+| event_management\screens                                                                                                  |          7 |      1,351 |         19 |        114 |      1,484 |
+| event_management\services                                                                                                 |          2 |        156 |          4 |         27 |        187 |
+| event_management\widgets                                                                                                  |          3 |        217 |          7 |         16 |        240 |
+| event_registration                                                                                                        |          5 |        747 |          5 |         50 |        802 |
+| event_registration\screens                                                                                                |          4 |        747 |          5 |         49 |        801 |
+| event_registration\services                                                                                               |          1 |          0 |          0 |          1 |          1 |
+| fundamental_widgets                                                                                                       |          2 |         74 |          3 |         11 |         88 |
+| login_and_register                                                                                                        |          5 |        477 |         15 |         48 |        540 |
+| login_and_register\screens                                                                                                |          5 |        477 |         15 |         48 |        540 |
+| models                                                                                                                    |          9 |        824 |          5 |        106 |        935 |
+| network                                                                                                                   |          7 |        615 |         86 |         68 |        769 |
+| themes                                                                                                                    |          1 |         54 |         22 |          2 |         78 |
++---------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                  | language | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_creation\screens\event_common_questions.dart              | Dart     |        136 |          0 |         10 |        146 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_creation\screens\event_details.dart                       | Dart     |        311 |          4 |         28 |        343 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_creation\screens\event_questions.dart                     | Dart     |        122 |         10 |         18 |        150 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_creation\screens\event_tickets.dart                       | Dart     |        169 |          6 |         17 |        192 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_creation\widgets\create_question.dart                     | Dart     |        206 |          7 |         15 |        228 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_creation\widgets\create_ticket.dart                       | Dart     |        113 |          4 |         12 |        129 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_exploration\screens\explore.dart                          | Dart     |        610 |          2 |         31 |        643 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_exploration\screens\filter_events.dart                    | Dart     |        210 |         10 |         15 |        235 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\screens\edit_details.dart                      | Dart     |        286 |          0 |         25 |        311 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\screens\edit_questions.dart                    | Dart     |        207 |          3 |         16 |        226 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\screens\edit_registrations.dart                | Dart     |         98 |          0 |         10 |        108 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\screens\edit_tickets.dart                      | Dart     |        420 |          6 |         30 |        456 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\screens\event_report.dart                      | Dart     |        145 |          2 |         12 |        159 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\screens\manage_event.dart                      | Dart     |        126 |          6 |          9 |        141 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\screens\organiser_dashboard_home.dart          | Dart     |         69 |          2 |         12 |         83 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\services\date_and_time_parser.dart             | Dart     |         52 |          1 |         19 |         72 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\services\export_report.dart                    | Dart     |        104 |          3 |          8 |        115 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\widgets\event_info_item.dart                   | Dart     |         61 |          0 |          3 |         64 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\widgets\event_info_tile.dart                   | Dart     |         76 |          0 |          5 |         81 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_management\widgets\events_slideshow.dart                  | Dart     |         80 |          7 |          8 |         95 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_registration\screens\new_registration_form_generator.dart | Dart     |        254 |          1 |         18 |        273 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_registration\screens\participant_information.dart         | Dart     |        145 |          2 |          8 |        155 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_registration\screens\registration_summary.dart            | Dart     |        173 |          0 |         12 |        185 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_registration\screens\ticket_select.dart                   | Dart     |        175 |          2 |         11 |        188 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\event_registration\services\registration_service.dart           | Dart     |          0 |          0 |          1 |          1 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\fundamental_widgets\action_button.dart                          | Dart     |         32 |          0 |          6 |         38 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\fundamental_widgets\form_widgets.dart                           | Dart     |         42 |          3 |          5 |         50 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\login_and_register\screens\change_password.dart                 | Dart     |        102 |          4 |         11 |        117 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\login_and_register\screens\login.dart                           | Dart     |        126 |          4 |         14 |        144 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\login_and_register\screens\profile_page.dart                    | Dart     |         43 |          0 |          4 |         47 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\login_and_register\screens\register_account.dart                | Dart     |        156 |          7 |         15 |        178 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\login_and_register\screens\registration_confirmation_page.dart  | Dart     |         50 |          0 |          4 |         54 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\main.dart                                                       | Dart     |         34 |          2 |          7 |         43 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\main_screen.dart                                                | Dart     |         80 |          0 |         15 |         95 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\email.dart                                               | Dart     |         25 |          0 |          3 |         28 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\event.dart                                               | Dart     |        189 |          5 |         20 |        214 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\organizer.dart                                           | Dart     |         16 |          0 |          5 |         21 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\participant.dart                                         | Dart     |         56 |          0 |          3 |         59 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\question.dart                                            | Dart     |        143 |          0 |         21 |        164 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\registration.dart                                        | Dart     |         71 |          0 |         17 |         88 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\report.dart                                              | Dart     |         90 |          0 |         11 |        101 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\tickets.dart                                             | Dart     |         98 |          0 |          9 |        107 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\models\user.dart                                                | Dart     |        136 |          0 |         17 |        153 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\network\auth.dart                                               | Dart     |         87 |          1 |         13 |        101 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\network\dio_client.dart                                         | Dart     |         32 |         63 |         14 |        109 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\network\email.dart                                              | Dart     |         13 |          1 |          1 |         15 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\network\event.dart                                              | Dart     |        237 |         20 |         17 |        274 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\network\event_registration.dart                                 | Dart     |         37 |          0 |          8 |         45 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\network\report.dart                                             | Dart     |         24 |          0 |          1 |         25 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\network\users.dart                                              | Dart     |        185 |          1 |         14 |        200 |
+| c:\Users\isaac\dev\Capstone-Project\Capstone-Frontend\lib\themes\app_themes.dart                                          | Dart     |         54 |         22 |          2 |         78 |
+| Total                                                                                                                     |          |      6,506 |        211 |        610 |      7,327 |
++---------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
