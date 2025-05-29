@@ -22,10 +22,15 @@ class _TicketManagementScreenState extends State<TicketManagementScreen> {
   // Helper to pick a date.
   Future<DateTime?> _pickDate(DateTime? initialDate, {DateTime? lastDate, DateTime? firstDate}) async {
     DateTime now = DateTime.now();
+    final DateTime effectiveFirstDate = firstDate ?? DateTime(now.year, now.month, now.day);
+    DateTime effectiveInitialDate = initialDate ?? effectiveFirstDate;
+    if (effectiveInitialDate.isBefore(effectiveFirstDate)) {
+      effectiveInitialDate = effectiveFirstDate;
+    }
     return await showDatePicker(
       context: context,
-      initialDate: initialDate ?? now,
-      firstDate: firstDate ?? DateTime(now.year, now.month, now.day),
+      initialDate: effectiveInitialDate,
+      firstDate: effectiveFirstDate,
       lastDate: lastDate ?? DateTime(now.year + 5),
     );
   }
