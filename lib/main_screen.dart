@@ -4,6 +4,7 @@ import 'package:app_mobile_frontend/features/event_exploration/screens/explore.d
 import 'package:app_mobile_frontend/features/event_management/screens/organiser_dashboard_home.dart';
 import 'package:app_mobile_frontend/features/login_and_register/screens/login.dart';
 import 'package:app_mobile_frontend/features/login_and_register/screens/profile_page.dart';
+import 'package:app_mobile_frontend/features/event_registration/screens/view_event.dart';
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
@@ -60,6 +61,7 @@ class _MainScreenState extends State<MainScreen> {
       _isLoggedIn
           ? const BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account')
           : const BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login'),
+      const BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: 'View Event'),
     ];
 
     final screens = <Widget>[
@@ -67,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
       if (_isOrganizer)
         OrganiserDashboard(key: Key('organiser_dashboard_home')),
       _isLoggedIn ? const ProfileScreen() : const LoginScreen(),
-
+      const EventDetailsPage(),
     ];
 
 
@@ -83,6 +85,7 @@ class _MainScreenState extends State<MainScreen> {
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.black,
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
