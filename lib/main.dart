@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'main_screen.dart';
 import 'package:app_mobile_frontend/core/themes/app_themes.dart';
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,12 @@ Future<void> main() async {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
+
+  // Configure the logging handler
+  Logger.root.level = Level.ALL; // Set the desired log level
+  Logger.root.onRecord.listen((LogRecord record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
 
   runApp(const MyApp());
 }
@@ -40,4 +47,4 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
     );
   }
-} 
+}

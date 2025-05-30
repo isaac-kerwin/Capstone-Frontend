@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/registration_summary.dart';
+import 'package:logging/logging.dart';
 
 class RegistrationForm extends StatefulWidget {
   final int eventId;
@@ -28,6 +29,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   final Map<int, TextEditingController> controllers = {};
   final Map<int, Set<int>> checkboxSelections = {};
   final Map<int, int?> dropdownSelections = {};
+  final Logger _logger = Logger('RegistrationForm');
 
   @override
   void initState() {
@@ -91,12 +93,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   Widget _buildQuestionFields(EventWithQuestions event) {
     final questionCount = event.questions.length;
+    _logger.info('Processing $questionCount questions for event ID: ${widget.eventId}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(widget.tickets.length, (ticketIndex) {
         final ticket = widget.tickets[ticketIndex];
         final ticketName = widget.ticketNames[ticketIndex];
         final quantity = _parseQuantity(ticket['quantity']);
+
+        _logger.info('Ticket: $ticketName, Quantity: $quantity');
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,6 +129,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     final question = event.questions[questionIndex];
                     final qText = question.question.questionText;
                     final qType = question.question.questionType.toLowerCase();
+
+                    _logger.info('Question: $qText, Type: $qType');
 
                     controllers.putIfAbsent(composite, () => TextEditingController());
                     if (qType == 'checkbox') {
