@@ -364,7 +364,12 @@ class _ExploreState extends State<Explore> {
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: snapshot.data!.events.map(_buildEventItem).toList(),
+            children: snapshot.data!.events.map((event) {
+              return GestureDetector(
+                onTap: () => _register(event),
+                child: _buildEventItem(event),
+              );
+            }).toList(),
           ),
         );
       },
@@ -440,7 +445,7 @@ class _ExploreState extends State<Explore> {
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       ),
-                      child: const Text('Register'),
+                      child: const Text('View Event'),
                     ),
                   ],
                 ),
@@ -598,15 +603,6 @@ class _ExploreState extends State<Explore> {
                           _getSectionTitle(),
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Row(
-                            children: [
-                              Text('See All'),
-                              Icon(Icons.chevron_right, size: 18),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -619,15 +615,7 @@ class _ExploreState extends State<Explore> {
                           'All Events',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Row(
-                            children: [
-                              Text('See All'),
-                              Icon(Icons.chevron_right, size: 18),
-                            ],
-                          ),
-                        ),
+                    
                       ],
                     ),
                     const SizedBox(height: 8),

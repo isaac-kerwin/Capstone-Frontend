@@ -150,7 +150,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
                                     } else {
                                       checkboxSelections[composite]!.remove(opt.id);
                                     }
-                                    controllers[composite]!.text = checkboxSelections[composite]!.join(',');
+                                    // Store selected option texts as comma-separated string
+                                    final selectedOptions = opts
+                                        .where((o) => checkboxSelections[composite]!.contains(o.id))
+                                        .map((o) => o.optionText)
+                                        .join(', ');
+                                    controllers[composite]!.text = selectedOptions;
                                   });
                                 },
                               );

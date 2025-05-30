@@ -139,10 +139,10 @@ class EventDetailsPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: _TicketsReadMoreSection(event: event),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 12),
                   // Buy Ticket Button using ActionButton
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ActionButton(
                       text: 'REGISTER FOR EVENT',
                       icon: Icons.arrow_forward,
@@ -215,7 +215,7 @@ class _TicketsReadMoreSectionState extends State<_TicketsReadMoreSection> {
               ...widget.event.tickets.map((ticket) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 2.0),
                 child: Text(
-                  '${ticket.name} : ${ticket.price}',
+                  '${ticket.name} : \$${ticket.price}',
                   style: const TextStyle(fontSize: 14),
                 ),
               )),
