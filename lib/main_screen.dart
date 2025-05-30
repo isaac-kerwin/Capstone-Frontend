@@ -61,7 +61,6 @@ class _MainScreenState extends State<MainScreen> {
       _isLoggedIn
           ? const BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account')
           : const BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login'),
-      const BottomNavigationBarItem(icon: Icon(Icons.info_outline), label: 'View Event'),
     ];
 
     final screens = <Widget>[
@@ -69,7 +68,6 @@ class _MainScreenState extends State<MainScreen> {
       if (_isOrganizer)
         OrganiserDashboard(key: Key('organiser_dashboard_home')),
       _isLoggedIn ? const ProfileScreen() : const LoginScreen(),
-      const EventDetailsPage(),
     ];
 
 

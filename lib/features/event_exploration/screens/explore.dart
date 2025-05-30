@@ -4,6 +4,7 @@ import 'package:app_mobile_frontend/features/event_exploration/screens/filter_ev
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/ticket_select.dart';
+import 'package:app_mobile_frontend/features/event_registration/screens/view_event.dart';
 
 class Explore extends StatefulWidget {
   const Explore({Key? key}) : super(key: key);
@@ -115,7 +116,7 @@ class _ExploreState extends State<Explore> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => TicketSelectPage(eventId: event.id),
+          builder: (_) => EventDetailsPage(eventId: event.id),
         ),
       );
     });
@@ -615,7 +616,7 @@ class _ExploreState extends State<Explore> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Near You',
+                          'All Events',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         TextButton(
