@@ -46,6 +46,7 @@ class Report{
   final Sales sales;
   final Remaining remaining;
   final List<Participant> participants;
+  final Map<String, Map<String, int>> questions;
 
   Report({
     required this.eventName,
@@ -55,6 +56,7 @@ class Report{
     required this.sales,
     required this.remaining,
     required this.participants,
+    required this.questions,
   });
 
   factory Report.fromJson(Map<String, dynamic> json) {
@@ -79,9 +81,14 @@ class Report{
           name: p["name"],
           email: p["email"],
           ticketType: p["ticket"],
-          questionResponses: List<Map<String, dynamic>>.from(p["questionaireResponses"]),
+          questionResponses: List<Map<String, dynamic>>.from(
+            p["questionnaireResponses"] ?? p["questionnairreResponses"] ?? []
+          ),
         )),
       ),
+      questions: (json["questions"] as Map<String, dynamic>?)
+        ?.map((q, v) => MapEntry(q, Map<String, int>.from(v as Map)))
+        ?? {},
     );
     report.prettyPrint();
     return report;
@@ -94,8 +101,16 @@ class Report{
     _logger.info("Start Time: $startDateTime");
     _logger.info("End Time: $endDateTime");
     _logger.info("Total Tickets Sold: ${sales.totalTickets}");
-    _logger.info("Total Revenue: \4{sales.revenue}");
+    _logger.info("Total Revenue: \$${sales.revenue}");
     _logger.info("Remaining Tickets: ${remaining.remainingTickets}");
+    // Questions summary log
+    _logger.info("Questions Summary:");
+    questions.forEach((q, opts) {
+      _logger.info("Question: $q");
+      opts.forEach((opt, count) {
+        _logger.info("  $opt: $count");
+      });
+    });
     _logger.info("Participants Count: ${participants.length}");
   }
 }

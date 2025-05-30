@@ -104,6 +104,22 @@ class _ReportScreenState extends State<ReportScreen> {
                 Text('Participants', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 _buildParticipantsTable(report['participants'] ?? []),
+                const Divider(height: 32),
+                Text('Questions Summary', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                ...((report['questions'] ?? {}) as Map<String, dynamic>)
+                    .entries
+                    .map<Widget>((entry) {
+                      final details = entry.value as Map<String, dynamic>;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(entry.key, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          ...details.entries.map((opt) => Text('${opt.key}: ${opt.value}')),
+                          const SizedBox(height: 8),
+                        ],
+                      );
+                    }).toList(),
               ],
             ),
           );
