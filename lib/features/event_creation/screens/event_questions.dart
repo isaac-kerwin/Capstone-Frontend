@@ -6,12 +6,12 @@ import 'package:app_mobile_frontend/models/tickets.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/main_screen.dart';
 import 'package:app_mobile_frontend/core/fundamental_widgets/action_button.dart';
+import 'package:logging/logging.dart';
 
-
+final Logger _logger = Logger('EventQuestions');
 
 class CreateEventQuestions extends StatefulWidget {
-
-  final Map<String, dynamic> eventData; 
+  final Map<String, dynamic> eventData;
   const CreateEventQuestions({
     super.key,
     required this.eventData,
@@ -27,13 +27,13 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     super.initState();
     // Ensure the key exists and is a List<CreateQuestionDTO>
     widget.eventData.putIfAbsent('questions', () => <CreateQuestionDTO>[]);
-
   }
+
   // Opens the pop-up dialog to create a new question.
   Future<void> _openCreateQuestionDialog() async {
-    final  CreateQuestionDTO? newQuestion = await showDialog< CreateQuestionDTO>(
+    final CreateQuestionDTO? newQuestion = await showDialog<CreateQuestionDTO>(
       context: context,
-      builder: (context) => CreateQuestionDialog(displayOrder: widget.eventData['questions'].length + 1 ), 
+      builder: (context) => CreateQuestionDialog(displayOrder: widget.eventData['questions'].length + 1),
     );
     if (newQuestion != null) {
       setState(() {
@@ -55,14 +55,14 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     List<CreateQuestionDTO> questions = eventData['questions'];
 
     for (var question in questions) {
-      print(question.toJson());
+      _logger.fine(question.toJson().toString());
     }
 
     // Create the event object
     CreateEventDTO event = CreateEventDTO(
-      name : name,
+      name: name,
       description: description,
-      location: location, 
+      location: location,
       eventType: type,
       startDateTime: startDateTime,
       endDateTime: endDateTime,
@@ -72,7 +72,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     );
 
     // Call the API to create the event
-    print(event.toJson());
+    _logger.fine(event.toJson().toString());
     await createEvent(event);
   }
 
@@ -87,17 +87,16 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
     }
 
     await _unpackAndCreateEvent(widget.eventData);
-    
-        // Alternatively, if you want to remove all previous routes, use:
+
+    // Alternatively, if you want to remove all previous routes, use:
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (_) => MainScreen(
-          initialIndex: 1,           // Dashboard tab
+          initialIndex: 1, // Dashboard tab
         ),
       ),
       (_) => false,
     );
-  
   }
 
   _buildQuestionList() {

@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 
 class Sales {
   final int totalTickets;
@@ -86,15 +87,17 @@ class Report{
     return report;
   }
 
-  prettyPrint() {
-    print("Event Report:"); 
-    print("Event Name: $eventName");
-    print("Description: $eventDescription");
-    print("Start Time: $startDateTime");
-    print("End Time: $endDateTime");
-    print("Total Tickets Sold: ${sales.totalTickets}");
-    print("Total Revenue: \$${sales.revenue}");
-    print("Remaining Tickets: ${remaining.remainingTickets}");
-    print("Participants Count: ${participants.length}");
+  void prettyPrint() {
+    _logger.info("Event Report:");
+    _logger.info("Event Name: $eventName");
+    _logger.info("Description: $eventDescription");
+    _logger.info("Start Time: $startDateTime");
+    _logger.info("End Time: $endDateTime");
+    _logger.info("Total Tickets Sold: ${sales.totalTickets}");
+    _logger.info("Total Revenue: \4{sales.revenue}");
+    _logger.info("Remaining Tickets: ${remaining.remainingTickets}");
+    _logger.info("Participants Count: ${participants.length}");
   }
 }
+
+final Logger _logger = Logger('EventModel');

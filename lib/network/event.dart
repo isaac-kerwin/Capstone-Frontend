@@ -1,9 +1,12 @@
-
 import 'package:app_mobile_frontend/network/auth.dart';
 import "package:app_mobile_frontend/network/dio_client.dart";
 import "package:app_mobile_frontend/models/event.dart";
 import "package:dio/dio.dart";
 import "package:app_mobile_frontend/models/tickets.dart";
+import 'package:logging/logging.dart';
+
+// Initialize logger
+final Logger _logger = Logger('EventNetwork');
 
 // TO DO  
 Future<void> createEvent(CreateEventDTO event) async {
@@ -17,14 +20,14 @@ Future<void> createEvent(CreateEventDTO event) async {
       },
     ));
     if (response.data["success"]) {
-      print("Event created successfully: ${response.data}");
+      _logger.info("Event created successfully: ${response.data}");
       // Update event to published status
       await publishEvent(response.data["data"]["id"]);
     } else {
-      print("Failed to create event: ${response.data}");
+      _logger.warning("Failed to create event: ${response.data}");
     }
   } catch (error) {
-    print("Error creating event: $error");
+    _logger.severe("Error creating event: $error");
   }
 }
 
@@ -37,12 +40,12 @@ Future<void> updateEvent(int id, UpdateEventDTO updatedEvent) async {
       headers: {
         'Authorization': 'Bearer ${await getToken()}',}));
     if (response.data["success"]) {
-      print("Event updated successfully: ${response.data}");
+      _logger.info("Event updated successfully: ${response.data}");
     } else {
-      print("Failed to update event: ${response.data}");
+      _logger.warning("Failed to update event: ${response.data}");
     }
   } catch (error) {
-    print("Error updating event: $error");
+    _logger.severe("Error updating event: $error");
   }     
 }
 
@@ -55,12 +58,12 @@ Future<void> deleteEvent(int id) async {
       headers:
         {'Authorization': 'Bearer ${await getToken()}',}));
     if (response.data["success"]) {
-      print("Event deleted successfully: ${response.data}");
+      _logger.info("Event deleted successfully: ${response.data}");
     } else {
-      print("Failed to delete event: ${response.data}");
+      _logger.warning("Failed to delete event: ${response.data}");
     }
   } catch (error) {
-    print("Error deleting event: $error");
+    _logger.severe("Error deleting event: $error");
   }
 }
 
@@ -118,7 +121,7 @@ Future<Events> getFilteredEvents(String filter) async{
 
 Future<EventWithQuestions> getEventById(int id) async {
   try {
-    print("ID: $id");
+    _logger.fine("ID: $id");
     final response = await dioClient.dio.get("/events/$id");
     if (response.data["success"]) {
       final responseData = response.data;
@@ -146,32 +149,32 @@ Future<bool> publishEvent(int id) async{
       },
     ));
     if (response.data["success"]) {
-      print("Event published successfully: ${response.data}");
+      _logger.info("Event published successfully: ${response.data}");
       return true;
     } else {
-      print("Failed to publish event: ${response.data}");
+      _logger.warning("Failed to publish event: ${response.data}");
       return false;
     }
   } catch (error) {
-    print("Error publishing event: $error");
+    _logger.severe("Error publishing event: $error");
     return false;
   }
 }
 
 Future<Ticket> getTicketById(int eventId, int ticketId) async {
   try {
-    print("/events/$eventId/tickets/$ticketId");
+    _logger.fine("/events/$eventId/tickets/$ticketId");
     final response = await dioClient.dio.get("/events/$eventId/tickets/$ticketId");
     if (response.data["success"]) {
       final ticketData = response.data["data"];
-      print("Ticket data: $ticketData");
+      _logger.fine("Ticket data: $ticketData");
       return Ticket.fromJson(ticketData);
     } else {
-      print("Failed to get ticket: ${response.data}");
+      _logger.warning("Failed to get ticket: ${response.data}");
       throw Exception("Failed to get ticket: ${response.data}");
     }
   } catch (error) {
-    print("Error getting ticket: $error");
+    _logger.severe("Error getting ticket: $error");
     throw Exception("Error getting ticket: $error");
   }
 }

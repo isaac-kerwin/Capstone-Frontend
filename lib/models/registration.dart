@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:logging/logging.dart';
+
 class EventRegistrationDTO{
   final int eventId;
   final List<Map<String, dynamic>>  tickets;
@@ -81,8 +83,10 @@ class Participant {
   };
 }
 
+final Logger _logger = Logger('RegistrationModel');
+
 void prettyPrintEventRegistrationDTO(EventRegistrationDTO dto) {
   const encoder = JsonEncoder.withIndent('  ');
   final prettyJson = encoder.convert(dto.toJson());
-  print(prettyJson);
+  _logger.info(prettyJson);
 }

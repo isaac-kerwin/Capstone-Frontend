@@ -2,14 +2,13 @@ import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/event_management/widgets/events_slideshow.dart';
+import 'package:logging/logging.dart';
 
-
-class OrganiserDashboard extends StatefulWidget
-{
+class OrganiserDashboard extends StatefulWidget {
   // Constructor to initialize the organiserId.
   OrganiserDashboard({super.key});
-  @override State<OrganiserDashboard> createState() => _OrganiserDashboardState();  
-
+  @override
+  State<OrganiserDashboard> createState() => _OrganiserDashboardState();
 }
 
 Future<Events> _getOrganizersEvents() async {
@@ -31,17 +30,19 @@ Widget _buildEventSlideshow(Future<Events> futureEvents, {Key? key}) {
       } else {
         final eventsData = snapshot.data!;
         eventsData.events.forEach((event) {
-          print('Event Name: ${event.name}');
+          _logger.fine('Event Name: 4{event.name}');
         });
-        return EventSlideshow(events: eventsData, context: context, key: key,);
+        return EventSlideshow(
+          events: eventsData,
+          context: context,
+          key: key,
+        );
       }
     },
   );
 }
 
-
 class _OrganiserDashboardState extends State<OrganiserDashboard> {
- 
   late Future<Events> futureEvents;
 
   @override
@@ -61,7 +62,7 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -80,3 +81,5 @@ class _OrganiserDashboardState extends State<OrganiserDashboard> {
     );
   }
 }
+
+final Logger _logger = Logger('OrgDashboard');

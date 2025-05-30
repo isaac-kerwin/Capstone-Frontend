@@ -2,7 +2,9 @@ import 'package:app_mobile_frontend/network/dio_client.dart';
 import 'package:app_mobile_frontend/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:app_mobile_frontend/network/auth.dart';
+import 'package:logging/logging.dart';
 
+final Logger _logger = Logger('UserNetwork');
 
 Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) async {
   try {
@@ -16,17 +18,17 @@ Future<void> updateUserProfile(int id, UpdateUserProfileDTO updatedProfile) asyn
           },
     ));
     if (response.data["success"]) {
-      print("User profile updated successfully: ${response.data}");
+      _logger.info("User profile updated successfully: ${response.data}");
     } else {
-      print("Failed to update user profile: ${response.data}");
+      _logger.warning("Failed to update user profile: ${response.data}");
     }
   } catch (error) {
-    print("Error updating user profile: $error");
+    _logger.severe("Error updating user profile: $error");
   } 
 }
 Future<UserProfile?> getUserProfile() async {
   try {
-    print("Access Token: ${ await getToken()}");
+    _logger.fine("Access Token: ${await getToken()}");
     final response = await dioClient.dio.get(
       "/user/profile",         
       options: Options(
@@ -36,8 +38,8 @@ Future<UserProfile?> getUserProfile() async {
       ),
     );
 
-      print("Data: ${response.data["data"]}");
-      print("Success: ${response.data["success"]}");
+      _logger.fine("Data: ${response.data["data"]}");
+      _logger.fine("Success: ${response.data["success"]}");
 
 
     if (response.data["success"] == true) {
@@ -47,7 +49,7 @@ Future<UserProfile?> getUserProfile() async {
     }
   } catch (error) {
     
-    print("Error retrieving user profile: $error");
+    _logger.severe("Error retrieving user profile: $error");
     return null;
   }
 }
@@ -64,18 +66,18 @@ Future<void> createUser(CreateUserDTO user) async {
       ),
     );
     if (response.data["success"]) {
-      print("User created successfully: ${response.data}");
+      _logger.info("User created successfully: ${response.data}");
     } else {
-      print("Failed to create user: ${response.data}");
+      _logger.warning("Failed to create user: ${response.data}");
     }
   } catch (error) {
-    print("Error creating user: $error");
+    _logger.severe("Error creating user: $error");
   }
 }
 
 Future<void> getAllUsers() async {
   try {
-    print("Access Token: $accessToken");
+    _logger.fine("Access Token: $accessToken");
     final response = await dioClient.dio.get(
       "/user",
       options: Options(
@@ -88,12 +90,12 @@ Future<void> getAllUsers() async {
       final List<User> users = (response.data["data"] as List)
           .map((user) => User.fromJson(user))
           .toList();
-      print("Users retrieved successfully: $users");
+      _logger.info("Users retrieved successfully: $users");
     } else {
-      print("Failed to retrieve users: ${response.data}");
+      _logger.warning("Failed to retrieve users: ${response.data}");
     }
   } catch (error) {
-    print("Error retrieving users: $error");
+    _logger.severe("Error retrieving users: $error");
   }
 }
 
@@ -109,12 +111,12 @@ Future<void> getUserById(int id) async {
     );
     if (response.data["success"]) {
       final User user = User.fromJson(response.data["data"]);
-      print("User retrieved successfully: $user");
+      _logger.info("User retrieved successfully: $user");
     } else {
-      print("Failed to retrieve user: ${response.data}");
+      _logger.warning("Failed to retrieve user: ${response.data}");
     }
   } catch (error) {
-    print("Error retrieving user: $error");
+    _logger.severe("Error retrieving user: $error");
   }
 }
 
@@ -133,12 +135,12 @@ Future<void> updateUserRole(int id, String oldRole, String newRole) async {
       ),
     );
     if (response.data["success"]) {
-      print("User role updated successfully: ${response.data}");
+      _logger.info("User role updated successfully: ${response.data}");
     } else {
-      print("Failed to update user role: ${response.data}");
+      _logger.warning("Failed to update user role: ${response.data}");
     }
   } catch (error) {
-    print("Error updating user role: $error");
+    _logger.severe("Error updating user role: $error");
   }
 }
 
@@ -153,12 +155,12 @@ Future<void> deleteUser(int id) async {
       ),
     );
     if (response.data["success"]) {
-      print("User deleted successfully: ${response.data}");
+      _logger.info("User deleted successfully: ${response.data}");
     } else {
-      print("Failed to delete user: ${response.data}");
+      _logger.warning("Failed to delete user: ${response.data}");
     }
   } catch (error) {
-    print("Error deleting user: $error");
+    _logger.severe("Error deleting user: $error");
   }
 }
 /// Returns the raw 'role' string, or null on any error.
@@ -170,7 +172,7 @@ Future<String?> getUserRole() async {
     if (role is String) return role;
     return null;
   } catch (e) {
-    print("Error fetching role: $e");
+    _logger.severe("Error fetching role: $e");
     return null;
   }
 }
@@ -185,14 +187,14 @@ Future<bool> changePassword(String oldPassword, String newPassword) async {
       },
     );
     if (response.data["success"]) {
-      print("Password changed successfully: ${response.data}");
+      _logger.info("Password changed successfully: ${response.data}");
       return true;
     } else {
-      print("Failed to change password: ${response.data}");
+      _logger.warning("Failed to change password: ${response.data}");
       return false;
     }
   } catch (error) {
-    print("Error changing password: $error");
+    _logger.severe("Error changing password: $error");
     return false;
   }
 }

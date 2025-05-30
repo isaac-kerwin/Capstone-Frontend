@@ -2,6 +2,9 @@ import 'package:app_mobile_frontend/network/auth.dart';
 import "package:app_mobile_frontend/network/dio_client.dart";
 import 'package:app_mobile_frontend/models/registration.dart';  
 import "package:dio/dio.dart";
+import 'package:logging/logging.dart';
+
+final Logger _logger = Logger('EventRegistration');
 
 Future<String?> createRegistration(EventRegistrationDTO registrationDTO) async {
   try {
@@ -10,14 +13,14 @@ Future<String?> createRegistration(EventRegistrationDTO registrationDTO) async {
       data: registrationDTO.toJson(),
     );
     if (response.data["registrationId"] != null) {
-      print("Event registration successful: ${response.data}");
+      _logger.info("Event registration successful: ${response.data}");
       return response.data["registrationId"].toString();
     } else {
-      print("Failed to register for event: ${response.data}");
+      _logger.warning("Failed to register for event: ${response.data}");
       return null;
     }
   } catch (error) {
-    print("Error registering for event: $error");
+    _logger.severe("Error registering for event: $error");
     return null;
   }
 }
@@ -34,7 +37,7 @@ Future<void> updateRegistrationStatus(String registrationId, String status) asyn
       ),
     );
   } catch (error) {
-    print("Error updating registration status: $error");
+    _logger.severe("Error updating registration status: $error");
   }
 }
 

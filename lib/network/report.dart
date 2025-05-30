@@ -2,6 +2,9 @@ import 'package:app_mobile_frontend/models/report.dart';
 import 'package:app_mobile_frontend/network/dio_client.dart';
 import 'package:app_mobile_frontend/network/auth.dart';
 import 'package:dio/dio.dart';
+import 'package:logging/logging.dart';
+
+final Logger _logger = Logger('EventReport');
 
 Future<dynamic> getEventReport(int eventId) async {
   try {
@@ -14,7 +17,7 @@ Future<dynamic> getEventReport(int eventId) async {
       ),
     );
     if (response.statusCode == 200 && response.data != null) {
-      print("Event report fetched successfully: ${response.data}"); 
+      _logger.info("Event report fetched successfully: ${response.data}"); 
       return response.data;
     } else {
       throw Exception('Failed to fetch event report: ${response.data}');
