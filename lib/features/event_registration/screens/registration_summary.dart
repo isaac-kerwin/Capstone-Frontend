@@ -196,11 +196,18 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
                   title: Text('Participant #${idx + 1}'),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: answer.entries.map((e) => Text('${e.key}: ${e.value}')).toList(),
+                    children: answer.entries.map((e) {
+                      // Format JSON-like lists into comma-separated text
+                      var resp = e.value.toString();
+                      if (resp.startsWith('[') && resp.endsWith(']')) {
+                        resp = resp.substring(1, resp.length - 1).replaceAll('"', '');
+                      }
+                      return Text('${e.key}: $resp');
+                    }).toList(),
                   ),
                 ),
               );
-            }),
+            }).toList(),
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,

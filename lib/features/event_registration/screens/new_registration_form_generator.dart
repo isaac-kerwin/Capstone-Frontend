@@ -3,6 +3,7 @@ import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/registration_summary.dart';
 import 'package:logging/logging.dart';
+import 'dart:convert';
 
 class RegistrationForm extends StatefulWidget {
   final int eventId;
@@ -79,7 +80,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     ?.where((o) => selSet.contains(o.id))
                     .map((o) => o.optionText)
                     .toList() ?? [];
-            text = texts.join(', ');
+            // Encode as JSON array string
+            text = jsonEncode(texts);
           }
 
           answerMap[question.question.questionText] = text;
