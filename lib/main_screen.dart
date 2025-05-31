@@ -4,7 +4,6 @@ import 'package:app_mobile_frontend/features/event_exploration/screens/explore.d
 import 'package:app_mobile_frontend/features/event_management/screens/organiser_dashboard_home.dart';
 import 'package:app_mobile_frontend/features/login_and_register/screens/login.dart';
 import 'package:app_mobile_frontend/features/login_and_register/screens/profile_page.dart';
-import 'package:app_mobile_frontend/features/event_registration/screens/view_event.dart';
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;

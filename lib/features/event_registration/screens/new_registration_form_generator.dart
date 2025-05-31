@@ -1,4 +1,3 @@
-import 'package:app_mobile_frontend/models/registration.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
