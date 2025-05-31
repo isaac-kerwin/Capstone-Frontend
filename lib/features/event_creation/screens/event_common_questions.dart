@@ -25,7 +25,7 @@ import 'package:app_mobile_frontend/models/question.dart';
             questionText: 'Phone Number',
             isRequired: true,
             displayOrder: questions.length + 1,
-            questionType: "text"
+            questionType: "TEXT"
           ));
       }
       if (enableDOB) {
@@ -33,7 +33,7 @@ import 'package:app_mobile_frontend/models/question.dart';
             questionText: 'Date of Birth',
             isRequired: true,
             displayOrder: questions.length + 1,
-            questionType: "text"
+            questionType: "TEXT"
           ));
       }
       if (enableEmergencyContact) {
@@ -41,7 +41,7 @@ import 'package:app_mobile_frontend/models/question.dart';
         questionText: 'Emergency Contact',
         isRequired: true,
         displayOrder: questions.length + 1,
-        questionType: "text"
+        questionType: "TEXT"
       ));
       }
       if (enablePrefferedName) {
@@ -49,7 +49,7 @@ import 'package:app_mobile_frontend/models/question.dart';
         questionText: 'Preferred Name',
         isRequired: true,
         displayOrder: questions.length + 1,
-        questionType: "text"
+        questionType: "TEXT"
       ));
       }
       if (enableCompanyName) {
@@ -57,7 +57,7 @@ import 'package:app_mobile_frontend/models/question.dart';
         questionText: 'Company Name',
         isRequired: true,
         displayOrder: questions.length + 1,
-        questionType: "text"
+        questionType: "TEXT"
       ));
       }
       

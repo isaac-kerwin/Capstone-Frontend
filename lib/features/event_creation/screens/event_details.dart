@@ -19,7 +19,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
   final TextEditingController _capacityController = TextEditingController();
 
   // State fields
-  String? _selectedEventType = 'SPORTS';
+  String? _selectedEventType;
   DateTime? _startDateTime;
   DateTime? _endDateTime;
   bool _isFree = false;
@@ -77,9 +77,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget _buildEventTypeDropdown() {
     const List<DropdownMenuEntry<String>> items = [
       DropdownMenuEntry(value: 'SPORTS', label: 'SPORTS'),
-      DropdownMenuEntry(value: 'MUSIC', label: 'MUSIC'),
-      DropdownMenuEntry(value: 'FOOD', label: 'FOOD'),
-      DropdownMenuEntry(value: 'ART', label: 'ART'),
+      DropdownMenuEntry(value: 'MUSICAL', label: 'MUSIC'),
+      DropdownMenuEntry(value: 'SOCIAL', label: 'SOCIAL'),
+      DropdownMenuEntry(value: 'VOLUNTEERING', label: 'VOLUNTEERING'),
     ];
 
     return Column(

@@ -29,9 +29,6 @@ Widget _buildEventSlideshow(Future<Events> futureEvents, {Key? key}) {
         return const Text('No events found.');
       } else {
         final eventsData = snapshot.data!;
-        eventsData.events.forEach((event) {
-          _logger.fine('Event Name: 4{event.name}');
-        });
         return EventSlideshow(
           events: eventsData,
           context: context,
