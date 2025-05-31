@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/core/fundamental_widgets/action_button.dart';
 import 'package:app_mobile_frontend/models/event.dart';
-import 'package:app_mobile_frontend/features/event_registration/screens/ticket_select.dart'; // Import the correct TicketSelectPage
+import 'package:app_mobile_frontend/features/event_registration/screens/ticket_select.dart';
 import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/features/event_management/services/date_and_time_parser.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final int eventId;
@@ -19,7 +20,7 @@ class EventDetailsPage extends StatelessWidget {
           );
         } else if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(),
+            appBar: _buildSmallAppBar(context),
             body: Center(child: Text('Error: \\${snapshot.error}')),
           );
         } else if (!snapshot.hasData) {
@@ -27,94 +28,127 @@ class EventDetailsPage extends StatelessWidget {
             body: Center(child: Text('Event not found.')),
           );
         }
+
         final event = snapshot.data!;
         return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(40),
-            child: AppBar(
-              toolbarHeight: 40,
-              elevation: 0,
-              backgroundColor: Colors.white,
-              centerTitle: false,
-              titleSpacing: 0,
-              leadingWidth: 40,
-              leading: IconButton(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
-                constraints: const BoxConstraints(),
-                icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black87),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ),
+          appBar: _buildSmallAppBar(context),
           body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Full-width yellow banner (placeholder for event image)
+                  // 1) Full‐width yellow banner
                   Container(
                     height: 200,
                     width: double.infinity,
                     color: Colors.amber[200],
                   ),
+
+                  // 2) Gap between banner and title
                   const SizedBox(height: 16),
-                  // Event title
+
+                  // 3) Event title (“Melbourne Italian Festa 2024”)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       event.name,
                       style: const TextStyle(
-                        fontSize: 22,
+                        fontSize: 24,          // slightly larger than before
                         fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
                     ),
                   ),
-                  // Going count
+
+                  // 4) Very small gap between title and “Spots Filled”
+                  const SizedBox(height: 4),
+
+                  // 5) Spots Filled (e.g. “40/100 Spots Filled”)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      '${event.registrationsCount} / ${event.capacity} going',
+                      '${event.registrationsCount}/${event.capacity} Spots Filled',
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.blue,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                  // Date and time
+
+                  // 6) Gap before date row
+                  const SizedBox(height: 12),
+
+                  // 7) Date + Time row (two lines)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(Icons.calendar_today, size: 20, color: Colors.grey),
                         const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _formatEventDateTime(event),
-                            style: const TextStyle(fontSize: 14),
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Use shared parser for date range and times
+                            Text(
+                              formatDateRangeAsWords(event.startDateTime, event.endDateTime),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '${formatTimeAmPm(event.startDateTime)} – ${formatTimeAmPm(event.endDateTime)}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  // Location
+
+                  // 8) Gap between date and location
+                  const SizedBox(height: 12),
+
+                  // 9) Location row (two lines: name + address)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(Icons.location_on, size: 20, color: Colors.grey),
                         const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            event.location,
-                            style: const TextStyle(fontSize: 14),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Venue name (bold-ish)
+                              Text(
+                                event.location,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  // About Event
+
+                  // 10) Gap before “About Event” heading
+                  const SizedBox(height: 16),
+
+                  // 11) “About Event” heading
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'About Event',
                       style: TextStyle(
@@ -123,20 +157,35 @@ class EventDetailsPage extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  // 12) Tiny gap between heading and body text
+                  const SizedBox(height: 4),
+
+                  // 13) Event description/body
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       event.description,
-                      style: const TextStyle(fontSize: 14),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
-                  // Read More link (shows tickets)
+
+                  // 14) Gap before “View Tickets”
+                  const SizedBox(height: 12),
+
+                  // 15) View Tickets (collapse/expand)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: _TicketsReadMoreSection(event: event),
                   ),
-                  const SizedBox(height: 12),
-                  // Buy Ticket Button using ActionButton
+
+                  // 16) Gap before Register button
+                  const SizedBox(height: 16),
+
+                  // 17) REGISTER FOR EVENT button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ActionButton(
@@ -152,6 +201,9 @@ class EventDetailsPage extends StatelessWidget {
                       },
                     ),
                   ),
+
+                  // 18) Extra bottom padding so content doesn’t feel “stuck”
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
@@ -160,18 +212,25 @@ class EventDetailsPage extends StatelessWidget {
       },
     );
   }
-}
 
-String _formatEventDateTime(EventWithQuestions event) {
-  final s = event.startDateTime;
-  final e = event.endDateTime;
-  return '${s.day}/${s.month}/${s.year} ${_formatTime(s)} - ${e.day}/${e.month}/${e.year} ${_formatTime(e)}';
-}
-
-String _formatTime(DateTime dt) {
-  final hour = dt.hour.toString().padLeft(2, '0');
-  final min = dt.minute.toString().padLeft(2, '0');
-  return '$hour:$min';
+  /// A slim AppBar (40px tall) with only a back arrow.
+  PreferredSizeWidget _buildSmallAppBar(BuildContext context) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(40),
+      child: AppBar(
+        toolbarHeight: 40,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leadingWidth: 40,
+        leading: IconButton(
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+          constraints: const BoxConstraints(),
+          icon: const Icon(Icons.arrow_back, size: 20, color: Colors.black87),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+    );
+  }
 }
 
 class _TicketsReadMoreSection extends StatefulWidget {
@@ -191,32 +250,40 @@ class _TicketsReadMoreSectionState extends State<_TicketsReadMoreSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextButton(
-          onPressed: () {
-            setState(() {
-              showTickets = !showTickets;
-            });
-          },
+          onPressed: () => setState(() => showTickets = !showTickets),
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             alignment: Alignment.centerLeft,
           ),
-          child: Text(showTickets ? 'Hide Tickets' : 'View Tickets'),
-        ),
-        if (showTickets)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 8),
-              const Text('Tickets', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              ...widget.event.tickets.map((ticket) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2.0),
-                child: Text(
-                  '${ticket.name} : \$${ticket.price}',
-                  style: const TextStyle(fontSize: 14),
-                ),
-              )),
-            ],
+          child: Text(
+            showTickets ? 'Hide Tickets' : 'View Tickets',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.blue,
+            ),
           ),
+        ),
+        if (showTickets) ...[
+          const SizedBox(height: 8),
+          const Text(
+            'Tickets',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          ...widget.event.tickets.map(
+            (ticket) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2.0),
+              child: Text(
+                '${ticket.name} : \$${ticket.price}',
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }
