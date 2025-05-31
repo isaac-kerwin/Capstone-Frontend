@@ -121,13 +121,13 @@ class CreateQuestionDTO {
   Map<String, dynamic> toJson() {
     final data = {
       'questionText': questionText,
-      'isRequired': isRequired,
-      'displayOrder': displayOrder,
       'questionType': questionType,
       'options': options?.map((option) => {
         'optionText': option['optionText'],
         'displayOrder': option['displayOrder'],
       }).toList(),
+      'isRequired': isRequired,
+      'displayOrder': displayOrder,
     };
     return data;
   }
