@@ -134,13 +134,16 @@ class QuestionDTO {
   final String questionText;
   final bool isRequired;
   final int displayOrder;
+  final String questionType;
+  final List<Map<String, dynamic>>? options;
 
   QuestionDTO({
     required this.id,
     required this.questionText,
     required this.isRequired,
     required this.displayOrder,
-    
+    required this.questionType,
+    this.options,
   });
 
   factory QuestionDTO.fromJson(Map<String, dynamic> json) {
@@ -149,6 +152,10 @@ class QuestionDTO {
       questionText: json["questionText"],
       isRequired: json["isRequired"],
       displayOrder: json["displayOrder"],
+      questionType: json["questionType"] ?? 'TEXT',
+      options: (json["options"] as List<dynamic>?)
+        ?.map((o) => Map<String, dynamic>.from(o as Map))
+        .toList(),
     );
   }
 
@@ -158,6 +165,8 @@ class QuestionDTO {
       "questionText": questionText,
       "isRequired": isRequired,
       "displayOrder": displayOrder,
+      "questionType": questionType,
+      if (options != null) 'options': options,
     };
   }
 }

@@ -99,6 +99,7 @@ body: Padding(
                     questionText: q.question.questionText,
                     isRequired: q.isRequired,
                     displayOrder: q.displayOrder,
+                    questionType: q.question.questionType,
                   )).toList(),
                 ),
               );

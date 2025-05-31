@@ -4,6 +4,7 @@ import "package:app_mobile_frontend/models/event.dart";
 import "package:dio/dio.dart";
 import "package:app_mobile_frontend/models/tickets.dart";
 import 'package:logging/logging.dart';
+import 'package:app_mobile_frontend/models/question.dart';  // import CreateQuestionDTO
 
 // Initialize logger
 final Logger _logger = Logger('EventNetwork');
@@ -101,23 +102,6 @@ Future<Events> getFilteredEvents(String filter) async{
     throw Exception("Error getting events: $error");
   }
 }
-
-// Future<Events> searchEvents(String searchTerm) async {
-//   try {
-//     final encodedSearchTerm = Uri.encodeComponent(searchTerm);
-//     final response = await dioClient.dio.get("/events?search=$encodedSearchTerm");
-    
-//     if (response.data["success"]) {
-//       final responseData = response.data;
-//       Events events = Events.fromJson(responseData["data"]);
-//       return events;
-//     } else {
-//       throw Exception("Failed to search events: ${response.data}");
-//     }
-//   } catch (error) {
-//     throw Exception("Error searching events: $error");
-//   }
-// }
 
 Future<EventWithQuestions> getEventById(int id) async {
   try {
@@ -272,5 +256,28 @@ Future<List<dynamic>> getEventRegistrations(String eventId, bool pendingOnly) as
       print("Error fetching registrations for event: $error");
       rethrow;
     }
+  }
+}
+
+/// Updates only the questionnaire questions for a given event
+Future<bool> updateEventQuestions(int eventId, List<CreateQuestionDTO> questions) async {
+  try {
+    final response = await dioClient.dio.put(
+      "/events/$eventId",
+      data: { 'questions': questions.map((q) => q.toJson()).toList() },
+      options: Options(
+        headers: { 'Authorization': 'Bearer ${await getToken()}' },
+      ),
+    );
+    if (response.data["success"]) {
+      _logger.info("Questions updated successfully for event $eventId");
+      return true;
+    } else {
+      _logger.warning("Failed to update questions: \\${response.data}");
+      return false;
+    }
+  } catch (e) {
+    _logger.severe("Error updating questions: $e");
+    return false;
   }
 }

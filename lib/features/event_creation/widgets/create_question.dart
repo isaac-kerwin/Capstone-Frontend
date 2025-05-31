@@ -1,8 +1,6 @@
-import 'dart:math';
 import 'package:app_mobile_frontend/core/fundamental_widgets/form_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/question.dart';
-import 'package:app_mobile_frontend/features/event_creation/widgets/create_question.dart';
 
 class CreateQuestionDialog extends StatefulWidget {
   final CreateQuestionDTO? initialQuestion;
@@ -30,9 +28,17 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   @override
   void initState() {
     super.initState();
+    // Initialize question text and required flag
     _questionTextController = TextEditingController(text: widget.initialQuestion?.questionText ?? '');
     isRequired = widget.initialQuestion?.isRequired ?? false;
-    // Optionally, initialize _questionType and _optionControllers from initialQuestion if editing
+    // Default question type from initialQuestion or TEXT
+    _questionType = widget.initialQuestion?.questionType ?? 'TEXT';
+    // Initialize option controllers from existing options if editing
+    if (widget.initialQuestion?.options != null) {
+      _optionControllers = widget.initialQuestion!.options!
+          .map((opt) => TextEditingController(text: opt['optionText'] as String))
+          .toList();
+    }
   }
 
   @override
@@ -71,12 +77,13 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
           items: const [
             DropdownMenuItem(value: "TEXT", child: Text('Text')),
             DropdownMenuItem(value: 'DROPDOWN', child: Text('Dropdown Menu')),
+            DropdownMenuItem(value: 'CHECKBOX', child: Text('Checkbox')),
           ],
           onChanged: (value) {
             if (value == null) return;
             setState(() {
               _questionType = value;
-              if (_questionType == 'DROPDOWN' && _optionControllers.isEmpty) {
+              if ((_questionType == 'DROPDOWN' || _questionType == 'CHECKBOX') && _optionControllers.isEmpty) {
                 _optionControllers.add(TextEditingController());
               }
             });
@@ -87,13 +94,16 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   }
 
   Widget _buildOptionsFields() {
-    if (_questionType != 'DROPDOWN') return const SizedBox.shrink();
+    if (_questionType != 'DROPDOWN' && _questionType != 'CHECKBOX') return const SizedBox.shrink();
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 8),
-        const Text('Dropdown Options:', style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          _questionType == 'DROPDOWN' ? 'Dropdown Options:' : 'Checkbox Options:',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         ..._optionControllers.asMap().entries.map((entry) {
           final idx = entry.key;
           final controller = entry.value;
@@ -105,12 +115,12 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
                   child: TextFormField(
                     controller: controller,
                     decoration: InputDecoration(
-                      labelText: 'Option ${idx + 1}',
+                      labelText: '${_questionType == 'DROPDOWN' ? 'Option' : 'Choice'} ${idx + 1}',
                       border: const OutlineInputBorder(),
                     ),
                     validator: (val) {
-                      if (_questionType == 'DROPDOWN' && (val == null || val.trim().isEmpty)) {
-                        return 'Option cannot be empty';
+                      if ((_questionType == 'DROPDOWN' || _questionType == 'CHECKBOX') && (val == null || val.trim().isEmpty)) {
+                        return 'Choice cannot be empty';
                       }
                       return null;
                     },
@@ -128,7 +138,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
               ],
             ),
           );
-        }),
+        }).toList(),
         TextButton.icon(
           onPressed: () {
             setState(() {
@@ -136,34 +146,42 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
             });
           },
           icon: const Icon(Icons.add),
-          label: const Text('Add Option'),
+          label: Text(_questionType == 'DROPDOWN' ? 'Add Option' : 'Add Choice'),
         ),
       ],
     );
   }
 
-_createQuestionDTO() {
-  if (_questionType == 'DROPDOWN'){
-  return CreateQuestionDTO(
-    questionText: _questionTextController.text.trim(),
-    isRequired: isRequired,
-    displayOrder: widget.displayOrder,
-    questionType: _questionType,
-    options: _questionType == 'DROPDOWN'
+  _createQuestionDTO() {
+  if (_questionType == 'DROPDOWN' || _questionType == 'CHECKBOX'){
+   return CreateQuestionDTO(
+     questionText: _questionTextController.text.trim(),
+     isRequired: isRequired,
+     displayOrder: widget.displayOrder,
+     questionType: _questionType,
+     options: _questionType == 'DROPDOWN'
       ? _optionControllers
-          .asMap()
-          .entries
-          .where((e) => e.value.text.trim().isNotEmpty)
-          .map((e) => <String, dynamic>{
-                // no id field
-                'optionText': e.value.text.trim(),
-                'displayOrder': e.key + 1,
-              })
-          .toList()
-      : null,
-  );
-  }
-  else {
+           .asMap()
+           .entries
+           .where((e) => e.value.text.trim().isNotEmpty)
+           .map((e) => <String, dynamic>{
+                 // no id field
+                 'optionText': e.value.text.trim(),
+                 'displayOrder': e.key + 1,
+               })
+           .toList()
+      : _optionControllers
+           .asMap()
+           .entries
+           .where((e) => e.value.text.trim().isNotEmpty)
+           .map((e) => <String, dynamic>{
+                 'optionText': e.value.text.trim(),
+                 'displayOrder': e.key + 1,
+               })
+           .toList(),
+   );
+   }
+   else {
     return CreateQuestionDTO(
       questionText: _questionTextController.text.trim(),
       isRequired: isRequired,
