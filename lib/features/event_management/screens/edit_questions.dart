@@ -57,7 +57,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
 
   /// Opens a dialog to edit an existing question and updates it in the list
   Future<void> _openEditQuestionDialog(QuestionDTO question) async {
-    _logger.fine('Opening edit dialog for question ID: ${question.id}');
+    _logger.fine('Opening edit dialog for question ID: ${question.id}, text: ${question.questionText}, type: ${question.questionType}, options: ${question.options}');
     // Show the dialog for editing, passing in the current question details
     final CreateQuestionDTO? editedQuestion = await showDialog<CreateQuestionDTO>(
       context: context,

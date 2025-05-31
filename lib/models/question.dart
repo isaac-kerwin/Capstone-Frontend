@@ -1,5 +1,6 @@
 class Question {
   final int id;
+  final int questionId;
   final int eventId;
   final bool isRequired;
   final int displayOrder;
@@ -7,24 +8,28 @@ class Question {
   final DateTime updatedAt;
   final QuestionDetails question;
 
-  Question(
-      {required this.id,
-      required this.eventId,
-      required this.isRequired,
-      required this.displayOrder,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.question});
+  Question({
+    required this.id,
+    required this.questionId,
+    required this.eventId,
+    required this.isRequired,
+    required this.displayOrder,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.question,
+  });
 
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
-        id: json["id"],
-        eventId: json["eventId"],
-        isRequired: json["isRequired"],
-        displayOrder: json["displayOrder"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        question: QuestionDetails.fromJson(json["question"]));
+      id: json["id"],
+      questionId: json["questionId"],
+      eventId: json["eventId"],
+      isRequired: json["isRequired"],
+      displayOrder: json["displayOrder"],
+      createdAt: DateTime.parse(json["createdAt"]),
+      updatedAt: DateTime.parse(json["updatedAt"]),
+      question: QuestionDetails.fromJson(json["question"]),
+    );
   }
 }
 

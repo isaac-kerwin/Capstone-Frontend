@@ -137,8 +137,8 @@ class EventWithQuestions {
         tickets: json["tickets"]
             .map<Ticket>((ticket) => Ticket.fromJson(ticket))
             .toList(),
-        questions: json["eventQuestions"]
-            .map<Question>((question) => Question.fromJson(question))
+        questions: (json["eventQuestions"] as List)
+            .map<Question>((qJson) => Question.fromJson(qJson as Map<String, dynamic>))
             .toList(),
         registrationsCount: json["_count"]["registrations"],);
   }

@@ -100,6 +100,12 @@ body: Padding(
                     isRequired: q.isRequired,
                     displayOrder: q.displayOrder,
                     questionType: q.question.questionType,
+                    options: q.question.options
+                        ?.map((opt) => {
+                              'optionText': opt.optionText,
+                              'displayOrder': opt.displayOrder,
+                            })
+                        .toList(),
                   )).toList(),
                 ),
               );

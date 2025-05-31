@@ -29,15 +29,22 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
   void initState() {
     super.initState();
     // Initialize question text and required flag
-    _questionTextController = TextEditingController(text: widget.initialQuestion?.questionText ?? '');
+    _questionTextController = TextEditingController(
+      text: widget.initialQuestion?.questionText ?? '',
+    );
     isRequired = widget.initialQuestion?.isRequired ?? false;
-    // Default question type from initialQuestion or TEXT
-    _questionType = widget.initialQuestion?.questionType ?? 'TEXT';
-    // Initialize option controllers from existing options if editing
-    if (widget.initialQuestion?.options != null) {
-      _optionControllers = widget.initialQuestion!.options!
+    // Normalize and set question type
+    _questionType = widget.initialQuestion?.questionType.toUpperCase() ?? 'TEXT';
+    // Initialize option controllers from existing options if provided
+    final existingOptions = widget.initialQuestion?.options;
+    if (existingOptions != null && existingOptions.isNotEmpty) {
+      _optionControllers = existingOptions
           .map((opt) => TextEditingController(text: opt['optionText'] as String))
           .toList();
+    }
+    // Ensure at least one controller for dropdown or checkbox types
+    if ((_questionType == 'DROPDOWN' || _questionType == 'CHECKBOX') && _optionControllers.isEmpty) {
+      _optionControllers = [TextEditingController()];
     }
   }
 

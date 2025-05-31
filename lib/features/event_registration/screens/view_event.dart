@@ -56,10 +56,6 @@ class EventDetailsPage extends StatelessWidget {
                     height: 200,
                     width: double.infinity,
                     color: Colors.amber[200],
-                    // If you add an image field to EventDetails, replace this with:
-                    // child: event.imageUrl != null && event.imageUrl.isNotEmpty
-                    //     ? Image.network(event.imageUrl, fit: BoxFit.cover)
-                    //     : null,
                   ),
                   const SizedBox(height: 16),
                   // Event title
