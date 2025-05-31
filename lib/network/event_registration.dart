@@ -27,7 +27,7 @@ Future<String?> createRegistration(EventRegistrationDTO registrationDTO) async {
 
 Future<void> updateRegistrationStatus(String registrationId, String status) async {
   try {
-    final response = await dioClient.dio.patch(
+    await dioClient.dio.patch(
       "/registrations/$registrationId/status",
       data: {"status": status},
       options: Options(

@@ -1,4 +1,3 @@
-import "dart:convert";
 import "package:app_mobile_frontend/network/dio_client.dart";
 import "package:app_mobile_frontend/models/user.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";

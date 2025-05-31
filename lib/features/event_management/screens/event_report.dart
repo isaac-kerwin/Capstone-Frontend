@@ -136,7 +136,8 @@ class _ReportScreenState extends State<ReportScreen> {
     // Collect all unique question texts for columns
     final Set<String> questionSet = {};
     for (final p in participants) {
-      for (final resp in (p['questionnaireResponses'] ?? [])) {
+      final responses = p['questionnaireResponses'] ?? p['questionnairreResponses'] ?? [];
+      for (final resp in responses) {
         if (resp.containsKey('question')) {
           questionSet.add(resp['question']);
         }
@@ -155,9 +156,16 @@ class _ReportScreenState extends State<ReportScreen> {
         ],
         rows: participants.map<DataRow>((p) {
           Map<String, String> respMap = {};
-          for (final resp in (p['questionnaireResponses'] ?? [])) {
+          final responses = p['questionnaireResponses'] ?? p['questionnairreResponses'] ?? [];
+          for (final resp in responses) {
             if (resp.containsKey('question') && resp.containsKey('response')) {
-              respMap[resp['question']] = resp['response'].toString();
+              // Clean up list-formatted responses (e.g., ["A","B"])
+              var respText = resp['response'].toString();
+              // Remove brackets and quotes
+              respText = respText.replaceAll(RegExp(r'[\[\]\"]'), '');
+              // Normalize commas and whitespace
+              respText = respText.split(',').map((s) => s.trim()).join(', ');
+              respMap[resp['question']] = respText;
             }
           }
           return DataRow(

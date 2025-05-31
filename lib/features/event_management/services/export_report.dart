@@ -11,10 +11,11 @@ Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
   final fontBase  = await PdfGoogleFonts.robotoRegular();
   final fontBold  = await PdfGoogleFonts.robotoBold();
   // Collect all unique question texts for columns
-  final participants = report['participants'] ?? [];
+  final participants = report['participants'] as List? ?? [];
   final Set<String> questionSet = {};
-  for (final p in participants) {
-    for (final resp in (p['questionnaireResponses'] ?? [])) {
+  for (final p in participants.cast<Map<String, dynamic>>()) {
+    final responses = p['questionnaireResponses'] as List? ?? p['questionnairreResponses'] as List? ?? [];
+    for (final resp in responses.cast<Map<String, dynamic>>()) {
       if (resp.containsKey('question')) {
         questionSet.add(resp['question']);
       }
@@ -85,8 +86,17 @@ Future<File> exportReportAsPdf(Map<String, dynamic> report) async {
     ),
   );
 
-  // Trigger download/share dialog
-  final file = File('/storage/emulated/0/Download/${report['eventName']}.pdf');
+  // Trigger download/share dialog, suffixing if the file exists
+  final dir = '/storage/emulated/0/Download';
+  final baseName = report['eventName'] ?? 'report';
+  String filePath = '$dir/$baseName.pdf';
+  File file = File(filePath);
+  int counter = 1;
+  while (await file.exists()) {
+    filePath = '$dir/$baseName($counter).pdf';
+    file = File(filePath);
+    counter++;
+  }
   await file.writeAsBytes(await pdf.save());
   return file;
 }
@@ -105,9 +115,14 @@ pw.Widget _buildParticipantsTablePdf(List participants, List<String> questionCol
     ],
     data: participants.map<List<String>>((p) {
       Map<String, String> respMap = {};
-      for (final resp in (p['questionnaireResponses'] ?? [])) {
+      final responses = (p['questionnaireResponses'] as List? ?? p['questionnairreResponses'] as List? ?? []).cast<Map<String, dynamic>>();
+      for (final resp in responses) {
         if (resp.containsKey('question') && resp.containsKey('response')) {
-          respMap[resp['question']] = resp['response'].toString();
+          // Clean up checkbox list formatting e.g., ["A","B"]
+          var respText = resp['response'].toString();
+          respText = respText.replaceAll(RegExp(r'[\[\]\"]'), '');
+          respText = respText.split(',').map((s) => s.trim()).join(', ');
+          respMap[resp['question']] = respText;
         }
       }
       return [
