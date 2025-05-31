@@ -5,6 +5,7 @@ import 'package:app_mobile_frontend/models/registration.dart';
 import 'package:app_mobile_frontend/models/email.dart';
 import 'package:app_mobile_frontend/network/email.dart';
 import 'package:app_mobile_frontend/main_screen.dart';
+import 'package:logging/logging.dart';
 
 class RegistrationSummaryScreen extends StatefulWidget {
   final int eventId;
@@ -29,7 +30,16 @@ class RegistrationSummaryScreen extends StatefulWidget {
 }
 
 class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
+  final Logger _logger = Logger('RegistrationSummary');
   bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _logger.info('RegistrationSummaryScreen initialized for eventId: ${widget.eventId}');
+    _logger.fine('Participant data: ${widget.participantData}');
+    _logger.fine('Answers: ${widget.answers}');
+  }
 
   int _parseQuantity(dynamic value) {
     if (value is int) return value;
@@ -38,9 +48,9 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
   }
 
   Map<String, dynamic> _buildRegistrationPayload() {
+    _logger.info('Building registration payload');
     final ticketsPayload = <Map<String, dynamic>>[];
     final participantsPayload = <Map<String, dynamic>>[];
-    final questionCount = widget.event.questions.length;
 
     // Build a map from question text to question id for this event
     final Map<String, dynamic> questionTextToId = {
@@ -81,6 +91,12 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
       }
     }
 
+    final payload = {
+      'eventId': widget.eventId,
+      'tickets': ticketsPayload,
+      'participants': participantsPayload,
+    };
+    _logger.fine('Registration payload: $payload');
     return {
       'eventId': widget.eventId,
       'tickets': ticketsPayload,
@@ -89,6 +105,7 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
   }
 
   Future<void> _submitRegistration() async {
+    _logger.info('Submitting registration');
     setState(() => _isSubmitting = true);
     try {
       final payload = _buildRegistrationPayload();
@@ -97,42 +114,50 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
         tickets: payload['tickets'],
         participants: payload['participants'],
       );
+      _logger.fine('Calling createRegistration API');
       final regId = await createRegistration(dto);
+      _logger.info('Registration created with ID: $regId');
       if (regId != null) {
         final first = widget.participantData.first;
         final emailDto = EmailDTO(
           email: first['email'] ?? '',
           registrationID: regId,
-          eventName: widget.event.name ?? '',
-          startDateTime: widget.event.startDateTime ?? DateTime.now(),  
-          endDateTime: widget.event.endDateTime ?? DateTime.now(),
-          location: widget.event.location ?? '',
+          eventName: widget.event.name,
+          startDateTime: widget.event.startDateTime,
+          endDateTime: widget.event.endDateTime,
+          location: widget.event.location,
           type: 'confirmation',
         );
+        _logger.fine('Sending confirmation email');
         await sendRegistrationEmail(emailDto);
+        _logger.info('Confirmation email sent to ${emailDto.email}');
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration submitted!')),
       );
+      _logger.info('Navigating to MainScreen');
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const MainScreen()),
         (r) => false,
       );
     } catch (e, stack) {
+      _logger.severe('Error during submission: $e', e, stack);
       debugPrint('Error during submission: $e');
       debugPrintStack(stackTrace: stack);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
       );
     } finally {
+      _logger.info('Submission complete, resetting submitting state');
       setState(() => _isSubmitting = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _logger.fine('Building RegistrationSummary UI');
     return Scaffold(
       appBar: AppBar(title: const Text('Registration Summary')),
       body: Padding(
@@ -143,6 +168,7 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
             ...widget.participantData.asMap().entries.map((entry) {
               final idx = entry.key;
               final data = entry.value;
+              _logger.fine('Displaying participant #${idx+1}: $data');
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: ListTile(
@@ -163,6 +189,7 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
             ...widget.answers.asMap().entries.map((entry) {
               final idx = entry.key;
               final answer = entry.value;
+              _logger.fine('Displaying answers for participant #${idx+1}: $answer');
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 child: ListTile(

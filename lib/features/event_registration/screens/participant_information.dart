@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/new_registration_form_generator.dart';
+import 'package:logging/logging.dart';
 
 class ParticipantInformationScreen extends StatefulWidget {
   final int eventId;
@@ -21,35 +22,52 @@ class ParticipantInformationScreen extends StatefulWidget {
 
 class _ParticipantInformationScreenState extends State<ParticipantInformationScreen> {
   late final int totalParticipants;
-  late final List<Map<String, String>> participantData;
+  /// Logger for debugging participant form state
+  final Logger _logger = Logger('ParticipantInfo');
+  // Controllers for participant fields to retain input
+  late final List<Map<String, TextEditingController>> _controllers;
   final _formKey = GlobalKey<FormState>();
-  List<Map<String, String>> participantResponses = [];
 
   @override
   void initState() {
     super.initState();
+    _logger.info('Initializing ParticipantInformationScreen');
     // Sum the 'quantity' field from each ticket map
     totalParticipants = widget.tickets.fold<int>(
       0,
-      (sum, ticket) {
-        final int q = ticket['quantity']!;
-        if (q is int) return sum + q;
-        if (q is String) return sum + q ?? 0;
-        return sum;
-      },
+      (sum, ticket) => sum + (ticket['quantity'] ?? 0),
     );
-    participantData = List.generate(
-      totalParticipants,
-      (_) => {'firstname': '', 'lastname': '', 'email': '', 'phone': ''},
-    );
-    participantResponses = List.generate(totalParticipants, (_) => {});
+    _logger.info('Total participants: $totalParticipants');
+    // Initialize controllers per participant
+    _controllers = List.generate(totalParticipants, (_) => {
+      'firstname': TextEditingController(),
+      'lastname': TextEditingController(),
+      'email': TextEditingController(),
+      'phone': TextEditingController(),
+    });
+    // Attach listeners to log field changes
+    for (int i = 0; i < _controllers.length; i++) {
+      _controllers[i].forEach((field, controller) {
+        controller.addListener(() {
+          _logger.fine('Participant $i $field changed to: ${controller.text}');
+        });
+      });
+    }
+  }
+  
+  @override
+  void dispose() {
+    for (var map in _controllers) {
+      map.values.forEach((c) => c.dispose());
+    }
+    super.dispose();
   }
 
 String _getTicketNameForParticipant(int index) {
   int runningTotal = 0;
   for (int i = 0; i < widget.tickets.length; i++) {
-    final quantity = widget.tickets[i]['quantity'] ?? 0;
-    runningTotal += quantity is int ? quantity : int.tryParse(quantity.toString()) ?? 0;
+    final int quantity = widget.tickets[i]['quantity'] ?? 0;
+    runningTotal += quantity;
     if (index < runningTotal) {
       // Defensive: ticketNames and tickets should be in the same order
       if (i < widget.ticketNames.length) {
@@ -65,6 +83,7 @@ String _getTicketNameForParticipant(int index) {
   Widget _buildParticipantForm(int index) {
     final ticketName = _getTicketNameForParticipant(index);
     return Card(
+      key: ValueKey('participant_form_$index'),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -77,41 +96,41 @@ String _getTicketNameForParticipant(int index) {
             ),
             const SizedBox(height: 12),
             TextFormField(
+              key: ValueKey('firstname_field_$index'),
+              controller: _controllers[index]['firstname'],
               decoration: const InputDecoration(labelText: 'First Name'),
-              initialValue: participantData[index]['firstname'],
               validator: (value) => value == null || value.isEmpty ? 'Required' : null,
-              onChanged: (value) => participantData[index]['firstname'] = value,
             ),
             const SizedBox(height: 12),
             TextFormField(
+              key: ValueKey('lastname_field_$index'),
+              controller: _controllers[index]['lastname'],
               decoration: const InputDecoration(labelText: 'Last Name'),
-              initialValue: participantData[index]['lastname'],
               validator: (value) => value == null || value.isEmpty ? 'Required' : null,
-              onChanged: (value) => participantData[index]['lastname'] = value,
             ),
             const SizedBox(height: 12),
             TextFormField(
+              key: ValueKey('email_field_$index'),
+              controller: _controllers[index]['email'],
               decoration: const InputDecoration(labelText: 'Email'),
-              initialValue: participantData[index]['email'],
               validator: (value) {
                 if (value == null || value.isEmpty) return 'Required';
                 final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
                 if (!emailRegex.hasMatch(value)) return 'Invalid email';
                 return null;
               },
-              onChanged: (value) => participantData[index]['email'] = value,
             ),
             const SizedBox(height: 12),
             TextFormField(
+              key: ValueKey('phone_field_$index'),
+              controller: _controllers[index]['phone'],
               decoration: const InputDecoration(labelText: 'Phone Number'),
-              initialValue: participantData[index]['phone'],
               validator: (value) {
                 if (value == null || value.isEmpty) return 'Required';
                 final phoneRegex = RegExp(r'^\+?[0-9]{7,15}$');
                 if (!phoneRegex.hasMatch(value)) return 'Invalid phone number';
                 return null;
               },
-              onChanged: (value) => participantData[index]['phone'] = value,
             ),
           ],
         ),
@@ -120,13 +139,29 @@ String _getTicketNameForParticipant(int index) {
   }
 
   void _goToQuestionnairePage() {
+    // Collect responses from controllers and log them
+    final participantData = _controllers.map((map) {
+      return {
+        'firstname': map['firstname']!.text,
+        'lastname': map['lastname']!.text,
+        'email': map['email']!.text,
+        'phone': map['phone']!.text,
+      };
+    }).toList();
+    _logger.info('Collected participant data: $participantData');
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => RegistrationForm(eventId: widget.eventId, tickets: widget.tickets, ticketNames: widget.ticketNames, participantData: participantData,),
+        builder: (_) => RegistrationForm(
+          eventId: widget.eventId,
+          tickets: widget.tickets,
+          ticketNames: widget.ticketNames,
+          participantData: participantData,
+        ),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
