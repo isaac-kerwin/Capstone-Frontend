@@ -359,10 +359,15 @@ class _ExploreState extends State<Explore> {
             ),
           );
         }
+        // Only include events with at least one ticket sales started
+        final now = DateTime.now();
+        final availableEvents = snapshot.data!.events.where((event) {
+          return event.tickets.any((t) => t.salesStart.isBefore(now) || t.salesStart.isAtSameMomentAs(now));
+        }).toList();
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: snapshot.data!.events.map((event) {
+            children: availableEvents.map((event) {
               return GestureDetector(
                 onTap: () => _register(event),
                 child: _buildEventItem(event),

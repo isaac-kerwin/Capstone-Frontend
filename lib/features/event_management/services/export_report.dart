@@ -115,7 +115,7 @@ pw.Widget _buildParticipantsTablePdf(List participants, List<String> questionCol
     ],
     data: participants.map<List<String>>((p) {
       Map<String, String> respMap = {};
-      final responses = (p['questionnaireResponses'] as List? ?? p['questionnairreResponses'] as List? ?? []).cast<Map<String, dynamic>>();
+      final responses = (p['questionnaireResponses'] as List? ?? p['questionnaireResponses'] as List? ?? []).cast<Map<String, dynamic>>();
       for (final resp in responses) {
         if (resp.containsKey('question') && resp.containsKey('response')) {
           // Clean up checkbox list formatting e.g., ["A","B"]

@@ -156,7 +156,7 @@ class _ReportScreenState extends State<ReportScreen> {
         ],
         rows: participants.map<DataRow>((p) {
           Map<String, String> respMap = {};
-          final responses = p['questionnaireResponses'] ?? p['questionnairreResponses'] ?? [];
+          final responses = p['questionnaireResponses'] ?? p['questionnaireResponses'] ?? [];
           for (final resp in responses) {
             if (resp.containsKey('question') && resp.containsKey('response')) {
               // Clean up list-formatted responses (e.g., ["A","B"])
