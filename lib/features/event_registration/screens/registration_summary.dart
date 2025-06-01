@@ -82,6 +82,7 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
         }
         final pData = widget.participantData[participantsPayload.length];
         participantsPayload.add({
+          'ticketId': ticket['ticketId'], // Associate participant with ticket
           'email': pData['email'] ?? '',
           'firstName': pData['firstname'] ?? '',
           'lastName': pData['lastname'] ?? '',
