@@ -373,7 +373,7 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
       itemCount: _tickets.length,
       itemBuilder: (context, index) {
         final ticket = _tickets[index];
-        final canDelete = _tickets.length > 1; // Prevent deleting last ticket
+        final canDelete = _tickets.length > 1 && ticket.quantitySold == 0; // Cannot delete if registrations exist
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -406,13 +406,15 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
                       ? () => _deleteTicket(index)
                       : () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('At least one ticket is required. You cannot delete the last ticket.'),
-                              duration: Duration(seconds: 2),
+                            SnackBar(
+                              content: Text(ticket.quantitySold > 0
+                                  ? 'Cannot delete ticket with existing registrations.'
+                                  : 'At least one ticket is required. You cannot delete the last ticket.'),
+                              duration: const Duration(seconds: 2),
                             ),
                           );
                         },
-                  tooltip: 'Delete',
+                  tooltip: canDelete ? 'Delete' : 'Cannot delete',
                 ),
               ],
             ),
