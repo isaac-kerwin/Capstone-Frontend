@@ -106,6 +106,7 @@ body: Padding(
                             })
                         .toList(),
                   )).toList(),
+                  registrationsCount: eventWithQuestions.registrationsCount,
                 ),
               );
             } catch (e) {

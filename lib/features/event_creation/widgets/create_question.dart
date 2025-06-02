@@ -5,11 +5,13 @@ import 'package:app_mobile_frontend/models/question.dart';
 class CreateQuestionDialog extends StatefulWidget {
   final CreateQuestionDTO? initialQuestion;
   final int displayOrder;
+  final bool allowTypeChange;
 
   const CreateQuestionDialog({
     super.key,
     this.initialQuestion,
     required this.displayOrder,
+    this.allowTypeChange = true,
   });
 
   @override
@@ -86,7 +88,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
             DropdownMenuItem(value: 'DROPDOWN', child: Text('Dropdown Menu')),
             DropdownMenuItem(value: 'CHECKBOX', child: Text('Checkbox')),
           ],
-          onChanged: (value) {
+          onChanged: widget.allowTypeChange ? (value) {
             if (value == null) return;
             setState(() {
               _questionType = value;
@@ -94,7 +96,7 @@ class _CreateQuestionDialogState extends State<CreateQuestionDialog> {
                 _optionControllers.add(TextEditingController());
               }
             });
-          },
+          } : null,
         ),
       ],
     );

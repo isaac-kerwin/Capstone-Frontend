@@ -9,11 +9,13 @@ import 'package:logging/logging.dart';
 class QuestionnaireManagementPage extends StatefulWidget {
   final int eventId;
   final List<QuestionDTO> questions;
+  final int registrationsCount;
 
   const QuestionnaireManagementPage({
     super.key,
     required this.eventId,
     required this.questions,
+    required this.registrationsCount,
   });
 
   @override
@@ -70,6 +72,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
           options: question.options,
         ),
         displayOrder: question.displayOrder,
+        allowTypeChange: widget.registrationsCount == 0,
       ),
     );
     if (editedQuestion != null) {
@@ -162,6 +165,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
       itemCount: _questions.length,
       itemBuilder: (context, index) {
         final question = _questions[index];
+        final canDelete = widget.registrationsCount == 0;
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           child: ListTile(
@@ -174,11 +178,13 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
               children: [
                 IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: () => _openEditQuestionDialog(question),
+                  onPressed: widget.registrationsCount == 0 ? () => _openEditQuestionDialog(question) : null,
+                  tooltip: widget.registrationsCount == 0 ? 'Edit' : 'Cannot edit questions with that have answers',
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () => _deleteQuestion(question),
+                  onPressed: canDelete ? () => _deleteQuestion(question) : null,
+                  tooltip: canDelete ? 'Delete' : 'Cannot delete questions with answers',
                 ),
               ],
             ),
@@ -202,7 +208,7 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
               child: Column(
                 children: [
                   TextButton(
-                    onPressed: _openCreateQuestionDialog,
+                    onPressed: widget.registrationsCount == 0 ? _openCreateQuestionDialog : null,
                     child: const Text('Add Question'),
                   ),
                   const SizedBox(height: 16),
