@@ -3,6 +3,7 @@ import 'package:app_mobile_frontend/models/question.dart';
 import 'package:app_mobile_frontend/features/event_creation/widgets/create_question.dart';
 import 'package:app_mobile_frontend/network/event.dart';
 import 'package:app_mobile_frontend/core/fundamental_widgets/action_button.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/question_tile.dart';
 import 'package:logging/logging.dart';
 
 /// Page for creating, editing and managing a list of questionnaire questions for an event
@@ -165,30 +166,14 @@ class _QuestionnaireManagementPageState extends State<QuestionnaireManagementPag
       itemCount: _questions.length,
       itemBuilder: (context, index) {
         final question = _questions[index];
+        final canEdit = widget.registrationsCount == 0;
         final canDelete = widget.registrationsCount == 0;
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: ListTile(
-            title: Text(question.questionText),
-            subtitle: Text(
-              'Required: ${question.isRequired ? "Yes" : "No"}, Order: ${question.displayOrder}',
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: widget.registrationsCount == 0 ? () => _openEditQuestionDialog(question) : null,
-                  tooltip: widget.registrationsCount == 0 ? 'Edit' : 'Cannot edit questions with that have answers',
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: canDelete ? () => _deleteQuestion(question) : null,
-                  tooltip: canDelete ? 'Delete' : 'Cannot delete questions with answers',
-                ),
-              ],
-            ),
-          ),
+        return QuestionTile(
+          question: question,
+          canEdit: canEdit,
+          canDelete: canDelete,
+          onEdit: (_) => _openEditQuestionDialog(question),
+          onDelete: (_) => _deleteQuestion(question),
         );
       },
     );

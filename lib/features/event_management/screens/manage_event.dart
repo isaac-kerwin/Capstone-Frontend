@@ -21,11 +21,6 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  /*   void _createReport() {
-      final reportService = ReportService();
-      reportService.generatePdfReport(getParticipantData());
-    }
-  */
   void _navigateTo(BuildContext context, Widget page) {
     Navigator.push(
       context,

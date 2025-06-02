@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
+import 'package:app_mobile_frontend/features/event_management/widgets/event_text_field.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/date_time_row.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/image_picker_tile.dart';
 
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
@@ -87,12 +90,6 @@ class _EditEventPageState extends State<EditEventPage> {
     }
   }
 
-  String _formatDateTime(DateTime? dateTime) {
-    if (dateTime == null) return 'Not selected';
-    return '${dateTime.toLocal().toString().split(' ')[0]} '
-        '${TimeOfDay.fromDateTime(dateTime).format(context)}';
-  }
-
   Future<void> saveChanges() async {
     if (_startDateTime == null || _endDateTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -149,115 +146,6 @@ class _EditEventPageState extends State<EditEventPage> {
     });
   }
 
-  Widget _buildTextField({
-    required String label,
-    required TextEditingController controller,
-    int maxLines = 1,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return TextField(
-      controller: controller,
-      maxLines: maxLines,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-        filled: true,
-        fillColor: Colors.white,
-      ),
-    );
-  }
-
-
-  Widget _buildDateTimeRow({
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return InkWell(
-      onTap: onPressed,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(4),
-          color: Colors.white,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label),
-            const Icon(Icons.calendar_today),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImagePicker() {
-    return GestureDetector(
-      onTap: _pickImage,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey),
-          color: Colors.white,
-        ),
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            _image == null
-                ? const Text("Upload Image")
-                : Image.file(
-                    _image!,
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.cover,
-                  ),
-            const SizedBox(height: 5),
-            const Text("Tap to select an image"),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildButton(
-          text: "Cancel Changes",
-          color: Colors.red,
-          onPressed: cancelChanges,
-        ),
-        _buildButton(
-          text: "Save Changes",
-          onPressed: saveChanges,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildButton({
-    required String text,
-    Color? color,
-    required VoidCallback onPressed,
-  }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-      child: Text(text),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -273,35 +161,58 @@ class _EditEventPageState extends State<EditEventPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTextField(label: "Event Name", controller: nameController),
+              EventTextField(label: "Event Name", controller: nameController),
               const SizedBox(height: 15),
-              _buildTextField(label: "Location", controller: locationController),
+              EventTextField(label: "Location", controller: locationController),
               const SizedBox(height: 15),
-              _buildTextField(
+              EventTextField(
                 label: "Maximum Capacity",
                 controller: capacityController,
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 15),
-              _buildTextField(
+              EventTextField(
                 label: "Description",
                 controller: descriptionController,
                 maxLines: 3,
               ),
               const SizedBox(height: 15),
-              _buildDateTimeRow(
-                label: 'Starts on: ${_formatDateTime(_startDateTime)}',
-                onPressed: () => _pickDateTime(true),
+              DateTimeRow(
+                label: 'Starts on: ${_startDateTime != null ? _startDateTime!.toLocal().toString().split(' ').first + ' ' + TimeOfDay.fromDateTime(_startDateTime!).format(context) : 'Not selected'}',
+                onTap: () => _pickDateTime(true),
               ),
               const SizedBox(height: 15),
-              _buildDateTimeRow(
-                label: 'Ends on: ${_formatDateTime(_endDateTime)}',
-                onPressed: () => _pickDateTime(false),
+              DateTimeRow(
+                label: 'Ends on: ${_endDateTime != null ? _endDateTime!.toLocal().toString().split(' ').first + ' ' + TimeOfDay.fromDateTime(_endDateTime!).format(context) : 'Not selected'}',
+                onTap: () => _pickDateTime(false),
               ),
               const SizedBox(height: 15),
-              _buildImagePicker(),
+              ImagePickerTile(image: _image, onTap: _pickImage),
               const SizedBox(height: 20),
-              _buildActionButtons(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: cancelChanges,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    child: const Text('Cancel Changes'),
+                  ),
+                  ElevatedButton(
+                    onPressed: saveChanges,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    child: const Text('Save Changes'),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

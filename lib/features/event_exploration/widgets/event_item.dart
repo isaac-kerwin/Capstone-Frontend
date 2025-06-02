@@ -72,7 +72,7 @@ class EventItem extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '+ \\${event.capacity} Going',
+              '${event.capacity} Going',
               style: TextStyle(fontSize: 12, color: Colors.grey[800]),
             ),
             const SizedBox(height: 4),

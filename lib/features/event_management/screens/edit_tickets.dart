@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:app_mobile_frontend/models/tickets.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/ticket_tile.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/ticket_form.dart';
 
 class TicketManagementPage extends StatefulWidget {
   final EventDetails event;
@@ -69,10 +71,7 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
     late DateTime lastDate;
 
     // Get event start date for validation
-    final eventStart = widget.event.startDateTime;
-    DateTime eventStartDate = eventStart is DateTime
-        ? eventStart
-        : DateTime.tryParse(eventStart.toString()) ?? DateTime(now.year + 5);
+    DateTime eventStartDate = widget.event.startDateTime; // Corrected: Assuming widget.event.startDateTime is DateTime
 
     if (isStart) {
       firstDate = DateTime(now.year, now.month, now.day);
@@ -144,12 +143,6 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
     }
   }
 
-  String _formatDateTime(DateTime? dateTime) {
-    if (dateTime == null) return 'Not selected';
-    return '${dateTime.toLocal().toString().split(' ')[0]} '
-        '${TimeOfDay.fromDateTime(dateTime).format(context)}';
-  }
-
   Future<void> _saveTicket() async {
     if (_nameController.text.isEmpty ||
         _priceController.text.isEmpty ||
@@ -170,8 +163,8 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
     }
 
     try {
-      List<TicketDTO> tickets = [];
-      final ticket = TicketDTO(
+      List<TicketDTO> ticketsDto = []; // Changed variable name for clarity
+      final ticketDto = TicketDTO( // Changed variable name for clarity
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         price: double.parse(_priceController.text),
@@ -179,39 +172,42 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
         salesStart: _salesStart!,
         salesEnd: _salesEnd!,
       );
-      tickets.add(ticket);
+      ticketsDto.add(ticketDto);
 
       if (_isEditing) {
         // Update existing ticket
         UpdateEventDTO ticketUpdate = UpdateEventDTO(
-          tickets: tickets,
+          tickets: ticketsDto,
         );
-        await updateEvent(widget.event.id, ticketUpdate);
+        // Assuming updateEvent can handle updating a single ticket by its ID or requires the full list.
+        // The current DTO structure suggests it might be replacing/updating tickets based on the list.
+        // For simplicity, we'll assume the backend handles matching or that this is the intended update mechanism.
+        await updateEvent(widget.event.id, ticketUpdate); 
         setState(() {
           _tickets[_editingIndex!] = Ticket(
-            id: _tickets[_editingIndex!].id,
+            id: _tickets[_editingIndex!].id, // Keep existing ID
             eventId: widget.event.id,
-            name: ticket.name,
-            description: ticket.description,
-            price: ticket.price.toString(),
-            quantityTotal: ticket.quantityTotal,
-            quantitySold: _tickets[_editingIndex!].quantitySold,
-            salesStart: ticket.salesStart,
-            salesEnd: ticket.salesEnd,
-            status: _tickets[_editingIndex!].status,
-            createdAt: _tickets[_editingIndex!].createdAt,
-            updatedAt: DateTime.now(),
+            name: ticketDto.name,
+            description: ticketDto.description,
+            price: ticketDto.price.toString(), // Ticket model expects string price
+            quantityTotal: ticketDto.quantityTotal,
+            quantitySold: _tickets[_editingIndex!].quantitySold, // Preserve sold quantity
+            salesStart: ticketDto.salesStart,
+            salesEnd: ticketDto.salesEnd,
+            status: _tickets[_editingIndex!].status, // Preserve status
+            createdAt: _tickets[_editingIndex!].createdAt, // Preserve creation date
+            updatedAt: DateTime.now(), // Update modification date
           );
         });
       } else {
         // Create new ticket
-        final newTicket = await createTicket(widget.event.id, ticket);
+        final newTicket = await createTicket(widget.event.id, ticketDto);
         setState(() {
           _tickets.add(newTicket);
         });
       }
 
-      _cancelEditing();
+      _cancelEditing(); // Clears form and resets editing state
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_isEditing ? 'Ticket updated successfully!' : 'Ticket added successfully!')),
       );
@@ -238,192 +234,6 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
     }
   }
 
-  Widget _buildTicketForm() {
-    return Column(
-      children: [
-        TextField(
-          controller: _nameController,
-          decoration: const InputDecoration(
-            labelText: 'Ticket Name',
-            border: OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _descriptionController,
-          maxLines: 2,
-          decoration: const InputDecoration(
-            labelText: 'Description (Optional)',
-            border: OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _priceController,
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))],
-          decoration: const InputDecoration(
-            labelText: 'Price (\$)',
-            border: OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _quantityController,
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: const InputDecoration(
-            labelText: 'Quantity',
-            border: OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 12),
-        InkWell(
-          onTap: () => _pickDateTime(true),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.white,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Sales Start: ${_formatDateTime(_salesStart)}'),
-                const Icon(Icons.calendar_today),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        InkWell(
-          onTap: () => _pickDateTime(false),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.white,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Sales End: ${_formatDateTime(_salesEnd)}'),
-                const Icon(Icons.calendar_today),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            if (_isEditing)
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _cancelEditing,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    minimumSize: const Size.fromHeight(50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            if (_isEditing) const SizedBox(width: 12),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: _saveTicket,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4A55FF),
-                  minimumSize: const Size.fromHeight(50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  _isEditing ? 'Update Ticket' : 'Add Ticket',
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTicketList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: _tickets.length,
-      itemBuilder: (context, index) {
-        final ticket = _tickets[index];
-        final canDelete = _tickets.length > 1 && ticket.quantitySold == 0; // Cannot delete if registrations exist
-        return Card(
-          margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: ListTile(
-            title: Text(
-              ticket.name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Price: \$${ticket.price}'),
-                Text('Quantity: ${ticket.quantityTotal} (${ticket.quantitySold} sold)'),
-                Text('Sales Period: ${_formatDateTime(ticket.salesStart)} - ${_formatDateTime(ticket.salesEnd)}'),
-                if (ticket.description.isNotEmpty)
-                  Text('Description: ${ticket.description}'),
-                Text('Status: ${ticket.status}'),
-              ],
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () => _startEditing(index),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: canDelete
-                      ? () => _deleteTicket(index)
-                      : () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(ticket.quantitySold > 0
-                                  ? 'Cannot delete ticket with existing registrations.'
-                                  : 'At least one ticket is required. You cannot delete the last ticket.'),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        },
-                  tooltip: canDelete ? 'Delete' : 'Cannot delete',
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -447,7 +257,18 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildTicketForm(),
+              TicketForm(
+                nameController: _nameController,
+                descriptionController: _descriptionController,
+                priceController: _priceController,
+                quantityController: _quantityController,
+                salesStart: _salesStart,
+                salesEnd: _salesEnd,
+                pickDateTime: _pickDateTime,
+                saveTicket: _saveTicket,
+                cancelEditing: _isEditing ? _cancelEditing : null,
+                isEditing: _isEditing,
+              ),
               const SizedBox(height: 24),
               const Text(
                 'Existing Tickets',
@@ -457,7 +278,35 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildTicketList(),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _tickets.length,
+                itemBuilder: (context, index) {
+                  final ticket = _tickets[index];
+                  // Logic for canDelete moved here to pass to TicketTile
+                  final bool canDelete = _tickets.length > 1 && ticket.quantitySold == 0;
+                  return TicketTile(
+                    ticket: ticket,
+                    canDelete: canDelete,
+                    onEdit: () => _startEditing(index),
+                    onDelete: () {
+                      if (canDelete) {
+                        _deleteTicket(index);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(ticket.quantitySold > 0
+                                ? 'Cannot delete ticket with existing registrations.'
+                                : 'At least one ticket is required. You cannot delete the last ticket.'),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),
