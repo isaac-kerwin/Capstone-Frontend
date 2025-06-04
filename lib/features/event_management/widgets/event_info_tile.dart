@@ -18,6 +18,7 @@ class _EventInfoTileState extends State<EventInfoTile> {
     EventDetails event = widget.event;
   }
   
+  @override
   Widget build(BuildContext context) {
     EventDetails event = widget.event;
 
