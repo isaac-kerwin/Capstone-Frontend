@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:app_mobile_frontend/features/event_exploration/widgets/category_selector.dart';
 import 'package:app_mobile_frontend/features/event_exploration/widgets/time_filter_chips.dart';
 import 'package:app_mobile_frontend/features/event_exploration/widgets/date_range_picker_tile.dart';

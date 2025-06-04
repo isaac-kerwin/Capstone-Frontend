@@ -195,7 +195,6 @@ class _ExploreState extends State<Explore> {
   }
 
   // --- Main Build ---
-
   Widget _buildHeader(BuildContext context) {
     return Container(
       color: const Color(0xFF5E55FF),

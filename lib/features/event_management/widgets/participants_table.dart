@@ -38,7 +38,6 @@ class ParticipantsTable extends StatelessWidget {
           for (final resp in responses) {
             if (resp.containsKey('question') && resp.containsKey('response')) {
               var respText = resp['response'].toString();
-              // Corrected regex to only remove square brackets and double quotes
               respText = respText.replaceAll(RegExp(r'[\[\]"]'), ''); 
               respText = respText.split(',').map((s) => s.trim()).join(', ');
               respMap[resp['question']] = respText;
