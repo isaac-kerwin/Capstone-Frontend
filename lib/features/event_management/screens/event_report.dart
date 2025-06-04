@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/network/report.dart';
 import 'package:app_mobile_frontend/features/event_management/services/export_report.dart';
 import 'package:app_mobile_frontend/features/event_management/services/date_and_time_parser.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/report_section_header.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/sales_report_section.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/remaining_tickets_section.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/participants_table.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/questions_summary_section.dart';
 
 class ReportScreen extends StatefulWidget {
   final int eventId;
@@ -31,15 +36,15 @@ class _ReportScreenState extends State<ReportScreen> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
+          } else if (!snapshot.hasData || snapshot.data == null) {
             return const Center(child: Text('No report data found.'));
           }
 
           final report = snapshot.data!;
 
           // Format start and end date/time
-          String startStr = '';
-          String endStr = '';
+          String startStr = 'N/A';
+          String endStr = 'N/A';
           try {
             if (report['start'] != null) {
               final startDate = DateTime.parse(report['start']);
@@ -51,132 +56,71 @@ class _ReportScreenState extends State<ReportScreen> {
               endStr =
                   '${formatDateAsWords(endDate)} at ${formatTimeAmPm(endDate)}';
             }
-          } catch (_) {}
+          } catch (_) {
+            // Dates might be invalid or null, keep N/A
+          }
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(report['eventName'] ?? '',
-                    style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold)),
-                TextButton(
-                  onPressed: () async {
+                ReportSectionHeader(
+                  eventName: report['eventName'] ?? 'Event Name Not Available',
+                  eventDescription: report['eventDescription'] ?? 'No description.',
+                  startStr: startStr,
+                  endStr: endStr,
+                  onExport: () async {
                     try {
-                      if (snapshot.hasData) {
-                        await exportReportAsPdf(snapshot.data!);
-
+                      // Ensure report data is not null before exporting
+                      if (snapshot.data != null) {
+                         await exportReportAsPdf(snapshot.data!);
+                         ScaffoldMessenger.of(context).showSnackBar(
+                           const SnackBar(
+                             content: Text('Report saved to Downloads'),
+                             duration: Duration(seconds: 3),
+                           ),
+                         );
+                      } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Report saved to Downloads'),
-                            duration: Duration(seconds: 3),
-                          ),
-                        );
+                           const SnackBar(
+                             content: Text('No data to export.'),
+                             duration: Duration(seconds: 3),
+                           ),
+                         );
                       }
-                    } catch (e) {}
+                    } catch (e) {
+                       ScaffoldMessenger.of(context).showSnackBar(
+                         SnackBar(
+                           content: Text('Error exporting PDF: $e'),
+                           duration: const Duration(seconds: 3),
+                         ),
+                       );
+                    }
                   },
-                  child: const Text('Export as PDF'),
                 ),
-                const SizedBox(height: 8),
-                Text(report['eventDescription'] ?? ''),
-                const SizedBox(height: 8),
-                Text('Start: $startStr'),
-                Text('End: $endStr'),
                 const Divider(height: 32),
-                Text('Sales', style: Theme.of(context).textTheme.titleMedium),
-                Text('Total Tickets: ${report['sales']?['totalTickets'] ?? ''}'),
-                Text('Revenue: \$${report['sales']?['revenue'] ?? ''}'),
-                const SizedBox(height: 8),
-                Text('Tickets Sold by Type:'),
-                ...((report['sales']?['soldByTickets'] ?? []) as List)
-                    .map<Widget>((t) => Text('${t['name']}: ${t['total']}')),
-                const SizedBox(height: 8),
-                Text('Revenue by Ticket:'),
-                ...((report['sales']?['revenueByTickets'] ?? []) as List)
-                    .map<Widget>((t) => Text('${t['name']}: \$${t['total']}')),
+                SalesReportSection(
+                  salesData: report['sales'] as Map<String, dynamic>? ?? {},
+                ),
                 const Divider(height: 32),
-                Text('Remaining', style: Theme.of(context).textTheme.titleMedium),
-                Text('Remaining Tickets: ${report['remaining']?['remainingTickets'] ?? ''}'),
-                ...((report['remaining']?['remainingByTicket'] ?? []) as List)
-                    .map<Widget>((r) => Text('${r['name']}: ${r['total']}')),
+                RemainingTicketsSection(
+                  remainingData: report['remaining'] as Map<String, dynamic>? ?? {},
+                ),
                 const Divider(height: 32),
                 Text('Participants', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
-                _buildParticipantsTable(report['participants'] ?? []),
+                ParticipantsTable(
+                  participantsData: (report['participants'] as List<dynamic>?)?.map((e) => e as Map<String, dynamic>).toList() ?? [],
+                ),
                 const Divider(height: 32),
-                Text('Questions Summary', style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                ...((report['questions'] ?? {}) as Map<String, dynamic>)
-                    .entries
-                    .map<Widget>((entry) {
-                      final details = entry.value as Map<String, dynamic>;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(entry.key, style: const TextStyle(fontWeight: FontWeight.bold)),
-                          ...details.entries.map((opt) => Text('${opt.key}: ${opt.value}')),
-                          const SizedBox(height: 8),
-                        ],
-                      );
-                    }).toList(),
+                QuestionsSummarySection(
+                  questionsData: report['questions'] as Map<String, dynamic>? ?? {},
+                ),
               ],
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildParticipantsTable(List participants) {
-    if (participants.isEmpty) {
-      return const Text('No participants.');
-    }
-
-    // Collect all unique question texts for columns
-    final Set<String> questionSet = {};
-    for (final p in participants) {
-      final responses = p['questionnaireResponses'] ?? p['questionnairreResponses'] ?? [];
-      for (final resp in responses) {
-        if (resp.containsKey('question')) {
-          questionSet.add(resp['question']);
-        }
-      }
-    }
-    final List<String> questionColumns = questionSet.toList();
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        columns: [
-          const DataColumn(label: Text('Name')),
-          const DataColumn(label: Text('Email')),
-          const DataColumn(label: Text('Ticket Type')),
-          ...questionColumns.map((q) => DataColumn(label: Text(q))),
-        ],
-        rows: participants.map<DataRow>((p) {
-          Map<String, String> respMap = {};
-          final responses = p['questionnaireResponses'] ?? p['questionnairreResponses'] ?? [];
-          for (final resp in responses) {
-            if (resp.containsKey('question') && resp.containsKey('response')) {
-              // Clean up list-formatted responses (e.g., ["A","B"])
-              var respText = resp['response'].toString();
-              // Remove brackets and quotes
-              respText = respText.replaceAll(RegExp(r'[\[\]\"]'), '');
-              // Normalize commas and whitespace
-              respText = respText.split(',').map((s) => s.trim()).join(', ');
-              respMap[resp['question']] = respText;
-            }
-          }
-          return DataRow(
-            cells: [
-              DataCell(Text(p['name'] ?? '')),
-              DataCell(Text(p['email'] ?? '')),
-              DataCell(Text(p['ticket'] ?? '')),
-              ...questionColumns.map((q) => DataCell(Text(respMap[q] ?? ''))),
-            ],
-          );
-        }).toList(),
       ),
     );
   }

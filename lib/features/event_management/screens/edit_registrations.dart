@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/network/event_registration.dart';
 import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/features/event_management/widgets/registration_tile.dart';
 
 class EditRegistrationsScreen extends StatefulWidget {
   final int eventId;
@@ -38,36 +39,6 @@ class _EditRegistrationsScreenState extends State<EditRegistrationsScreen> {
     );
   }
 
-  Widget _buildRegistrationTile(Map<String, dynamic> reg) {
-    final registrationId = reg['registrationId'].toString();
-    final primaryParticipantName = reg['primaryParticipantName'] ?? 'N/A';
-    final numberOfAttendees = reg['numberOfAttendees']?.toString() ?? '1';
-    final totalAmountPaid = reg['totalAmountPaid']?.toString() ?? '0';
-    final status = reg['registrationStatus'] ?? 'UNKNOWN';
-
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-      child: ListTile(
-        title: Text('Registration #$registrationId'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Primary: $primaryParticipantName'),
-            Text('Attendees: $numberOfAttendees'),
-            Text('Total Paid: \$${totalAmountPaid}'),
-            Text('Status: $status'),
-          ],
-        ),
-        trailing: status == "PENDING"
-            ? ElevatedButton(
-                onPressed: () => _confirmRegistration(registrationId),
-                child: const Text('Confirm'),
-              )
-            : null,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,8 +69,21 @@ class _EditRegistrationsScreenState extends State<EditRegistrationsScreen> {
           final registrations = snapshot.data!;
           return ListView.builder(
             itemCount: registrations.length,
-            itemBuilder: (context, index) =>
-                _buildRegistrationTile(registrations[index] as Map<String, dynamic>),
+            itemBuilder: (context, index) {
+              final reg = registrations[index] as Map<String, dynamic>;
+              final id = reg['registrationId'].toString();
+              final attendees = (reg['numberOfAttendees'] as int?) ?? 1;
+              final paid = double.tryParse(reg['totalAmountPaid']?.toString() ?? '0') ?? 0;
+              final status = reg['registrationStatus'] ?? 'UNKNOWN';
+              return RegistrationTile(
+                registrationId: id,
+                primaryParticipantName: reg['primaryParticipantName'] ?? 'N/A',
+                numberOfAttendees: attendees,
+                totalAmountPaid: paid,
+                status: status,
+                onConfirm: status == 'PENDING' ? () => _confirmRegistration(id) : null,
+              );
+            },
           );
         },
       ),

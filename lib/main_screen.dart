@@ -71,7 +71,6 @@ class _MainScreenState extends State<MainScreen> {
 
 
     return Scaffold(
-      appBar: AppBar(),
       body: IndexedStack(
         index: _selectedIndex,
         children: screens,

@@ -61,6 +61,7 @@ class _RegistrationSummaryScreenState extends State<RegistrationSummaryScreen> {
     for (var tIndex = 0; tIndex < widget.tickets.length; tIndex++) {
       final ticket = widget.tickets[tIndex];
       final qty = _parseQuantity(ticket['quantity']);
+      _logger.fine('Ticket payload - id: ${ticket['ticketId']}, quantity: $qty');
       ticketsPayload.add({
         'ticketId': ticket['ticketId'],
         'quantity': qty,

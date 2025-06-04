@@ -38,12 +38,6 @@ class EventSlideshow extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Event published!')),
       );
-/*       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => OrganiserDashboard(),
-        ),
-      ); */
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Could not publish: $e')),

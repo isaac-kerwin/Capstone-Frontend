@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:app_mobile_frontend/features/event_exploration/widgets/category_selector.dart';
+import 'package:app_mobile_frontend/features/event_exploration/widgets/time_filter_chips.dart';
+import 'package:app_mobile_frontend/features/event_exploration/widgets/date_range_picker_tile.dart';
 
 class EventFilterModal extends StatefulWidget {
   final Function(Map<String, dynamic>) onApplyFilters;
@@ -71,28 +73,11 @@ class _EventFilterModalState extends State<EventFilterModal> {
           const SizedBox(height: 32),
 
           // Categories
-          Wrap(
-            spacing: 18, runSpacing: 18,
-            children: categories.map((cat) {
-              final selected = selectedCategory == cat['label'];
-              return GestureDetector(
-                onTap: () => setState(() => selectedCategory =
-                    selected ? null : cat['label'] as String),
-                child: Column(children: [
-                  Container(
-                    width: 54, height: 54,
-                    decoration: BoxDecoration(
-                      color: selected ? primaryColor : Colors.grey[300],
-                      shape: BoxShape.circle),
-                    child: Icon(cat['icon'], color: Colors.white, size: 28),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(cat['label'],
-                    style: TextStyle(fontSize: 13,
-                        color: selected ? Colors.black : Colors.grey[600])),
-                ]),
-              );
-            }).toList(),
+          CategorySelector(
+            selectedCategory: selectedCategory,
+            categories: categories,
+            onCategoryTap: (cat) => setState(() => selectedCategory = cat),
+            primaryColor: primaryColor,
           ),
 
           const SizedBox(height: 36),
@@ -103,97 +88,69 @@ class _EventFilterModalState extends State<EventFilterModal> {
           const SizedBox(height: 20),
 
           // Time chips
-          Row(
-            children: timeFilters.map((f) {
-              final selected = selectedTimeFilter == f;
-              return Container(
-                margin: const EdgeInsets.only(right: 14),
-                child: ChoiceChip(
-                  label: Text(f),
-                  selected: selected,
-                  selectedColor: primaryColor,
-                  backgroundColor: Colors.grey[200],
-                  labelStyle:
-                      TextStyle(color: selected ? Colors.white : Colors.black),
-                  onSelected: (sel) => setState(() {
-                    if (sel) {
-                      selectedTimeFilter = f;
-                      final now = DateTime.now();
-                      switch (f) {
-                        case 'Today':
-                          startDate = DateTime(now.year, now.month, now.day);
-                          endDate   = startDate!.add(const Duration(hours: 23, minutes: 59, seconds: 59));
-                          break;
-                        case 'Tomorrow':
-                          startDate = DateTime(now.year, now.month, now.day + 1);
-                          endDate   = startDate!.add(const Duration(hours: 23, minutes: 59, seconds: 59));
-                          break;
-                        case 'This week':
-                          startDate = DateTime(now.year, now.month, now.day);
-                          final daysLeft = DateTime.daysPerWeek - now.weekday;
-                          endDate = DateTime(now.year, now.month, now.day + daysLeft, 23, 59, 59);
-                          break;
-                      }
-                    } else {
-                      selectedTimeFilter = null;
-                      startDate = endDate = null;
-                    }
-                  }),
-                ),
-              );
-            }).toList(),
+          TimeFilterChips(
+            filters: timeFilters,
+            selectedFilter: selectedTimeFilter,
+            onFilterSelected: (f) => setState(() {
+              selectedTimeFilter = f;
+              // reset date when using time filter
+              if (f != null) {
+                final now = DateTime.now();
+                switch (f) {
+                  case 'Today':
+                    startDate = DateTime(now.year, now.month, now.day);
+                    endDate = startDate!.add(const Duration(hours: 23, minutes: 59, seconds: 59));
+                    break;
+                  case 'Tomorrow':
+                    startDate = DateTime(now.year, now.month, now.day + 1);
+                    endDate = startDate!.add(const Duration(hours: 23, minutes: 59, seconds: 59));
+                    break;
+                  case 'This week':
+                    startDate = DateTime(now.year, now.month, now.day);
+                    final daysLeft = DateTime.daysPerWeek - now.weekday;
+                    endDate = DateTime(now.year, now.month, now.day + daysLeft, 23, 59, 59);
+                    break;
+                }
+              } else {
+                startDate = endDate = null;
+              }
+            }),
+            primaryColor: primaryColor,
           ),
 
           const SizedBox(height: 24),
 
           // Date range picker
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: ListTile(
-              leading: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: startDate != null ? primaryColor : Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8)),
-                child: Icon(Icons.calendar_today,
-                    color: startDate != null ? Colors.white : Colors.grey),
-              ),
-              title: Text(startDate != null
-                      ? '${DateFormat('MM/dd/yyyy').format(startDate!)} - '
-                        '${DateFormat('MM/dd/yyyy').format(endDate!)}'
-                      : 'Enter Date Range'),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () async {
-                final picked = await showDateRangePicker(
-                  context: context,
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 365)),
-                  initialDateRange: startDate != null
-                      ? DateTimeRange(start: startDate!, end: endDate!)
-                      : null,
-                  builder: (ctx, child) => Theme(
-                    data: Theme.of(ctx).copyWith(
-                      colorScheme: ColorScheme.light(
-                        primary: primaryColor,
-                        onPrimary: Colors.white,
-                        onSurface: Colors.black,
-                      ),
+          DateRangePickerTile(
+            startDate: startDate,
+            endDate: endDate,
+            onTap: () async {
+              final picked = await showDateRangePicker(
+                context: context,
+                firstDate: DateTime.now(),
+                lastDate: DateTime.now().add(const Duration(days: 365)),
+                initialDateRange: startDate != null && endDate != null
+                    ? DateTimeRange(start: startDate!, end: endDate!)
+                    : null,
+                builder: (ctx, child) => Theme(
+                  data: Theme.of(ctx).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: primaryColor,
+                      onPrimary: Colors.white,
+                      onSurface: Colors.black,
                     ),
-                    child: child!,
                   ),
-                );
-                if (picked != null) {
-                  setState(() {
-                    startDate = picked.start;
-                    endDate   = picked.end;
-                    selectedTimeFilter = null;
-                  });
-                }
-              },
-            ),
+                  child: child!,
+                ),
+              );
+              if (picked != null) {
+                setState(() {
+                  startDate = picked.start;
+                  endDate   = picked.end;
+                  selectedTimeFilter = null;
+                });
+              }
+            },
           ),
 
           const Spacer(),

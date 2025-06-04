@@ -64,7 +64,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
           final composite = tIndex * 1000 + copy * questionCount + qIndex;
           final question = event.questions[qIndex];
           String text = controllers[composite]?.text.trim() ?? '';
-          if (text.isEmpty) continue;
+          if (text.isEmpty) {
+            // For optional questions, send a blank space; skip only if required
+            if (question.isRequired) {
+              continue;
+            } else {
+              text = 'EMPTY';
+            }
+          }
 
           final qType = question.question.questionType.toLowerCase();
           if (qType == 'dropdown') {
@@ -129,6 +136,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     final composite = ticketIndex * 1000 + copyIndex * questionCount + questionIndex;
                     final question = event.questions[questionIndex];
                     final qText = question.question.questionText;
+                    final label = question.isRequired ? '$qText *' : qText;
                     final qType = question.question.questionType.toLowerCase();
 
                     _logger.info('Question: $qText, Type: $qType');
@@ -142,7 +150,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(qText, style: const TextStyle(fontWeight: FontWeight.w500)),
+                            Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
                             const SizedBox(height: 8),
                             ...opts.map((opt) {
                               final checked = checkboxSelections[composite]!.contains(opt.id);
@@ -179,7 +187,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                         child: DropdownButtonFormField<int>(
                           value: dropdownSelections[composite],
                           decoration: InputDecoration(
-                            labelText: qText,
+                            labelText: label,
                             border: const OutlineInputBorder(),
                           ),
                           items: opts
@@ -203,7 +211,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                         child: TextFormField(
                           controller: controllers[composite],
                           decoration: InputDecoration(
-                            labelText: qText,
+                            labelText: label,
                             border: const OutlineInputBorder(),
                           ),
                           validator: (val) => question.isRequired && (val == null || val.isEmpty) ? 'This field is required' : null,
