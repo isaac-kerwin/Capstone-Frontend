@@ -1,2 +1,0 @@
-C:/Users/sawko/Desktop/flutter/Capstone-Frontend/android/app/.cxx/Debug/32x15634/x86_64/CMakeFiles/edit_cache.dir
-C:/Users/sawko/Desktop/flutter/Capstone-Frontend/android/app/.cxx/Debug/32x15634/x86_64/CMakeFiles/rebuild_cache.dir

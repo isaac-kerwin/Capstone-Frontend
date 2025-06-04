@@ -30,6 +30,7 @@ class ParticipantsTable extends StatelessWidget {
           const DataColumn(label: Text('Name')),
           const DataColumn(label: Text('Email')),
           const DataColumn(label: Text('Ticket Type')),
+          const DataColumn(label: Text('Registration Status')),
           ...questionColumns.map((q) => DataColumn(label: Text(q))),
         ],
         rows: participantsData.map<DataRow>((p) {
@@ -48,6 +49,7 @@ class ParticipantsTable extends StatelessWidget {
               DataCell(Text(p['name'] ?? '')),
               DataCell(Text(p['email'] ?? '')),
               DataCell(Text(p['ticket'] ?? '')),
+              DataCell(Text(p['registrationStatus'] ?? '')),
               ...questionColumns.map((q) => DataCell(Text(respMap[q] ?? ''))),
             ],
           );
