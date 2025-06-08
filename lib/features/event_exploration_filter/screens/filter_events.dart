@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/features/event_exploration/widgets/category_selector.dart';
-import 'package:app_mobile_frontend/features/event_exploration/widgets/time_filter_chips.dart';
-import 'package:app_mobile_frontend/features/event_exploration/widgets/date_range_picker_tile.dart';
+import 'package:app_mobile_frontend/features/event_exploration_filter/widgets/category_selector.dart';
+import 'package:app_mobile_frontend/features/event_exploration_filter/widgets/time_filter_chips.dart';
+import 'package:app_mobile_frontend/features/event_exploration_filter/widgets/date_range_picker_tile.dart';
 
 class EventFilterModal extends StatefulWidget {
   final Function(Map<String, dynamic>) onApplyFilters;

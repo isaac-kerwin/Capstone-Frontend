@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/features/event_exploration/screens/filter_events.dart';
+import 'package:app_mobile_frontend/features/event_exploration_filter/screens/filter_events.dart';
 import 'package:app_mobile_frontend/core/models/event.dart';
 import 'package:app_mobile_frontend/network/event_services.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/view_event.dart';
