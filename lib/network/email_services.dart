@@ -1,4 +1,5 @@
 import 'package:app_mobile_frontend/models/email.dart';
+import 'package:app_mobile_frontend/models/confirmation_email_dto.dart';
 import 'package:dio/dio.dart';
 import 'dio_client.dart';
 
@@ -11,5 +12,18 @@ Future<void> sendRegistrationEmail(EmailDTO emailDTO) async {
   } on DioException catch (e) {
     // You can handle/log errors here as needed
     throw Exception('Failed to send registration email: ${e.response?.data ?? e.message}');
+  }
+}
+
+Future<void> sendConfirmationEmail(ConfirmationEmailDTO dto) async {
+  try {
+    await dioClient.dio.post(
+      '/email/invoice',
+      data: dto.toJson(),
+    );
+  } on DioException catch (e) {
+    throw Exception(
+      'Failed to send confirmation email: ${e.response?.data ?? e.message}',
+    );
   }
 }
