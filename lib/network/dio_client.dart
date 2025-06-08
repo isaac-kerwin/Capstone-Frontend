@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';
-import 'auth.dart';
+import 'auth_services.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();

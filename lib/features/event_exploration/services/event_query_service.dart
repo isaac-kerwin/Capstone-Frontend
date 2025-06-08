@@ -1,5 +1,5 @@
 import 'package:app_mobile_frontend/models/event.dart';
-import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/network/event_services.dart';
 
 /// Service to fetch or filter events based on search and filters.
 class EventQueryService {

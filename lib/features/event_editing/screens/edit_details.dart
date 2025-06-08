@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-import 'package:app_mobile_frontend/features/event_management/widgets/event_text_field.dart';
-import 'package:app_mobile_frontend/features/event_management/widgets/date_time_row.dart';
-import 'package:app_mobile_frontend/features/event_management/widgets/image_picker_tile.dart';
-
+import 'package:app_mobile_frontend/features/event_editing/widgets/event_text_field.dart';
+import 'package:app_mobile_frontend/features/event_editing/widgets/date_time_row.dart';
+import 'package:app_mobile_frontend/features/event_editing/widgets/image_picker_tile.dart';
 import 'package:app_mobile_frontend/models/event.dart';
-import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/network/event_services.dart';
 
 class EditEventPage extends StatefulWidget {
   final EventDetails event;

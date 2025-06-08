@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/main_screen.dart';
-import 'package:app_mobile_frontend/network/auth.dart';
+import 'package:app_mobile_frontend/network/auth_services.dart';
 import 'package:app_mobile_frontend/features/login_and_register/screens/change_password.dart';
 
 

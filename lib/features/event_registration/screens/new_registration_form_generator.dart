@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/event.dart';
-import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/network/event_services.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/registration_summary.dart';
 import 'package:logging/logging.dart';
 import 'dart:convert';

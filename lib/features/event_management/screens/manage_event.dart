@@ -1,14 +1,13 @@
 import 'package:app_mobile_frontend/features/event_management/screens/edit_registrations.dart';
-import 'edit_tickets.dart';
-import 'edit_questions.dart';
-import 'edit_details.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:app_mobile_frontend/features/event_editing/screens/edit_tickets.dart';
+import 'package:app_mobile_frontend/features/event_editing/screens/edit_questions.dart';
+import 'package:app_mobile_frontend/features/event_editing/screens/edit_details.dart';
 import 'package:app_mobile_frontend/models/event.dart'; // Assuming EventWithQuestions or Event is here
-import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/network/event_services.dart';
 import 'package:app_mobile_frontend/features/event_management/widgets/event_info_tile.dart';
 import 'package:app_mobile_frontend/models/question.dart';   
-import 'package:app_mobile_frontend/features/event_management/screens/event_report.dart'; 
+import 'package:app_mobile_frontend/features/event_reporting/screens/event_report.dart'; 
+import 'package:flutter/material.dart';
 
 class DetailsPage extends StatefulWidget {
   final EventDetails event; 

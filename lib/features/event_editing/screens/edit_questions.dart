@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/models/question.dart';
 import 'package:app_mobile_frontend/features/event_creation/widgets/create_question.dart';
-import 'package:app_mobile_frontend/network/event.dart';
-import 'package:app_mobile_frontend/core/fundamental_widgets/action_button.dart';
-import 'package:app_mobile_frontend/features/event_management/widgets/question_tile.dart';
+import 'package:app_mobile_frontend/network/event_services.dart';
+import 'package:app_mobile_frontend/core/widgets/action_button.dart';
+import 'package:app_mobile_frontend/features/event_editing/widgets/question_tile.dart';
 import 'package:logging/logging.dart';
 
 /// Page for creating, editing and managing a list of questionnaire questions for an event

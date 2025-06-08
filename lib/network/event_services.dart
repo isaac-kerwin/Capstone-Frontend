@@ -1,4 +1,4 @@
-import 'package:app_mobile_frontend/network/auth.dart';
+import 'package:app_mobile_frontend/network/auth_services.dart';
 import "package:app_mobile_frontend/network/dio_client.dart";
 import "package:app_mobile_frontend/models/event.dart";
 import "package:dio/dio.dart";

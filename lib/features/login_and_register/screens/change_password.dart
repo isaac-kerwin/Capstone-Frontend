@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/network/users.dart';   // <- implement changePassword() there
+import 'package:app_mobile_frontend/network/users_services.dart';   // <- implement changePassword() there
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});

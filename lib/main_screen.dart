@@ -1,4 +1,4 @@
-import 'package:app_mobile_frontend/network/users.dart';
+import 'package:app_mobile_frontend/network/users_services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/event_exploration/screens/explore.dart';
 import 'package:app_mobile_frontend/features/event_management/screens/organiser_dashboard_home.dart';

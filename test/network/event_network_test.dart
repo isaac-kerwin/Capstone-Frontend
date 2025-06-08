@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:dio/dio.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/network/dio_client.dart';
-import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/network/event_services.dart';
 import 'event_network_test.mocks.dart';
 
 @GenerateMocks([Dio])

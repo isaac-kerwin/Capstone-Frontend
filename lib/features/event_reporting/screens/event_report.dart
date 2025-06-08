@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/network/report.dart';
+import 'package:app_mobile_frontend/network/report_services.dart';
 import 'package:app_mobile_frontend/features/event_management/services/export_report.dart';
 import 'package:app_mobile_frontend/features/event_management/services/date_and_time_parser.dart';
-import 'package:app_mobile_frontend/features/event_management/widgets/report_section_header.dart';
-import 'package:app_mobile_frontend/features/event_management/widgets/sales_report_section.dart';
-import 'package:app_mobile_frontend/features/event_management/widgets/remaining_tickets_section.dart';
-import 'package:app_mobile_frontend/features/event_management/widgets/participants_table.dart';
-import 'package:app_mobile_frontend/features/event_management/widgets/questions_summary_section.dart';
+import 'package:app_mobile_frontend/features/event_reporting/widgets/report_section_header.dart';
+import 'package:app_mobile_frontend/features/event_reporting/widgets/sales_report_section.dart';
+import 'package:app_mobile_frontend/features/event_reporting/widgets/remaining_tickets_section.dart';
+import 'package:app_mobile_frontend/features/event_reporting/widgets/participants_table.dart';
+import 'package:app_mobile_frontend/features/event_reporting/widgets/questions_summary_section.dart';
 
 class ReportScreen extends StatefulWidget {
   final int eventId;

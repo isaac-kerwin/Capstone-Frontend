@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/core/fundamental_widgets/action_button.dart';
+import 'package:app_mobile_frontend/core/widgets/action_button.dart';
 import 'package:app_mobile_frontend/models/event.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/ticket_select.dart';
-import 'package:app_mobile_frontend/network/event.dart';
+import 'package:app_mobile_frontend/network/event_services.dart';
 import 'package:app_mobile_frontend/features/event_management/services/date_and_time_parser.dart';
 
 class EventDetailsPage extends StatelessWidget {

@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:dio/dio.dart';
 
 import 'package:app_mobile_frontend/network/dio_client.dart';
-import 'package:app_mobile_frontend/network/users.dart';
+import 'package:app_mobile_frontend/network/users_services.dart';
 import 'package:app_mobile_frontend/models/user.dart';
 
 import 'user_network_test.mocks.dart';
