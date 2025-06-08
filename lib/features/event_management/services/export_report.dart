@@ -111,12 +111,13 @@ pw.Widget _buildParticipantsTablePdf(List participants, List<String> questionCol
       'Name',
       'Email',
       'Ticket Type',
+      'Registration Status',
       ...questionColumns,
     ],
     data: participants.map<List<String>>((p) {
       Map<String, String> respMap = {};
       final responses = (p['questionnaireResponses'] as List? ?? p['questionnaireResponses'] as List? ?? []).cast<Map<String, dynamic>>();
-      for (final resp in responses) {
+     for (final resp in responses) {
         if (resp.containsKey('question') && resp.containsKey('response')) {
           // Clean up checkbox list formatting e.g., ["A","B"]
           var respText = resp['response'].toString();
@@ -129,6 +130,7 @@ pw.Widget _buildParticipantsTablePdf(List participants, List<String> questionCol
         p['name'] ?? '',
         p['email'] ?? '',
         p['ticket'] ?? '',
+        p['registrationStatus'] ?? '',
         ...questionColumns.map((q) => respMap[q] ?? ''),
       ];
     }).toList(),

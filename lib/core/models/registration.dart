@@ -60,6 +60,7 @@ class ParticipantResponse {
 }
 
 class Participant {
+  final int ticketId;
   final String email;
   final String firstName;
   final String lastName;
@@ -67,6 +68,7 @@ class Participant {
   final List<ParticipantResponse> responses;
 
   Participant({
+    required this.ticketId,
     required this.email,
     required this.firstName,
     required this.lastName,
@@ -75,6 +77,7 @@ class Participant {
   });
 
   Map<String, dynamic> toJson() => {
+    'ticketId': ticketId,
     'email': email,
     'firstName': firstName,
     'lastName': lastName,
