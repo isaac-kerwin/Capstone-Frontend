@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/features/login_and_register/screens/login.dart'; // adjust path as needed
+import 'package:app_mobile_frontend/features/auth/screens/login.dart'; // adjust path as needed
 
 
 class RegistrationConfirmationScreen extends StatelessWidget {

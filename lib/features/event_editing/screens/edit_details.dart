@@ -5,7 +5,7 @@ import 'package:app_mobile_frontend/features/event_editing/widgets/event_text_fi
 import 'package:app_mobile_frontend/features/event_editing/widgets/date_time_row.dart';
 import 'package:app_mobile_frontend/features/event_editing/widgets/image_picker_tile.dart';
 import 'package:app_mobile_frontend/core/models/event.dart';
-import 'package:app_mobile_frontend/network/event_services.dart';
+import 'package:app_mobile_frontend/api/event_services.dart';
 
 class EditEventPage extends StatefulWidget {
   final EventDetails event;

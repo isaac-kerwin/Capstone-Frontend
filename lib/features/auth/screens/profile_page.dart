@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/core/widgets/navbar.dart';
-import 'package:app_mobile_frontend/network/auth_services.dart';
-import 'package:app_mobile_frontend/features/login_and_register/screens/change_password.dart';
+import 'package:app_mobile_frontend/api/auth_services.dart';
+import 'package:app_mobile_frontend/features/auth/screens/change_password.dart';
 
 
 class ProfileScreen extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:app_mobile_frontend/features/event_editing/screens/edit_tickets.
 import 'package:app_mobile_frontend/features/event_editing/screens/edit_questions.dart';
 import 'package:app_mobile_frontend/features/event_editing/screens/edit_details.dart';
 import 'package:app_mobile_frontend/core/models/event.dart'; // Assuming EventWithQuestions or Event is here
-import 'package:app_mobile_frontend/network/event_services.dart';
+import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:app_mobile_frontend/features/event_management/widgets/event_info_tile.dart';
 import 'package:app_mobile_frontend/core/models/question.dart';   
 import 'package:app_mobile_frontend/features/event_reporting/screens/event_report.dart'; 

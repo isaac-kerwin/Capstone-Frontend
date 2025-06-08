@@ -3,7 +3,7 @@ import 'package:app_mobile_frontend/core/models/question.dart';
 import 'package:app_mobile_frontend/features/event_creation/widgets/create_question.dart';
 import 'package:app_mobile_frontend/core/models/event.dart';
 import 'package:app_mobile_frontend/core/models/tickets.dart';
-import 'package:app_mobile_frontend/network/event_services.dart';
+import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:app_mobile_frontend/core/widgets/navbar.dart';
 import 'package:app_mobile_frontend/core/widgets/action_button.dart';
 import 'package:logging/logging.dart';

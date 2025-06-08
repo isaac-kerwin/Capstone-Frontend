@@ -4,7 +4,7 @@ import 'package:app_mobile_frontend/core/models/event.dart';
 import 'package:app_mobile_frontend/features/event_creation/screens/event_details.dart';
 import 'package:app_mobile_frontend/features/event_management/screens/manage_event.dart';
 import 'package:app_mobile_frontend/features/event_management/widgets/event_info_tile.dart';
-import 'package:app_mobile_frontend/network/event_services.dart';
+import 'package:app_mobile_frontend/api/event_services.dart';
 
 
 class EventSlideshow extends StatelessWidget {

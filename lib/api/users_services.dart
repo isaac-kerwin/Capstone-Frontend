@@ -1,7 +1,7 @@
-import 'package:app_mobile_frontend/network/dio_client.dart';
+import 'package:app_mobile_frontend/api/dio_client.dart';
 import 'package:app_mobile_frontend/core/models/user.dart';
 import 'package:dio/dio.dart';
-import 'package:app_mobile_frontend/network/auth_services.dart';
+import 'package:app_mobile_frontend/api/auth_services.dart';
 import 'package:logging/logging.dart';
 
 final Logger _logger = Logger('UserNetwork');

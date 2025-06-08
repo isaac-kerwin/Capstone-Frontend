@@ -1,5 +1,5 @@
 import 'package:app_mobile_frontend/core/models/event.dart';
-import 'package:app_mobile_frontend/network/event_services.dart';
+import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/event_management/widgets/events_slideshow.dart';
 import 'package:logging/logging.dart';
