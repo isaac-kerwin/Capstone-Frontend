@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/participant_information.dart';
-import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/core/models/event.dart';
 import 'package:app_mobile_frontend/network/event_services.dart';
 
 class TicketSelectPage extends StatefulWidget {

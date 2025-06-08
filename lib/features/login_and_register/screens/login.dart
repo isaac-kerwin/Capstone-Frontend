@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/login_and_register/screens/register_account.dart';
 import 'package:app_mobile_frontend/network/auth_services.dart';
 import 'package:app_mobile_frontend/network/users_services.dart';           // ← getUserProfile()
-import 'package:app_mobile_frontend/main_screen.dart';
+import 'package:app_mobile_frontend/core/widgets/navbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

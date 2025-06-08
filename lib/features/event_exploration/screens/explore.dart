@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/event_exploration/screens/filter_events.dart';
-import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/core/models/event.dart';
 import 'package:app_mobile_frontend/network/event_services.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/view_event.dart';
 import 'package:app_mobile_frontend/features/event_exploration/widgets/search_bar.dart' as search_widgets;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/models/question.dart';
+import 'package:app_mobile_frontend/core/models/question.dart';
 
 typedef QuestionAction = void Function(QuestionDTO question);
 

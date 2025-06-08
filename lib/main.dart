@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main_screen.dart';
+import 'core/widgets/navbar.dart';
 import 'package:app_mobile_frontend/core/themes/app_themes.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';

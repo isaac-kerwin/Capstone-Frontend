@@ -1,6 +1,6 @@
-import 'package:app_mobile_frontend/models/question.dart';
-import 'package:app_mobile_frontend/models/tickets.dart';
-import 'package:app_mobile_frontend/models/organizer.dart';
+import 'package:app_mobile_frontend/core/models/question.dart';
+import 'package:app_mobile_frontend/core/models/tickets.dart';
+import 'package:app_mobile_frontend/core/models/organizer.dart';
 
 //For Get all Events
 class Events {

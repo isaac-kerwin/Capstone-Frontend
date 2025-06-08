@@ -1,6 +1,6 @@
 import 'package:app_mobile_frontend/network/auth_services.dart';
 import "package:app_mobile_frontend/network/dio_client.dart";
-import 'package:app_mobile_frontend/models/registration.dart';  
+import 'package:app_mobile_frontend/core/models/registration.dart';  
 import "package:dio/dio.dart";
 import 'package:logging/logging.dart';
 

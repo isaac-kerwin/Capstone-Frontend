@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/core/models/event.dart';
 import 'dart:convert';
 
 

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/network/event_registration_services.dart';
 import 'package:app_mobile_frontend/network/event_services.dart';
 import 'package:app_mobile_frontend/features/registration_management/widgets/registration_tile.dart';
-import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/core/models/event.dart';
 import 'package:app_mobile_frontend/network/email_services.dart';
-import 'package:app_mobile_frontend/models/confirmation_email_dto.dart';
+import 'package:app_mobile_frontend/core/models/confirmation_email_dto.dart';
 
 class EditRegistrationsScreen extends StatefulWidget {
   final int eventId;

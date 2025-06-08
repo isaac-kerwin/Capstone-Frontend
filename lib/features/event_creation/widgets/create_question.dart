@@ -1,6 +1,6 @@
 import 'package:app_mobile_frontend/core/widgets/form_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/models/question.dart';
+import 'package:app_mobile_frontend/core/models/question.dart';
 
 class CreateQuestionDialog extends StatefulWidget {
   final CreateQuestionDTO? initialQuestion;

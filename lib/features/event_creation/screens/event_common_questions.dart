@@ -1,7 +1,7 @@
 
 import 'package:app_mobile_frontend/features/event_creation/screens/event_questions.dart';
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/models/question.dart';
+import 'package:app_mobile_frontend/core/models/question.dart';
  
  class CommonQuestions extends StatefulWidget {
    Map<String, dynamic> eventData = {};

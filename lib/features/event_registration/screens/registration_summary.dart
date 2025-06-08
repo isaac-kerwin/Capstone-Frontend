@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/models/event.dart';
+import 'package:app_mobile_frontend/core/models/event.dart';
 import 'package:app_mobile_frontend/network/event_registration_services.dart';
-import 'package:app_mobile_frontend/models/registration.dart';
-import 'package:app_mobile_frontend/models/email.dart';
+import 'package:app_mobile_frontend/core/models/registration.dart';
+import 'package:app_mobile_frontend/core/models/email.dart';
 import 'package:app_mobile_frontend/network/email_services.dart';
-import 'package:app_mobile_frontend/main_screen.dart';
+import 'package:app_mobile_frontend/core/widgets/navbar.dart';
 import 'package:logging/logging.dart';
 
 class RegistrationSummaryScreen extends StatefulWidget {

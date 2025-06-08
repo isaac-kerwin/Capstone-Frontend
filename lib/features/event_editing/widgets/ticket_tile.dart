@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/models/tickets.dart'; // Assuming Ticket model is here
+import 'package:app_mobile_frontend/core/models/tickets.dart'; // Assuming Ticket model is here
 
 typedef TicketActionCallback = void Function();
 
