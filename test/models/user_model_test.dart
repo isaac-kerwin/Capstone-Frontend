@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:app_mobile_frontend/core/models/user.dart'; // Update this path to your actual model file
+import 'package:app_mobile_frontend/core/models/user_models.dart'; // Update this path to your actual model file
 
 void main() {
   group('User Model & DTO Tests', () {

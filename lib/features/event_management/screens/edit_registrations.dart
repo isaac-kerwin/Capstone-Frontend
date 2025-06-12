@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/api/event_registration_services.dart';
 import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:app_mobile_frontend/features/registration_management/widgets/registration_tile.dart';
-import 'package:app_mobile_frontend/core/models/event.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart';
 import 'package:app_mobile_frontend/api/email_services.dart';
 import 'package:app_mobile_frontend/core/models/confirmation_email_dto.dart';
 

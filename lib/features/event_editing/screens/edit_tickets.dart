@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:app_mobile_frontend/core/models/tickets.dart';
-import 'package:app_mobile_frontend/core/models/event.dart';
+import 'package:app_mobile_frontend/core/models/ticket_models.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart';
 import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:app_mobile_frontend/features/event_editing/widgets/ticket_tile.dart';
 import 'package:app_mobile_frontend/features/event_editing/widgets/ticket_form.dart';

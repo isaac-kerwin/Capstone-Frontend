@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_mobile_frontend/features/event_editing/widgets/question_tile.dart';
-import 'package:app_mobile_frontend/core/models/question.dart';
+import 'package:app_mobile_frontend/core/models/question_models.dart';
 
 void main() {
   group('QuestionTile Widget Tests', () {

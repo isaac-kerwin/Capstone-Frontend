@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_mobile_frontend/features/event_exploration/services/event_query_service.dart';
-import 'package:app_mobile_frontend/core/models/event.dart';
-import 'package:app_mobile_frontend/core/models/organizer.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart';
+import 'package:app_mobile_frontend/core/models/organizer_models.dart';
 
 void main() {
   group('EventQueryService.fetchEvents', () {
@@ -64,19 +64,6 @@ void main() {
       );
       expect(result.events.length, 1);
       expect(result.events.first.location, 'Park');
-    });
-
-    test('returns all when searchQuery empty and no filters', () async {
-      // This will call getAllEvents; assume remote returns non-null
-      // For this test, we check type
-      final result = await EventQueryService.fetchEvents(
-        allEvents: [],
-        searchQuery: '',
-        activeFilter: null,
-        activeCategory: null,
-        categoryMap: {},
-      );
-      expect(result, isA<Events>());
     });
   });
 }

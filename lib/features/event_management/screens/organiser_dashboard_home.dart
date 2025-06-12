@@ -1,4 +1,4 @@
-import 'package:app_mobile_frontend/core/models/event.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart';
 import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/event_management/widgets/events_slideshow.dart';

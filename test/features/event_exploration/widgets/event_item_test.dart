@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_mobile_frontend/features/event_exploration/widgets/event_item.dart';
-import 'package:app_mobile_frontend/core/models/event.dart';
-import 'package:app_mobile_frontend/core/models/organizer.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart';
+import 'package:app_mobile_frontend/core/models/organizer_models.dart';
 
 void main() {
   group('EventItem Widget Tests', () {

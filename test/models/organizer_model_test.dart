@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:app_mobile_frontend/core/models/organizer.dart'; // Update path as needed
+import 'package:app_mobile_frontend/core/models/organizer_models.dart'; // Update path as needed
 
 void main() {
   group('Organizer Models', () {

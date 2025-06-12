@@ -1,10 +1,10 @@
 import 'package:app_mobile_frontend/api/auth_services.dart';
 import "package:app_mobile_frontend/api/dio_client.dart";
-import "package:app_mobile_frontend/core/models/event.dart";
+import "package:app_mobile_frontend/core/models/event_models.dart";
 import "package:dio/dio.dart";
-import "package:app_mobile_frontend/core/models/tickets.dart";
+import "package:app_mobile_frontend/core/models/ticket_models.dart";
 import 'package:logging/logging.dart';
-import 'package:app_mobile_frontend/core/models/question.dart';  // import CreateQuestionDTO
+import 'package:app_mobile_frontend/core/models/question_models.dart';  // import CreateQuestionDTO
 
 // Initialize logger
 final Logger _logger = Logger('EventNetwork');

@@ -1,5 +1,5 @@
 import 'package:app_mobile_frontend/api/dio_client.dart';
-import 'package:app_mobile_frontend/core/models/user.dart';
+import 'package:app_mobile_frontend/core/models/user_models.dart';
 import 'package:dio/dio.dart';
 import 'package:app_mobile_frontend/api/auth_services.dart';
 import 'package:logging/logging.dart';

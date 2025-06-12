@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/core/models/question.dart';
+import 'package:app_mobile_frontend/core/models/question_models.dart';
 import 'package:app_mobile_frontend/features/event_creation/widgets/create_question.dart';
 import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:app_mobile_frontend/core/widgets/action_button.dart';

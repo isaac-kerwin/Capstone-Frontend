@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/core/widgets/action_button.dart';
-import 'package:app_mobile_frontend/core/models/event.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart';
 import 'package:app_mobile_frontend/features/event_registration/screens/ticket_select.dart';
 import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:app_mobile_frontend/features/event_management/services/date_and_time_parser.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app_mobile_frontend/features/event_creation/screens/event_tickets.dart';
 import 'package:app_mobile_frontend/core/widgets/form_widgets.dart';
-import 'package:app_mobile_frontend/core/models/tickets.dart';
+import 'package:app_mobile_frontend/core/models/ticket_models.dart';
 import 'package:app_mobile_frontend/features/event_creation/screens/event_common_questions.dart';
 
 class CreateEventPage extends StatefulWidget {

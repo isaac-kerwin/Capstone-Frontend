@@ -1,5 +1,5 @@
 import "package:app_mobile_frontend/api/dio_client.dart";
-import "package:app_mobile_frontend/core/models/user.dart";
+import "package:app_mobile_frontend/core/models/user_models.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
 
 

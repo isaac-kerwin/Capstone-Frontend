@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_mobile_frontend/features/event_editing/widgets/ticket_tile.dart';
-import 'package:app_mobile_frontend/core/models/tickets.dart';
+import 'package:app_mobile_frontend/core/models/ticket_models.dart';
 
 void main() {
   group('TicketTile Widget Tests', () {
@@ -43,9 +43,9 @@ void main() {
       );
 
       expect(find.text('Original Name'), findsOneWidget);
-      final editIcon = find.byTooltip('Edit Ticket');
-      expect(editIcon, findsOneWidget);
-      await tester.tap(editIcon);
+      final editButton = find.widgetWithIcon(IconButton, Icons.edit);
+      expect(editButton, findsOneWidget);
+      await tester.tap(editButton);
       expect(editCalled, isTrue);
     });
 
@@ -63,9 +63,9 @@ void main() {
         ),
       );
 
-      final deleteIcon = find.byTooltip('Delete Ticket');
-      expect(deleteIcon, findsOneWidget);
-      await tester.tap(deleteIcon);
+      final deleteButton = find.widgetWithIcon(IconButton, Icons.delete);
+      expect(deleteButton, findsOneWidget);
+      await tester.tap(deleteButton);
       expect(deleteCalled, isFalse);
     });
   });
