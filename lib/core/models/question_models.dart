@@ -175,3 +175,20 @@ class QuestionDTO {
     };
   }
 }
+
+class UpdateQuestionDTO{
+  final bool? isRequired;
+  final int? displayOrder;
+
+  UpdateQuestionDTO({
+    this.isRequired,
+    this.displayOrder,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (isRequired != null) "isRequired": isRequired,
+      if (displayOrder != null) "displayOrder": displayOrder,
+    };
+  }
+}

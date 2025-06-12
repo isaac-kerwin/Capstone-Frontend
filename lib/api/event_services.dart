@@ -199,25 +199,4 @@ Future<List<dynamic>> getEventRegistrations(String eventId, bool pendingOnly) as
   }
 }
 
-/// Updates only the questionnaire questions for a given event
-Future<bool> updateEventQuestions(int eventId, List<CreateQuestionDTO> questions) async {
-  try {
-    final response = await dioClient.dio.put(
-      "/events/$eventId",
-      data: { 'questions': questions.map((q) => q.toJson()).toList() },
-      options: Options(
-        headers: { 'Authorization': 'Bearer ${await getToken()}' },
-      ),
-    );
-    if (response.data["success"]) {
-      _logger.info("Questions updated successfully for event $eventId");
-      return true;
-    } else {
-      _logger.warning("Failed to update questions: \\${response.data}");
-      return false;
-    }
-  } catch (e) {
-    _logger.severe("Error updating questions: $e");
-    return false;
-  }
-}
+
