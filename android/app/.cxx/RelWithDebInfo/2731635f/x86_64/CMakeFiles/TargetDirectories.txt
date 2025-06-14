@@ -1,0 +1,2 @@
+C:/Users/isaac/dev/Capstone-Project/Capstone-Frontend/android/app/.cxx/RelWithDebInfo/2731635f/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/isaac/dev/Capstone-Project/Capstone-Frontend/android/app/.cxx/RelWithDebInfo/2731635f/x86_64/CMakeFiles/rebuild_cache.dir
