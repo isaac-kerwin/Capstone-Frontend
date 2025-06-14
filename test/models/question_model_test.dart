@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:app_mobile_frontend/core/models/question.dart'; // Update the path if needed
+import 'package:app_mobile_frontend/core/models/question_models.dart'; // Update the path if needed
 
 void main() {
   group('Question Models', () {

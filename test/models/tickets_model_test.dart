@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:app_mobile_frontend/core/models/tickets.dart'; // Adjust the import path to match your structure
+import 'package:app_mobile_frontend/core/models/ticket_models.dart'; // Adjust the import path to match your structure
 
 void main() {
   group('Ticket Models', () {

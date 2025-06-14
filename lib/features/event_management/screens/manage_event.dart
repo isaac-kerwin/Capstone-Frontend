@@ -2,10 +2,10 @@ import 'package:app_mobile_frontend/features/event_management/screens/edit_regis
 import 'package:app_mobile_frontend/features/event_editing/screens/edit_tickets.dart';
 import 'package:app_mobile_frontend/features/event_editing/screens/edit_questions.dart';
 import 'package:app_mobile_frontend/features/event_editing/screens/edit_details.dart';
-import 'package:app_mobile_frontend/core/models/event.dart'; // Assuming EventWithQuestions or Event is here
-import 'package:app_mobile_frontend/network/event_services.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart'; // Assuming EventWithQuestions or Event is here
+import 'package:app_mobile_frontend/api/event_services.dart';
 import 'package:app_mobile_frontend/features/event_management/widgets/event_info_tile.dart';
-import 'package:app_mobile_frontend/core/models/question.dart';   
+import 'package:app_mobile_frontend/core/models/question_models.dart';   
 import 'package:app_mobile_frontend/features/event_reporting/screens/event_report.dart'; 
 import 'package:flutter/material.dart';
 

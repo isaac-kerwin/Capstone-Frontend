@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:app_mobile_frontend/core/models/tickets.dart';
-import 'package:app_mobile_frontend/core/models/event.dart';
-import 'package:app_mobile_frontend/network/event_services.dart';
+import 'package:app_mobile_frontend/core/models/ticket_models.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart';
+import 'package:app_mobile_frontend/api/event_services.dart';
+import 'package:app_mobile_frontend/api/ticket_services.dart';
 import 'package:app_mobile_frontend/features/event_editing/widgets/ticket_tile.dart';
 import 'package:app_mobile_frontend/features/event_editing/widgets/ticket_form.dart';
 
@@ -29,9 +29,30 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
   List<Ticket> _tickets = [];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Reload tickets when the screen is reopened
+    _loadTickets();
+  }
+
+  @override
   void initState() {
     super.initState();
-    _tickets = List.from(widget.event.tickets);
+    // Initialize ticket list from backend
+    _loadTickets();
+  }
+
+  // Reload the latest tickets from backend
+  Future<void> _loadTickets() async {
+    try {
+      final event = await getEventById(widget.event.id);
+      setState(() {
+        _tickets = event.tickets;
+      });
+    } catch (e) {
+      // optionally show error
+      debugPrint('Failed to load tickets: $e');
+    }
   }
 
   void _startEditing(int index) {
@@ -163,8 +184,7 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
     }
 
     try {
-      List<TicketDTO> ticketsDto = []; // Changed variable name for clarity
-      final ticketDto = TicketDTO( // Changed variable name for clarity
+      final ticketDto = TicketDTO(
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         price: double.parse(_priceController.text),
@@ -172,41 +192,19 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
         salesStart: _salesStart!,
         salesEnd: _salesEnd!,
       );
-      ticketsDto.add(ticketDto);
 
       if (_isEditing) {
-        // Update existing ticket
-        UpdateEventDTO ticketUpdate = UpdateEventDTO(
-          tickets: ticketsDto,
-        );
-        // Assuming updateEvent can handle updating a single ticket by its ID or requires the full list.
-        // The current DTO structure suggests it might be replacing/updating tickets based on the list.
-        // For simplicity, we'll assume the backend handles matching or that this is the intended update mechanism.
-        await updateEvent(widget.event.id, ticketUpdate); 
-        setState(() {
-          _tickets[_editingIndex!] = Ticket(
-            id: _tickets[_editingIndex!].id, // Keep existing ID
-            eventId: widget.event.id,
-            name: ticketDto.name,
-            description: ticketDto.description,
-            price: ticketDto.price.toString(), // Ticket model expects string price
-            quantityTotal: ticketDto.quantityTotal,
-            quantitySold: _tickets[_editingIndex!].quantitySold, // Preserve sold quantity
-            salesStart: ticketDto.salesStart,
-            salesEnd: ticketDto.salesEnd,
-            status: _tickets[_editingIndex!].status, // Preserve status
-            createdAt: _tickets[_editingIndex!].createdAt, // Preserve creation date
-            updatedAt: DateTime.now(), // Update modification date
-          );
-        });
+        final idx = _editingIndex!;
+        final ticketId = _tickets[idx].id;
+        // update backend with event and ticket IDs
+        await updateTicket(widget.event.id, ticketId, ticketDto);
       } else {
         // Create new ticket
-        final newTicket = await createTicket(widget.event.id, ticketDto);
-        setState(() {
-          _tickets.add(newTicket);
-        });
+        await createTicket(widget.event.id, ticketDto);
       }
 
+      // Refresh ticket list
+      await _loadTickets();
       _cancelEditing(); // Clears form and resets editing state
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_isEditing ? 'Ticket updated successfully!' : 'Ticket added successfully!')),
@@ -221,9 +219,8 @@ class _TicketManagementPageState extends State<TicketManagementPage> {
   Future<void> _deleteTicket(int index) async {
     try {
       await deleteTicket(widget.event.id, _tickets[index].id);
-      setState(() {
-        _tickets.removeAt(index);
-      });
+      // Refresh ticket list
+      await _loadTickets();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ticket deleted successfully!')),
       );

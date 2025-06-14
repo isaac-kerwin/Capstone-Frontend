@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:app_mobile_frontend/core/models/event.dart';
-import 'package:app_mobile_frontend/network/event_registration_services.dart';
-import 'package:app_mobile_frontend/core/models/registration.dart';
-import 'package:app_mobile_frontend/core/models/email.dart';
-import 'package:app_mobile_frontend/network/email_services.dart';
+import 'package:app_mobile_frontend/core/models/event_models.dart';
+import 'package:app_mobile_frontend/api/event_registration_services.dart';
+import 'package:app_mobile_frontend/core/models/registration_models.dart';
+import 'package:app_mobile_frontend/core/models/email_models.dart';
+import 'package:app_mobile_frontend/api/email_services.dart';
 import 'package:app_mobile_frontend/core/widgets/navbar.dart';
 import 'package:logging/logging.dart';
 
