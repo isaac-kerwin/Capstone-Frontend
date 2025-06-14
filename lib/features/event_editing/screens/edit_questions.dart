@@ -98,10 +98,13 @@ class _QuestionnaireManagementPageState
           final index = _questions.indexWhere((q) => q.id == question.id);
           if (index != -1) {
             // Call API to update isRequired only
+            _logger.info(
+                'Updating question ID: ${question.id}, new required status: $newRequired, display order: ${question.displayOrder}'
+            );
             final success = await updateEventQuestion(
               widget.eventId,
               question.id,
-              UpdateQuestionDTO(isRequired: newRequired),
+              UpdateQuestionDTO(isRequired: newRequired, displayOrder: question.displayOrder.toInt()),
             );
             if (success) {
               // Reload questions from backend

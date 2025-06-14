@@ -1,5 +1,4 @@
 import 'package:app_mobile_frontend/core/models/email_models.dart';
-import 'package:app_mobile_frontend/core/models/confirmation_email_dto.dart';
 import 'package:dio/dio.dart';
 import 'dio_client.dart';
 

@@ -11,8 +11,8 @@ final Logger _logger = Logger('EventQuestions');
 Future<bool> updateEventQuestion(int eventId, int eventQuestionId, UpdateQuestionDTO question) async {
   try {
     final response = await dioClient.dio.put(
-      "/events/$eventId/$eventQuestionId",
-      data: { 'question': question.toJson() },
+      "/events/$eventId/questions/$eventQuestionId",
+      data: { 'isRequired': question.isRequired, 'displayOrder': question.displayOrder },
       options: Options(
         headers: { 'Authorization': 'Bearer ${await getToken()}' },
       ),
