@@ -1,3 +1,8 @@
+/// Event Registration Services
+/// Uses `EventRegistrationDTO` for creating registrations and managing their status.
+/// Handles creating, retrieving, and managing event registrations.
+/// Provides functions to submit registration payloads and fetch registration details.
+
 import 'package:app_mobile_frontend/api/auth_services.dart';
 import "package:app_mobile_frontend/api/dio_client.dart";
 import 'package:app_mobile_frontend/core/models/registration_models.dart';  

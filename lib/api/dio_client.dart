@@ -1,3 +1,8 @@
+/// HTTP Client Singleton using Dio
+///
+/// Configures base URL, content type, timeouts, and cookie management.
+/// Provides a shared `dio` instance for all network requests.
+
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:cookie_jar/cookie_jar.dart';

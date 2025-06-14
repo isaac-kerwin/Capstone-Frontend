@@ -1,3 +1,8 @@
+/// Email Services
+///
+/// Provides functions to send confirmation or other transactional emails.
+/// Uses `EmailDTO` and `ConfirmationEmailDTO` payloads.
+
 import 'package:app_mobile_frontend/core/models/email_models.dart';
 import 'package:dio/dio.dart';
 import 'dio_client.dart';

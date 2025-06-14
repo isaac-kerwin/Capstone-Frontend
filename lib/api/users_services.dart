@@ -1,3 +1,10 @@
+/// User Services
+/// Uses `CreateUserDTO`, `UpdateUserProfileDTO`, and `UserProfile` for user management.
+/// Provides operations for user management:
+/// - getUserProfile
+/// - updateUserProfile
+/// - changePassword
+/// - deleteAccount
 import 'package:app_mobile_frontend/api/dio_client.dart';
 import 'package:app_mobile_frontend/core/models/user_models.dart';
 import 'package:dio/dio.dart';

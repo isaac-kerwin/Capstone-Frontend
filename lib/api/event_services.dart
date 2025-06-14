@@ -1,15 +1,21 @@
+/// Event Services
+/// Uses `CreateEventDTO` and `UpdateEventDTO` for creating and updating events.
+/// Uses `EventWithQuestions` for retrieving event details with questions.
+/// Provides CRUD operations for events and tickets:
+/// - createEvent, updateEvent, deleteEvent
+/// - getAllEvents, getEventById
+/// - createTicket, updateTicket, deleteTicket
+
 import 'package:app_mobile_frontend/api/auth_services.dart';
 import "package:app_mobile_frontend/api/dio_client.dart";
 import "package:app_mobile_frontend/core/models/event_models.dart";
 import "package:dio/dio.dart";
 import "package:app_mobile_frontend/core/models/ticket_models.dart";
 import 'package:logging/logging.dart';
-import 'package:app_mobile_frontend/core/models/question_models.dart';  // import CreateQuestionDTO
 
 // Initialize logger
 final Logger _logger = Logger('EventNetwork');
 
-// TO DO  
 Future<void> createEvent(CreateEventDTO event) async {
   try {
     final response = await dioClient.dio.post(

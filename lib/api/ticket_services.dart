@@ -1,3 +1,11 @@
+/// Ticket Services
+/// Uses `TicketDTO` for creating and updating tickets.
+/// Provides CRUD operations for tickets within events:
+/// - getTicketById
+/// - createTicket
+/// - updateTicket
+/// - deleteTicket
+
 import 'package:app_mobile_frontend/api/auth_services.dart';
 import "package:app_mobile_frontend/api/dio_client.dart";
 import "package:dio/dio.dart";

@@ -1,11 +1,17 @@
 import 'package:logging/logging.dart';
 
+/// Sales data summary for an event report.
 class Sales {
+  /// Total number of tickets sold.
   final int totalTickets;
+  /// Total revenue generated.
   final num revenue;
+  /// Breakdown of tickets sold by type.
   final List<Map<String, dynamic>> ticketTypes;
+  /// Revenue generated per ticket type.
   final List<Map<String, dynamic>> revenueByTicket;
 
+  /// Constructs a [Sales] summary.
   Sales({
     required this.totalTickets,
     required this.revenue,
@@ -14,22 +20,32 @@ class Sales {
   });
 }
 
+/// Remaining ticket data for an event report.
 class Remaining {
+  /// Number of tickets still available.
   final int remainingTickets;
-  final List<Map<String, dynamic>> remainingByTicket;   // <- List
+  /// Breakdown of remaining tickets by type.
+  final List<Map<String, dynamic>> remainingByTicket;
 
+  /// Constructs a [Remaining] summary.
   Remaining({
     required this.remainingTickets,
     required this.remainingByTicket,
   });
 }
 
-class Participant{
+/// Participant information included in event reports.
+class Participant {
+  /// Participant's full name.
   final String name;
+  /// Participant's email address.
   final String email;
+  /// Type of ticket purchased.
   final String ticketType;
+  /// Responses to event questions.
   final List<Map<String, dynamic>> questionResponses;
 
+  /// Constructs a [Participant] record.
   Participant({
     required this.name,
     required this.email,
@@ -38,16 +54,26 @@ class Participant{
   });
 }
 
-class Report{
+/// Comprehensive report model aggregating sales, participant, and question data.
+class Report {
+  /// Event name.
   final String eventName;
+  /// Event description.
   final String eventDescription;
+  /// Event start timestamp.
   final DateTime startDateTime;
+  /// Event end timestamp.
   final DateTime endDateTime;
+  /// Sales summary data.
   final Sales sales;
+  /// Remaining ticket summary.
   final Remaining remaining;
+  /// List of participants.
   final List<Participant> participants;
+  /// Summary of questions and response counts.
   final Map<String, Map<String, int>> questions;
 
+  /// Constructs a [Report] with all relevant details.
   Report({
     required this.eventName,
     required this.eventDescription,
@@ -59,6 +85,7 @@ class Report{
     required this.questions,
   });
 
+  /// Parses JSON into a [Report] instance and logs summary.
   factory Report.fromJson(Map<String, dynamic> json) {
      Report report = Report(
       eventName: json["eventName"],
@@ -94,6 +121,7 @@ class Report{
     return report;
   }
 
+  /// Logs a human-readable summary of the report.
   void prettyPrint() {
     _logger.info("Event Report:");
     _logger.info("Event Name: $eventName");
@@ -115,4 +143,5 @@ class Report{
   }
 }
 
+/// Logger for report models.
 final Logger _logger = Logger('EventModel');

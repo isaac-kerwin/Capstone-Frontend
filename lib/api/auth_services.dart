@@ -1,11 +1,20 @@
+/// Authentication Service
+///
+/// Provides functions to login, register, refresh, and logout users,
+/// and to securely store and retrieve access tokens.
+///
+/// Usage:
+/// ```dart
+/// await loginUser(email, password);
+/// String? token = await getToken();
+/// await logoutUser();
+/// ```
 import "package:app_mobile_frontend/api/dio_client.dart";
 import "package:app_mobile_frontend/core/models/user_models.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
 
-
 String? accessToken;
 final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
-
 
 Future<void> saveToken(String token) async {
   await _secureStorage.write(key: 'accessToken', value: token);

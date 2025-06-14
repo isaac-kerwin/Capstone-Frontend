@@ -1,3 +1,9 @@
+/// Report Services
+/// 
+/// Handles fetching and exporting event reports:
+/// - getEventReport
+/// - exportReport
+
 import 'package:app_mobile_frontend/api/dio_client.dart';
 import 'package:app_mobile_frontend/api/auth_services.dart';
 import 'package:dio/dio.dart';

@@ -1,3 +1,10 @@
+/// Question Services
+/// Uses `CreateQuestionDTO` and `UpdateQuestionDTO` for creating and updating questions.
+/// Provides CRUD operations for event questions:
+/// - createEventQuestion
+/// - updateEventQuestion
+/// - deleteEventQuestion
+
 import 'package:app_mobile_frontend/api/auth_services.dart';
 import "package:app_mobile_frontend/api/dio_client.dart";
 import "package:dio/dio.dart";
